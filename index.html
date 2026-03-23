@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sermon Recorder — Capture, Transcribe & Study Every Message</title>
+<meta name="description" content="Record or paste a sermon, get an instant AI-powered summary, key quotes, group study guide, scripture references, and a shareable elevator pitch.">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;0,700;1,400&family=Source+Sans+3:wght@400;500;600;700&display=swap');
+
+  :root {
+    --navy: #1A3A5C;
+    --navy-deep: #0F2640;
+    --navy-dark: #0A1A2E;
+    --navy-light: #243F5C;
+    --teal: #2A7FA5;
+    --teal-light: #EAF4FA;
+    --teal-border: #B0D8EC;
+    --gold: #B8860B;
+    --gold-light: #FDF6E3;
+    --green: #1B6E3A;
+    --green-light: #EAF5EE;
+    --red: #B0271D;
+    --gray-mid: #9096A3;
+    --gray-light: #D8DAE0;
+    --white: #FFFFFF;
+    --offwhite: #F7F8FA;
+    --charcoal: #2C2E33;
+    --font-display: 'Lora', 'Georgia', serif;
+    --font-body: 'Source Sans 3', 'Helvetica Neue', sans-serif;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: var(--font-body);
+    background: var(--navy-deep);
+    color: var(--white);
+    overflow-x: hidden;
+  }
+
+  /* ── Nav ── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0;
+    background: rgba(15,38,64,0.95);
+    backdrop-filter: blur(12px);
+    height: 56px;
+    display: flex; align-items: center;
+    padding: 0 32px;
+    z-index: 100;
+    border-bottom: 1px solid rgba(42,127,165,0.15);
+  }
+
+  .nav-logo {
+    display: flex; align-items: center; gap: 10px;
+  }
+
+  .nav-logo-mark {
+    width: 28px; height: 28px;
+    background: var(--teal);
+    border-radius: 4px;
+  }
+
+  .nav-logo h1 {
+    font-family: var(--font-display);
+    font-size: 17px; font-weight: 700;
+  }
+
+  .nav-cta {
+    margin-left: auto;
+    padding: 8px 20px;
+    background: var(--teal);
+    color: var(--white);
+    border: none; border-radius: 4px;
+    font-family: var(--font-body);
+    font-size: 13px; font-weight: 700;
+    cursor: pointer; text-decoration: none;
+    transition: background 0.2s;
+  }
+
+  .nav-cta:hover { background: #238BA8; }
+
+  /* ── Hero ── */
+  .hero {
+    min-height: 100vh;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    text-align: center;
+    padding: 80px 24px 60px;
+    background: linear-gradient(180deg, var(--navy-dark) 0%, var(--navy-deep) 50%, var(--navy) 100%);
+    position: relative;
+  }
+
+  .hero::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+    background: radial-gradient(ellipse 600px 400px at 50% 40%, rgba(42,127,165,0.08) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .hero-overline {
+    font-size: 11px; font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: var(--teal);
+    margin-bottom: 16px;
+  }
+
+  .hero h2 {
+    font-family: var(--font-display);
+    font-size: clamp(32px, 5vw, 52px);
+    font-weight: 700;
+    line-height: 1.2;
+    max-width: 720px;
+    margin-bottom: 20px;
+  }
+
+  .hero-sub {
+    font-size: 18px;
+    color: var(--gray-mid);
+    max-width: 540px;
+    line-height: 1.6;
+    margin-bottom: 36px;
+  }
+
+  .hero-cta {
+    display: inline-block;
+    padding: 14px 40px;
+    background: var(--teal);
+    color: var(--white);
+    border: none; border-radius: 4px;
+    font-family: var(--font-body);
+    font-size: 16px; font-weight: 700;
+    cursor: pointer; text-decoration: none;
+    transition: background 0.2s, transform 0.2s;
+  }
+
+  .hero-cta:hover { background: #238BA8; transform: translateY(-1px); }
+
+  .hero-note {
+    margin-top: 16px;
+    font-size: 12px; color: var(--gray-mid);
+  }
+
+  /* ── Section Base ── */
+  section {
+    padding: 80px 24px;
+  }
+
+  .section-center {
+    max-width: 960px;
+    margin: 0 auto;
+  }
+
+  .section-overline {
+    font-size: 11px; font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: var(--teal);
+    margin-bottom: 8px;
+    text-align: center;
+  }
+
+  .section-title {
+    font-family: var(--font-display);
+    font-size: clamp(24px, 3.5vw, 36px);
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 12px;
+  }
+
+  .section-sub {
+    font-size: 16px;
+    color: var(--gray-mid);
+    text-align: center;
+    max-width: 600px;
+    margin: 0 auto 48px;
+    line-height: 1.6;
+  }
+
+  /* ── How It Works ── */
+  .how-it-works {
+    background: var(--navy);
+  }
+
+  .steps {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 32px;
+  }
+
+  .step {
+    text-align: center;
+    padding: 24px 16px;
+  }
+
+  .step-number {
+    width: 48px; height: 48px;
+    border-radius: 50%;
+    background: rgba(42,127,165,0.15);
+    border: 2px solid var(--teal);
+    display: inline-flex;
+    align-items: center; justify-content: center;
+    font-family: var(--font-display);
+    font-size: 20px; font-weight: 700;
+    color: var(--teal);
+    margin-bottom: 16px;
+  }
+
+  .step h3 {
+    font-family: var(--font-display);
+    font-size: 18px; font-weight: 700;
+    margin-bottom: 8px;
+  }
+
+  .step p {
+    font-size: 14px;
+    color: var(--gray-mid);
+    line-height: 1.6;
+  }
+
+  /* ── Features ── */
+  .features-section {
+    background: var(--navy-deep);
+  }
+
+  .features-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+  }
+
+  .feature-card {
+    background: var(--navy);
+    border: 1px solid var(--navy-light);
+    border-radius: 6px;
+    padding: 24px;
+    transition: border-color 0.2s;
+  }
+
+  .feature-card:hover { border-color: var(--teal); }
+
+  .feature-icon {
+    font-size: 28px;
+    margin-bottom: 12px;
+  }
+
+  .feature-card h3 {
+    font-family: var(--font-display);
+    font-size: 16px; font-weight: 700;
+    margin-bottom: 6px;
+  }
+
+  .feature-card p {
+    font-size: 13px;
+    color: var(--gray-mid);
+    line-height: 1.6;
+  }
+
+  .feature-accent {
+    display: inline-block;
+    margin-top: 8px;
+    font-size: 11px; font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    padding: 3px 8px;
+    border-radius: 3px;
+    background: rgba(42,127,165,0.12);
+    color: var(--teal);
+  }
+
+  /* ── What You Get ── */
+  .output-section {
+    background: var(--navy);
+  }
+
+  .output-cards {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+  }
+
+  .output-card {
+    background: var(--navy-deep);
+    border: 1px solid var(--navy-light);
+    border-left: 4px solid var(--teal);
+    border-radius: 4px;
+    padding: 20px;
+  }
+
+  .output-card.gold { border-left-color: var(--gold); }
+  .output-card.green { border-left-color: var(--green); }
+
+  .output-card .overline {
+    font-size: 10px; font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--gray-mid);
+    margin-bottom: 4px;
+  }
+
+  .output-card h3 {
+    font-family: var(--font-display);
+    font-size: 15px; font-weight: 600;
+    margin-bottom: 8px;
+  }
+
+  .output-card p {
+    font-size: 12px;
+    color: var(--gray-mid);
+    line-height: 1.5;
+  }
+
+  /* ── Testimonial / Quote ── */
+  .quote-section {
+    background: var(--navy-deep);
+    text-align: center;
+  }
+
+  .big-quote {
+    font-family: var(--font-display);
+    font-size: clamp(20px, 3vw, 28px);
+    font-style: italic;
+    font-weight: 400;
+    line-height: 1.6;
+    max-width: 680px;
+    margin: 0 auto 20px;
+    color: var(--teal-border);
+  }
+
+  .big-quote::before { content: '\201C'; }
+  .big-quote::after { content: '\201D'; }
+
+  .quote-attr {
+    font-size: 13px;
+    color: var(--gray-mid);
+  }
+
+  /* ── Use Cases ── */
+  .use-cases {
+    background: var(--navy);
+  }
+
+  .use-list {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+    max-width: 700px;
+    margin: 0 auto;
+  }
+
+  .use-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 16px;
+    background: var(--navy-deep);
+    border: 1px solid var(--navy-light);
+    border-radius: 4px;
+  }
+
+  .use-check {
+    flex-shrink: 0;
+    width: 22px; height: 22px;
+    border-radius: 50%;
+    background: rgba(27,110,58,0.2);
+    border: 1.5px solid var(--green);
+    display: flex; align-items: center; justify-content: center;
+    color: var(--green);
+    font-size: 12px; font-weight: 700;
+  }
+
+  .use-item p {
+    font-size: 13px;
+    line-height: 1.5;
+    color: var(--offwhite);
+  }
+
+  .use-item strong {
+    color: var(--white);
+  }
+
+  /* ── CTA Bottom ── */
+  .cta-section {
+    background: linear-gradient(180deg, var(--navy) 0%, var(--navy-deep) 100%);
+    text-align: center;
+    padding: 80px 24px 100px;
+  }
+
+  .cta-section h2 {
+    font-family: var(--font-display);
+    font-size: clamp(24px, 4vw, 40px);
+    font-weight: 700;
+    margin-bottom: 16px;
+  }
+
+  .cta-section p {
+    font-size: 16px;
+    color: var(--gray-mid);
+    margin-bottom: 32px;
+    max-width: 500px;
+    margin-left: auto; margin-right: auto;
+    line-height: 1.6;
+  }
+
+  .cta-btn {
+    display: inline-block;
+    padding: 16px 48px;
+    background: var(--teal);
+    color: var(--white);
+    border: none; border-radius: 4px;
+    font-family: var(--font-body);
+    font-size: 17px; font-weight: 700;
+    cursor: pointer; text-decoration: none;
+    transition: background 0.2s, transform 0.2s;
+  }
+
+  .cta-btn:hover { background: #238BA8; transform: translateY(-1px); }
+
+  .cta-sub {
+    margin-top: 14px;
+    font-size: 12px; color: var(--gray-mid);
+  }
+
+  /* ── Footer ── */
+  footer {
+    background: var(--navy-dark);
+    padding: 24px 32px;
+    text-align: center;
+    font-size: 12px;
+    color: var(--gray-mid);
+    border-top: 1px solid var(--navy-light);
+  }
+
+  /* ── Responsive ── */
+  @media (max-width: 768px) {
+    .steps { grid-template-columns: 1fr; gap: 16px; }
+    .features-grid { grid-template-columns: 1fr; }
+    .output-cards { grid-template-columns: 1fr; }
+    .use-list { grid-template-columns: 1fr; }
+    nav { padding: 0 16px; }
+  }
+
+  /* ── Animations ── */
+  .fade-up {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+
+  .fade-up.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo">
+    <div class="nav-logo-mark"></div>
+    <h1>Sermon Recorder</h1>
+  </div>
+  <a href="sermon-recorder.html" class="nav-cta">Open App</a>
+</nav>
+
+<!-- Hero -->
+<div class="hero">
+  <div class="hero-overline">For pastors, study leaders & sermon listeners</div>
+  <h2>Every Sermon Deserves<br>More Than One Listen</h2>
+  <p class="hero-sub">Record, paste, or drop a YouTube link. In seconds, get a full summary, key quotes, scripture connections, a group study guide, and a prayer — all from one sermon.</p>
+  <a href="sermon-recorder.html" class="hero-cta">Start Recording</a>
+  <p class="hero-note">Free to use. Runs entirely in your browser. Works on desktop and mobile.</p>
+</div>
+
+<!-- How It Works -->
+<section class="how-it-works">
+  <div class="section-center">
+    <div class="section-overline">How It Works</div>
+    <h2 class="section-title">Three Steps. One Powerful Output.</h2>
+    <p class="section-sub">No accounts, no installs, no complicated setup. Just open the app and go.</p>
+    <div class="steps">
+      <div class="step fade-up">
+        <div class="step-number">1</div>
+        <h3>Capture</h3>
+        <p>Hit record during a live sermon, paste a transcript you already have, or drop in a YouTube link. The app handles the rest.</p>
+      </div>
+      <div class="step fade-up">
+        <div class="step-number">2</div>
+        <h3>Analyze</h3>
+        <p>Claude AI reads the full transcript and identifies the structure, themes, key moments, and scriptural connections.</p>
+      </div>
+      <div class="step fade-up">
+        <div class="step-number">3</div>
+        <h3>Use & Share</h3>
+        <p>Copy any section, download the full analysis, or share it to OneDrive, Google Drive, or any app on your phone.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- What You Get -->
+<section class="output-section">
+  <div class="section-center">
+    <div class="section-overline">What You Get</div>
+    <h2 class="section-title">A Complete Sermon Toolkit — Instantly</h2>
+    <p class="section-sub">Every analysis produces seven distinct deliverables, each designed to serve a different purpose.</p>
+    <div class="output-cards">
+      <div class="output-card fade-up">
+        <div class="overline">Elevator Pitch</div>
+        <h3>Tell Someone About It</h3>
+        <p>A compelling 1-2 sentence summary you can text to a friend, post on social media, or use to invite someone to listen.</p>
+      </div>
+      <div class="output-card fade-up">
+        <div class="overline">Main Points</div>
+        <h3>Structured Summary</h3>
+        <p>4-6 main points with sub-points, capturing the full arc and argument of the sermon in an outline you can study from.</p>
+      </div>
+      <div class="output-card gold fade-up">
+        <div class="overline">Sermon Arc</div>
+        <h3>7 Key Quotes</h3>
+        <p>Direct quotes spanning the full message — opening to closing — so you relive the journey, not just the highlights.</p>
+      </div>
+      <div class="output-card gold fade-up">
+        <div class="overline">Small Group</div>
+        <h3>Group Study Guide</h3>
+        <p>7 discussion questions with an opening, subpoint questions, and a reflective closer. Pick any 3-4 and you have a solid study.</p>
+      </div>
+      <div class="output-card green fade-up">
+        <div class="overline">Scripture</div>
+        <h3>Verse References</h3>
+        <p>2-3 Bible verses chosen specifically for how they speak to this sermon's themes — not generic, but precisely matched.</p>
+      </div>
+      <div class="output-card green fade-up">
+        <div class="overline">Response</div>
+        <h3>Prayer & Conclusions</h3>
+        <p>A heartfelt prayer drawn from the sermon's specific themes, plus key takeaways that crystallize the message.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Features -->
+<section class="features-section">
+  <div class="section-center">
+    <div class="section-overline">Features</div>
+    <h2 class="section-title">Built for Real Ministry Moments</h2>
+    <p class="section-sub">Whether you're in the pew, at your desk, or leading a small group mid-week.</p>
+    <div class="features-grid">
+      <div class="feature-card fade-up">
+        <div class="feature-icon">🎙️</div>
+        <h3>Live Recording</h3>
+        <p>Record directly from your phone or laptop microphone with real-time waveform feedback. Browser-based transcription starts immediately — no upload required.</p>
+        <span class="feature-accent">Works on Android & Desktop</span>
+      </div>
+      <div class="feature-card fade-up">
+        <div class="feature-icon">📋</div>
+        <h3>Paste Any Text</h3>
+        <p>Already have a transcript, sermon notes, or an outline? Paste it in and analyze. Works with any length of text — from brief notes to full manuscripts.</p>
+      </div>
+      <div class="feature-card fade-up">
+        <div class="feature-icon">▶️</div>
+        <h3>YouTube Integration</h3>
+        <p>Drop in a YouTube URL and the app pulls the transcript automatically. Perfect for analyzing your church's posted sermons or archived talks.</p>
+      </div>
+      <div class="feature-card fade-up">
+        <div class="feature-icon">📚</div>
+        <h3>Sermon History</h3>
+        <p>Every analysis is saved automatically. Browse past sermons, reload any previous analysis instantly. Your personal sermon library, always accessible.</p>
+        <span class="feature-accent">Stored Locally & Privately</span>
+      </div>
+      <div class="feature-card fade-up">
+        <div class="feature-icon">📤</div>
+        <h3>Share Anywhere</h3>
+        <p>Copy individual sections, download the complete analysis as a text file, or share directly to OneDrive, Google Drive, or any app on your phone.</p>
+      </div>
+      <div class="feature-card fade-up">
+        <div class="feature-icon">🔒</div>
+        <h3>Private & Secure</h3>
+        <p>No accounts, no data collection, no servers storing your sermons. Everything runs in your browser and stays on your device.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Quote -->
+<section class="quote-section">
+  <div class="section-center fade-up">
+    <div class="big-quote">A sermon heard once touches the heart. A sermon studied, quoted, and discussed transforms a community.</div>
+  </div>
+</section>
+
+<!-- Use Cases -->
+<section class="use-cases">
+  <div class="section-center">
+    <div class="section-overline">Who It's For</div>
+    <h2 class="section-title">From Sunday Morning to Wednesday Night</h2>
+    <p class="section-sub">Designed for anyone who believes a great sermon deserves to keep working after the service ends.</p>
+    <div class="use-list">
+      <div class="use-item fade-up">
+        <div class="use-check">✓</div>
+        <p><strong>Pastors</strong> — Review your own sermons, refine your message, and create study materials from what you've already preached.</p>
+      </div>
+      <div class="use-item fade-up">
+        <div class="use-check">✓</div>
+        <p><strong>Small Group Leaders</strong> — Get a ready-made 7-question study guide that makes Wednesday night prep take minutes, not hours.</p>
+      </div>
+      <div class="use-item fade-up">
+        <div class="use-check">✓</div>
+        <p><strong>Note Takers</strong> — Stop scribbling during service. Record the sermon and get a structured summary you can actually use.</p>
+      </div>
+      <div class="use-item fade-up">
+        <div class="use-check">✓</div>
+        <p><strong>Ministry Teams</strong> — Share elevator pitches on social media, pull quotes for bulletins, and build prayer lists from sermon themes.</p>
+      </div>
+      <div class="use-item fade-up">
+        <div class="use-check">✓</div>
+        <p><strong>Personal Devotion</strong> — Revisit sermons that moved you. Study the scripture connections. Pray the prayer again.</p>
+      </div>
+      <div class="use-item fade-up">
+        <div class="use-check">✓</div>
+        <p><strong>Church Staff</strong> — Archive every sermon with structured summaries and searchable history. Build an institutional memory.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<div class="cta-section">
+  <h2>Ready to Capture<br>Your Next Sermon?</h2>
+  <p>Open the app, hit record, and let every sermon keep teaching long after the last amen.</p>
+  <a href="sermon-recorder.html" class="cta-btn">Open Sermon Recorder</a>
+  <p class="cta-sub">No sign-up required. Free and private. Works on any device with Chrome.</p>
+</div>
+
+<footer>
+  Sermon Recorder — Built with care for the Church.
+</footer>
+
+<script>
+  // Intersection Observer for fade-up animations
+  const obs = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); } });
+  }, { threshold: 0.15 });
+  document.querySelectorAll('.fade-up').forEach(el => obs.observe(el));
+</script>
+</body>
+</html>
