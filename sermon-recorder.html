@@ -3,39 +3,30 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Sermon Recorder & Analyzer</title>
+<title>Sermon Recorder</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Lora:wght@600;700&family=Source+Sans+3:wght@400;500;600;700&display=swap');
 
   :root {
-    --color-white: #FFFFFF;
-    --color-offwhite: #F7F8FA;
-    --color-gray-band: #EDEEF1;
-    --color-gray-light: #D8DAE0;
-    --color-gray-mid: #9096A3;
-    --color-charcoal: #2C2E33;
-    --color-black: #111214;
-    --color-navy: #1A3A5C;
-    --color-teal: #2A7FA5;
-    --color-teal-light: #EAF4FA;
-    --color-teal-border: #B0D8EC;
-    --color-gold: #B8860B;
-    --color-gold-light: #FDF6E3;
-    --color-gold-border: #E2C97E;
-    --color-green: #1B6E3A;
-    --color-green-light: #EAF5EE;
-    --color-red: #B0271D;
-    --color-red-light: #FDECEA;
+    --navy: #1A3A5C;
+    --navy-deep: #0F2640;
+    --navy-light: #243F5C;
+    --teal: #2A7FA5;
+    --teal-light: #EAF4FA;
+    --teal-border: #B0D8EC;
+    --gold: #B8860B;
+    --gold-light: #FDF6E3;
+    --green: #1B6E3A;
+    --green-light: #EAF5EE;
+    --red: #B0271D;
+    --red-light: #FDECEA;
+    --gray-mid: #9096A3;
+    --gray-light: #D8DAE0;
+    --white: #FFFFFF;
+    --offwhite: #F7F8FA;
+    --charcoal: #2C2E33;
     --font-display: 'Lora', 'Georgia', serif;
     --font-body: 'Source Sans 3', 'Helvetica Neue', sans-serif;
-    --radius-sm: 3px;
-    --radius-md: 4px;
-    --radius-lg: 5px;
-    --border-default: 1px solid var(--color-gray-light);
-    --border-accent-width: 4px;
-    --max-width: 1020px;
-    --page-padding: 28px;
-    --nav-height: 52px;
   }
 
   * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -43,571 +34,353 @@
   body {
     font-family: var(--font-body);
     font-size: 14px;
-    background: var(--color-white);
-    color: var(--color-charcoal);
+    background: var(--navy-deep);
+    color: var(--white);
     min-height: 100vh;
+    display: flex;
+    flex-direction: column;
   }
 
-  /* ── Nav Bar ── */
+  /* ── Nav ── */
   nav {
-    background: var(--color-navy);
-    height: var(--nav-height);
+    background: var(--navy);
+    height: 48px;
     display: flex;
     align-items: center;
-    padding: 0 var(--page-padding);
-    gap: 14px;
+    padding: 0 20px;
+    gap: 12px;
+    flex-shrink: 0;
   }
 
   nav .logo-mark {
-    width: 28px;
-    height: 28px;
-    background: var(--color-teal);
-    border-radius: var(--radius-sm);
-    flex-shrink: 0;
+    width: 24px; height: 24px;
+    background: var(--teal);
+    border-radius: 3px;
   }
 
   nav h1 {
     font-family: var(--font-display);
-    font-size: 17px;
-    font-weight: 700;
-    color: var(--color-white);
-    letter-spacing: 0.01em;
+    font-size: 16px; font-weight: 700;
+    color: var(--white);
   }
 
-  nav .nav-links {
+  nav button {
     margin-left: auto;
-    display: flex;
-    gap: 20px;
-  }
-
-  nav .nav-links button {
-    background: none;
-    border: none;
-    color: #8BAAC4;
-    font-family: var(--font-body);
-    font-size: 13px;
-    font-weight: 500;
+    background: none; border: none;
+    color: #8BAAC4; font-family: var(--font-body);
+    font-size: 13px; font-weight: 500;
     cursor: pointer;
-    padding: 4px 0;
-    transition: color 0.2s ease;
   }
 
-  nav .nav-links button:hover {
-    color: var(--color-white);
+  nav button:hover { color: var(--white); }
+
+  /* ── Main ── */
+  .main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 24px 20px;
+    padding-top: 15vh;
+    gap: 16px;
   }
 
-  /* ── Hero Band ── */
-  .hero-band {
-    background: var(--color-gray-band);
-    padding: 24px var(--page-padding);
-    border-bottom: var(--border-default);
-  }
-
-  .hero-band h2 {
-    font-family: var(--font-display);
-    font-size: 24px;
-    font-weight: 700;
-    color: var(--color-black);
-  }
-
-  .hero-band p {
-    font-size: 13px;
-    color: var(--color-gray-mid);
-    margin-top: 4px;
-  }
-
-  /* ── Content Area ── */
-  .container {
-    max-width: var(--max-width);
-    margin: 0 auto;
-    padding: 32px var(--page-padding);
-  }
-
-  /* ── Settings Panel ── */
+  /* ── Settings ── */
   .settings-panel {
     display: none;
-    background: var(--color-offwhite);
-    border: var(--border-default);
-    border-radius: var(--radius-lg);
-    padding: 18px 22px;
-    margin-bottom: 24px;
+    width: 100%; max-width: 480px;
+    background: var(--navy);
+    border: 1px solid var(--navy-light);
+    border-radius: 4px;
+    padding: 16px;
   }
 
   .settings-panel.open { display: block; }
 
   .settings-panel h3 {
     font-family: var(--font-display);
-    font-size: 17px;
-    font-weight: 600;
-    color: var(--color-black);
-    margin-bottom: 16px;
+    font-size: 15px; margin-bottom: 12px;
   }
 
-  .setting-group {
-    margin-bottom: 14px;
-  }
+  .setting-group { margin-bottom: 12px; }
 
   .setting-group label {
-    display: block;
-    font-size: 14px;
-    font-weight: 700;
-    margin-bottom: 4px;
-    color: var(--color-charcoal);
+    display: block; font-size: 13px;
+    font-weight: 600; margin-bottom: 2px;
   }
 
   .setting-group small {
-    display: block;
-    font-size: 11px;
-    color: var(--color-gray-mid);
-    margin-bottom: 8px;
+    display: block; font-size: 11px;
+    color: var(--gray-mid); margin-bottom: 6px;
   }
 
-  .setting-group input[type="password"],
-  .setting-group input[type="text"] {
-    width: 100%;
-    padding: 10px 12px;
-    border: 1px solid var(--color-gray-light);
-    border-radius: var(--radius-md);
-    font-size: 14px;
+  .setting-group input {
+    width: 100%; padding: 8px 10px;
+    border: 1px solid var(--navy-light);
+    border-radius: 4px; font-size: 13px;
     font-family: var(--font-body);
-    background: var(--color-white);
-    color: var(--color-charcoal);
-    transition: border-color 0.15s ease;
+    background: var(--navy-deep); color: var(--white);
   }
 
   .setting-group input:focus {
-    outline: none;
-    border-color: var(--color-teal);
+    outline: none; border-color: var(--teal);
   }
 
-  .engine-toggle {
-    display: flex;
-    gap: 8px;
-    margin-top: 8px;
-  }
+  .engine-toggle { display: flex; gap: 6px; margin-top: 6px; }
 
   .engine-btn {
-    flex: 1;
-    padding: 10px;
-    border: var(--border-default);
-    border-radius: var(--radius-md);
-    background: var(--color-white);
-    cursor: pointer;
-    font-size: 13px;
-    font-weight: 600;
-    font-family: var(--font-body);
-    text-align: center;
-    color: var(--color-gray-mid);
-    transition: all 0.2s ease;
+    flex: 1; padding: 8px;
+    border: 1px solid var(--navy-light);
+    border-radius: 4px; background: var(--navy-deep);
+    color: var(--gray-mid); font-size: 12px;
+    font-weight: 600; font-family: var(--font-body);
+    cursor: pointer; text-align: center;
   }
 
   .engine-btn.active {
-    border-color: var(--color-teal);
-    background: var(--color-teal-light);
-    color: var(--color-teal);
+    border-color: var(--teal);
+    background: rgba(42,127,165,0.15);
+    color: var(--teal);
   }
 
-  /* ── Recorder Card ── */
-  .recorder-card {
-    background: var(--color-white);
-    border: var(--border-default);
-    border-left: var(--border-accent-width) solid var(--color-teal);
-    border-radius: var(--radius-lg);
-    padding: 32px;
+  /* ── Recorder ── */
+  .recorder {
     text-align: center;
-    margin-bottom: 24px;
   }
 
   .record-btn {
-    width: 88px;
-    height: 88px;
+    width: 80px; height: 80px;
     border-radius: 50%;
-    border: 3px solid var(--color-red);
-    background: var(--color-white);
+    border: 3px solid var(--red);
+    background: transparent;
     cursor: pointer;
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    transition: all 0.2s ease;
-    position: relative;
+    transition: background 0.2s ease;
   }
 
-  .record-btn:hover {
-    border-color: var(--color-red);
-    background: var(--color-red-light);
-  }
+  .record-btn:hover { background: rgba(176,39,29,0.1); }
 
   .record-btn .inner {
-    width: 36px;
-    height: 36px;
-    background: var(--color-red);
+    width: 32px; height: 32px;
+    background: var(--red);
     border-radius: 50%;
     transition: all 0.2s ease;
   }
 
   .record-btn.recording .inner {
-    width: 24px;
-    height: 24px;
-    border-radius: var(--radius-sm);
+    width: 22px; height: 22px;
+    border-radius: 3px;
   }
 
   .record-btn.recording {
-    animation: pulse-ring 1.5s ease-in-out infinite;
+    animation: pulse 1.5s ease-in-out infinite;
   }
 
-  @keyframes pulse-ring {
-    0%, 100% { border-color: var(--color-red); }
+  @keyframes pulse {
+    0%, 100% { border-color: var(--red); }
     50% { border-color: rgba(176,39,29,0.3); }
   }
 
   .timer {
     font-family: var(--font-display);
-    font-size: 22px;
-    font-weight: 700;
-    margin-top: 14px;
+    font-size: 20px; font-weight: 700;
+    margin-top: 10px;
     font-variant-numeric: tabular-nums;
-    color: var(--color-black);
   }
 
-  .recording-label {
-    font-size: 13px;
-    color: var(--color-gray-mid);
+  .record-label {
+    font-size: 12px; color: var(--gray-mid);
     margin-top: 4px;
   }
 
-  /* ── Waveform ── */
-  .waveform-container {
-    margin-top: 14px;
-    height: 48px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 3px;
+  .waveform {
+    margin-top: 10px; height: 36px;
+    display: flex; align-items: center;
+    justify-content: center; gap: 2px;
   }
 
   .waveform-bar {
-    width: 3px;
-    background: var(--color-teal);
+    width: 3px; height: 4px;
+    background: var(--teal);
     border-radius: 2px;
     transition: height 0.1s ease;
-    height: 4px;
   }
 
-  /* ── Transcript ── */
-  .transcript-card {
-    background: var(--color-white);
-    border: var(--border-default);
-    border-left: var(--border-accent-width) solid var(--color-navy);
-    border-radius: var(--radius-lg);
-    padding: 18px 22px;
-    margin-bottom: 24px;
-    display: none;
-  }
-
-  .transcript-card.visible { display: block; }
-
-  .transcript-card h3 {
-    font-family: var(--font-display);
-    font-size: 17px;
-    font-weight: 600;
-    color: var(--color-black);
-    margin-bottom: 10px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-
-  .transcript-card textarea {
-    width: 100%;
-    min-height: 200px;
-    border: 1px solid var(--color-gray-light);
-    border-radius: var(--radius-md);
-    padding: 10px 12px;
-    font-size: 14px;
-    font-family: var(--font-body);
-    line-height: 1.6;
-    resize: vertical;
-    color: var(--color-charcoal);
-    transition: border-color 0.15s ease;
-  }
-
-  .transcript-card textarea:focus {
-    outline: none;
-    border-color: var(--color-teal);
-  }
-
-  .transcript-status {
-    font-size: 11px;
-    color: var(--color-gray-mid);
-  }
-
+  /* ── Analyze Button ── */
   .analyze-btn {
-    display: inline-block;
-    margin-top: 14px;
-    padding: 12px 30px;
-    background: var(--color-teal);
-    color: var(--color-white);
-    border: none;
-    border-radius: var(--radius-md);
-    font-size: 14px;
-    font-weight: 700;
+    padding: 12px 32px;
+    background: var(--teal);
+    color: var(--white);
+    border: none; border-radius: 4px;
+    font-size: 14px; font-weight: 700;
     font-family: var(--font-body);
     cursor: pointer;
     transition: background 0.2s ease;
   }
 
-  .analyze-btn:hover {
-    background: var(--color-navy);
+  .analyze-btn:hover { background: var(--navy); }
+  .analyze-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+  /* ── Error ── */
+  .error-msg {
+    width: 100%; max-width: 480px;
+    background: rgba(176,39,29,0.15);
+    border: 1px solid var(--red);
+    color: var(--red-light);
+    padding: 8px 12px; border-radius: 4px;
+    font-size: 13px; display: none;
   }
 
-  .analyze-btn:disabled {
-    opacity: 0.4;
-    cursor: not-allowed;
-    background: var(--color-teal);
-  }
+  .error-msg.visible { display: block; }
 
   /* ── Spinner ── */
   .spinner {
-    display: none;
-    text-align: center;
-    padding: 36px;
+    display: none; text-align: center; padding: 16px;
   }
 
   .spinner.visible { display: block; }
 
   .spinner-ring {
-    width: 40px;
-    height: 40px;
-    border: 3px solid var(--color-gray-band);
-    border-top-color: var(--color-teal);
+    width: 36px; height: 36px;
+    border: 3px solid var(--navy-light);
+    border-top-color: var(--teal);
     border-radius: 50%;
     animation: spin 0.9s linear infinite;
-    margin: 0 auto 14px;
+    margin: 0 auto 10px;
   }
 
   @keyframes spin { to { transform: rotate(360deg); } }
 
-  .spinner p {
-    color: var(--color-gray-mid);
-    font-size: 13px;
-  }
+  .spinner p { color: var(--gray-mid); font-size: 13px; }
 
   /* ── Results ── */
-  .results { display: none; }
+  .results {
+    display: none;
+    width: 100%; max-width: 640px;
+  }
+
   .results.visible { display: block; }
 
   .results-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 16px;
+    display: flex; justify-content: space-between;
+    align-items: center; margin-bottom: 12px;
   }
 
   .results-header h2 {
     font-family: var(--font-display);
-    font-size: 24px;
-    font-weight: 700;
-    color: var(--color-black);
+    font-size: 20px; font-weight: 700;
   }
 
-  .results-actions {
-    display: flex;
-    gap: 8px;
-  }
+  .results-actions { display: flex; gap: 6px; }
 
   .btn-sm {
-    padding: 8px 16px;
-    border: var(--border-default);
-    border-radius: var(--radius-md);
-    background: var(--color-white);
+    padding: 6px 12px;
+    border: 1px solid var(--navy-light);
+    border-radius: 4px; background: var(--navy);
+    color: var(--gray-mid); font-size: 12px;
+    font-weight: 500; font-family: var(--font-body);
     cursor: pointer;
-    font-size: 13px;
-    font-weight: 500;
-    font-family: var(--font-body);
-    color: var(--color-gray-mid);
-    transition: border-color 0.2s ease;
   }
 
-  .btn-sm:hover {
-    border-color: var(--color-teal);
-    color: var(--color-charcoal);
-  }
+  .btn-sm:hover { border-color: var(--teal); color: var(--white); }
 
   /* ── Result Cards ── */
   .result-card {
-    background: var(--color-white);
-    border: var(--border-default);
-    border-left: var(--border-accent-width) solid var(--color-teal);
-    border-radius: var(--radius-lg);
-    padding: 18px 22px;
-    margin-bottom: 14px;
-    position: relative;
+    background: var(--navy);
+    border: 1px solid var(--navy-light);
+    border-left: 4px solid var(--teal);
+    border-radius: 4px;
+    padding: 14px 16px;
+    margin-bottom: 10px;
   }
 
-  .result-card.gold-border {
-    border-left-color: var(--color-gold);
-  }
-
-  .result-card.navy-border {
-    border-left-color: var(--color-navy);
-  }
-
-  .result-card.green-border {
-    border-left-color: var(--color-green);
-  }
+  .result-card.gold-border { border-left-color: var(--gold); }
+  .result-card.green-border { border-left-color: var(--green); }
+  .result-card.navy-accent { border-left-color: var(--teal-border); }
 
   .result-card h3 {
     font-family: var(--font-display);
-    font-size: 17px;
-    font-weight: 600;
-    color: var(--color-black);
-    margin-bottom: 10px;
-    display: flex;
-    justify-content: space-between;
+    font-size: 14px; font-weight: 600;
+    margin-bottom: 8px;
+    display: flex; justify-content: space-between;
     align-items: center;
   }
 
   .overline {
-    font-family: var(--font-body);
-    font-size: 10px;
-    font-weight: 700;
+    font-size: 10px; font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.12em;
-    color: var(--color-gray-mid);
-    margin-bottom: 4px;
+    color: var(--gray-mid);
+    margin-bottom: 2px;
   }
 
-  .result-card .copy-btn {
+  .copy-btn {
     background: none;
-    border: var(--border-default);
-    border-radius: var(--radius-md);
-    padding: 4px 10px;
-    font-size: 11px;
-    font-weight: 600;
+    border: 1px solid var(--navy-light);
+    border-radius: 4px; padding: 2px 8px;
+    font-size: 10px; font-weight: 600;
     font-family: var(--font-body);
-    cursor: pointer;
-    color: var(--color-gray-mid);
-    transition: all 0.2s ease;
+    cursor: pointer; color: var(--gray-mid);
   }
 
-  .result-card .copy-btn:hover {
-    border-color: var(--color-teal);
-    color: var(--color-teal);
-  }
-
-  .result-card .copy-btn.copied {
-    background: var(--color-teal);
-    color: var(--color-white);
-    border-color: var(--color-teal);
-  }
+  .copy-btn:hover { border-color: var(--teal); color: var(--teal); }
+  .copy-btn.copied { background: var(--teal); color: var(--white); border-color: var(--teal); }
 
   .result-card p, .result-card li {
-    font-size: 14px;
-    line-height: 1.7;
-    color: var(--color-charcoal);
+    font-size: 13px; line-height: 1.6; color: var(--offwhite);
   }
 
-  .result-card ul, .result-card ol {
-    padding-left: 1.2rem;
-  }
+  .result-card ol { padding-left: 1.2rem; }
+  .result-card li { margin-bottom: 4px; }
 
-  .result-card li {
-    margin-bottom: 6px;
-  }
-
-  /* ── Quote Items ── */
   .quote-item {
-    padding: 10px 0;
-    border-bottom: 1px solid var(--color-gray-band);
-    font-size: 14px;
-    color: var(--color-charcoal);
-    line-height: 1.6;
+    padding: 6px 0;
+    border-bottom: 1px solid var(--navy-light);
+    font-size: 13px; line-height: 1.5;
+    color: var(--offwhite);
   }
 
   .quote-item:last-child { border-bottom: none; }
 
   .quote-number {
     font-family: var(--font-display);
-    font-weight: 700;
-    color: var(--color-teal);
-    font-size: 13px;
-    margin-right: 8px;
+    font-weight: 700; color: var(--teal);
+    font-size: 12px; margin-right: 6px;
   }
 
-  /* ── Verse References ── */
   .verse-ref {
     font-family: var(--font-display);
-    font-weight: 700;
-    color: var(--color-gold);
+    font-weight: 700; color: var(--gold);
   }
 
-  /* ── Elevator Pitch ── */
   .elevator-pitch {
     font-family: var(--font-display);
-    font-size: 19px;
-    font-weight: 600;
-    text-align: center;
-    padding: 16px;
-    background: var(--color-teal-light);
-    border: 1px solid var(--color-teal-border);
-    border-radius: var(--radius-md);
-    color: var(--color-navy);
+    font-size: 16px; font-weight: 600;
+    text-align: center; padding: 12px;
+    background: rgba(42,127,165,0.12);
+    border: 1px solid var(--teal-border);
+    border-radius: 4px;
+    color: var(--teal-border);
     line-height: 1.5;
   }
 
-  /* ── Prayer ── */
   .prayer-text {
-    font-style: italic;
-    line-height: 1.8;
-    color: var(--color-charcoal);
-  }
-
-  /* ── Error ── */
-  .error-msg {
-    background: var(--color-red-light);
-    border: 1px solid var(--color-red);
-    color: var(--color-red);
-    padding: 10px 14px;
-    border-radius: var(--radius-md);
-    margin-bottom: 14px;
-    font-size: 13px;
-    display: none;
-  }
-
-  .error-msg.visible { display: block; }
-
-  /* ── Footer ── */
-  footer {
-    background: var(--color-gray-band);
-    border-top: var(--border-default);
-    padding: 16px var(--page-padding);
-    margin-top: 48px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-
-  footer span {
-    font-size: 11px;
-    color: var(--color-gray-mid);
+    font-style: italic; line-height: 1.7;
+    color: var(--offwhite);
   }
 
   /* ── Responsive ── */
-  @media (max-width: 600px) {
-    .container { padding: 16px; }
-    nav { padding: 0 16px; }
-    .hero-band { padding: 16px; }
-    .hero-band h2 { font-size: 20px; }
-    .record-btn { width: 72px; height: 72px; }
-    .record-btn .inner { width: 28px; height: 28px; }
-    .timer { font-size: 19px; }
-    .elevator-pitch { font-size: 16px; }
-    footer { flex-direction: column; gap: 8px; text-align: center; }
+  @media (max-width: 480px) {
+    .record-btn { width: 68px; height: 68px; }
+    .record-btn .inner { width: 26px; height: 26px; }
+    .timer { font-size: 18px; }
   }
 
-  /* ── Fade-up animation ── */
+  /* ── Animations ── */
   @keyframes fadeUp {
-    from { opacity: 0; transform: translateY(12px); }
+    from { opacity: 0; transform: translateY(8px); }
     to { opacity: 1; transform: translateY(0); }
   }
 
@@ -615,122 +388,101 @@
     animation: fadeUp 0.4s ease both;
   }
 
-  .results.visible .result-card:nth-child(2) { animation-delay: 0.07s; }
-  .results.visible .result-card:nth-child(3) { animation-delay: 0.14s; }
-  .results.visible .result-card:nth-child(4) { animation-delay: 0.21s; }
-  .results.visible .result-card:nth-child(5) { animation-delay: 0.28s; }
-  .results.visible .result-card:nth-child(6) { animation-delay: 0.35s; }
+  .results.visible .result-card:nth-child(2) { animation-delay: 0.06s; }
+  .results.visible .result-card:nth-child(3) { animation-delay: 0.12s; }
+  .results.visible .result-card:nth-child(4) { animation-delay: 0.18s; }
+  .results.visible .result-card:nth-child(5) { animation-delay: 0.24s; }
+  .results.visible .result-card:nth-child(6) { animation-delay: 0.30s; }
 </style>
 </head>
 <body>
 
-<!-- Nav Bar -->
 <nav>
   <div class="logo-mark"></div>
   <h1>Sermon Recorder</h1>
-  <div class="nav-links">
-    <button onclick="toggleSettings()">Settings</button>
-  </div>
+  <button onclick="toggleSettings()">Settings</button>
 </nav>
 
-<!-- Hero Band -->
-<div class="hero-band">
-  <h2>Record & Analyze</h2>
-  <p>Capture a sermon, transcribe it, and surface the insights that matter</p>
-</div>
-
-<div class="container">
+<div class="main">
   <!-- Settings -->
   <div class="settings-panel" id="settingsPanel">
     <h3>Configuration</h3>
     <div class="setting-group">
       <label>Anthropic API Key</label>
-      <small>Required for sermon analysis. Get one at console.anthropic.com</small>
+      <small>Required for analysis — console.anthropic.com</small>
       <input type="password" id="anthropicKey" placeholder="sk-ant-..." oninput="saveSetting('anthropicKey', this.value)">
     </div>
     <div class="setting-group">
       <label>OpenAI API Key (optional)</label>
-      <small>Only needed if using Whisper for transcription</small>
+      <small>Only for Whisper transcription</small>
       <input type="password" id="openaiKey" placeholder="sk-..." oninput="saveSetting('openaiKey', this.value)">
     </div>
     <div class="setting-group">
       <label>Transcription Engine</label>
       <div class="engine-toggle">
         <button class="engine-btn active" id="engineBrowser" onclick="setEngine('browser')">Browser (Free)</button>
-        <button class="engine-btn" id="engineWhisper" onclick="setEngine('whisper')">Whisper (Accurate)</button>
+        <button class="engine-btn" id="engineWhisper" onclick="setEngine('whisper')">Whisper</button>
       </div>
     </div>
-  </div>
-
-  <!-- Recorder -->
-  <div class="recorder-card">
-    <button class="record-btn" id="recordBtn" onclick="toggleRecording()">
-      <div class="inner"></div>
-    </button>
-    <div class="timer" id="timer">00:00</div>
-    <div class="recording-label" id="recordLabel">Tap to start recording</div>
-    <div class="waveform-container" id="waveform"></div>
   </div>
 
   <!-- Error -->
   <div class="error-msg" id="errorMsg"></div>
 
-  <!-- Transcript -->
-  <div class="transcript-card" id="transcriptCard">
-    <h3>
-      Transcript
-      <span class="transcript-status" id="transcriptStatus"></span>
-    </h3>
-    <textarea id="transcriptText" placeholder="Your sermon transcript will appear here. You can also paste or type a transcript manually."></textarea>
-    <button class="analyze-btn" id="analyzeBtn" onclick="analyzeSermon()">Analyze Sermon</button>
+  <!-- Recorder -->
+  <div class="recorder" id="recorderSection">
+    <button class="record-btn" id="recordBtn" onclick="toggleRecording()">
+      <div class="inner"></div>
+    </button>
+    <div class="timer" id="timer">00:00</div>
+    <div class="record-label" id="recordLabel">Tap to record</div>
+    <div class="waveform" id="waveform"></div>
+    <div style="margin-top:16px">
+      <button class="analyze-btn" id="analyzeBtn" onclick="analyzeSermon()" style="display:none">Analyze Sermon</button>
+    </div>
   </div>
 
-  <!-- Loading -->
+  <!-- Spinner -->
   <div class="spinner" id="spinner">
     <div class="spinner-ring"></div>
-    <p id="spinnerText">Analyzing sermon with Claude...</p>
+    <p>Analyzing with Claude...</p>
   </div>
 
   <!-- Results -->
   <div class="results" id="results">
     <div class="results-header">
-      <h2>Sermon Analysis</h2>
+      <h2>Analysis</h2>
       <div class="results-actions">
         <button class="btn-sm" onclick="copyAll()">Copy All</button>
         <button class="btn-sm" onclick="downloadResults()">Download</button>
       </div>
     </div>
 
-    <!-- Elevator Pitch -->
-    <div class="result-card navy-border" id="pitchCard">
+    <div class="result-card navy-accent" id="pitchCard">
       <div class="overline">Elevator Pitch</div>
       <h3><span></span><button class="copy-btn" onclick="copySection(this, 'pitch')">Copy</button></h3>
       <div class="elevator-pitch" id="pitchContent"></div>
     </div>
 
-    <!-- Summary -->
     <div class="result-card" id="summaryCard">
       <div class="overline">Summary</div>
       <h3>Main Points <button class="copy-btn" onclick="copySection(this, 'summary')">Copy</button></h3>
       <div id="summaryContent"></div>
     </div>
 
-    <!-- Key Quotes -->
     <div class="result-card gold-border" id="quotesCard">
       <div class="overline">Sermon Arc</div>
       <h3>12 Key Quotes <button class="copy-btn" onclick="copySection(this, 'quotes')">Copy</button></h3>
       <div id="quotesContent"></div>
     </div>
 
-    <!-- Bible Verses -->
     <div class="result-card green-border" id="versesCard">
       <div class="overline">Scripture</div>
-      <h3>Scripture References <button class="copy-btn" onclick="copySection(this, 'verses')">Copy</button></h3>
+      <h3>References <button class="copy-btn" onclick="copySection(this, 'verses')">Copy</button></h3>
       <div id="versesContent"></div>
     </div>
 
-    <!-- Prayer -->
-    <div class="result-card navy-border" id="prayerCard">
+    <div class="result-card navy-accent" id="prayerCard">
       <div class="overline">Response</div>
       <h3>Prayer <button class="copy-btn" onclick="copySection(this, 'prayer')">Copy</button></h3>
       <div class="prayer-text" id="prayerContent"></div>
@@ -738,164 +490,100 @@
   </div>
 </div>
 
-<!-- Footer -->
-<footer>
-  <span>Sermon Recorder & Analyzer</span>
-  <span>Powered by Claude AI</span>
-</footer>
-
 <script>
-  // ============ State ============
   let state = {
-    recording: false,
-    mediaRecorder: null,
-    audioChunks: [],
-    audioBlob: null,
-    timerInterval: null,
-    startTime: null,
-    recognition: null,
-    transcript: '',
-    engine: 'browser',
-    analyzerNode: null,
-    animFrame: null,
-    analysisData: null
+    recording: false, mediaRecorder: null, audioChunks: [], audioBlob: null,
+    timerInterval: null, startTime: null, recognition: null, transcript: '',
+    engine: 'browser', analyzerNode: null, animFrame: null, analysisData: null
   };
 
-  // ============ Init ============
   (function init() {
     document.getElementById('anthropicKey').value = localStorage.getItem('anthropicKey') || '';
     document.getElementById('openaiKey').value = localStorage.getItem('openaiKey') || '';
     state.engine = localStorage.getItem('engine') || 'browser';
     updateEngineUI();
-
-    const waveform = document.getElementById('waveform');
-    for (let i = 0; i < 40; i++) {
-      const bar = document.createElement('div');
-      bar.className = 'waveform-bar';
-      waveform.appendChild(bar);
-    }
-
-    const saved = localStorage.getItem('lastTranscript');
-    if (saved) {
-      document.getElementById('transcriptText').value = saved;
-      document.getElementById('transcriptCard').classList.add('visible');
+    const wf = document.getElementById('waveform');
+    for (let i = 0; i < 32; i++) {
+      const b = document.createElement('div');
+      b.className = 'waveform-bar';
+      wf.appendChild(b);
     }
   })();
 
-  // ============ Settings ============
-  function toggleSettings() {
-    document.getElementById('settingsPanel').classList.toggle('open');
-  }
-
-  function saveSetting(key, value) {
-    localStorage.setItem(key, value);
-  }
-
-  function setEngine(engine) {
-    state.engine = engine;
-    localStorage.setItem('engine', engine);
-    updateEngineUI();
-  }
-
+  function toggleSettings() { document.getElementById('settingsPanel').classList.toggle('open'); }
+  function saveSetting(k, v) { localStorage.setItem(k, v); }
+  function setEngine(e) { state.engine = e; localStorage.setItem('engine', e); updateEngineUI(); }
   function updateEngineUI() {
     document.getElementById('engineBrowser').classList.toggle('active', state.engine === 'browser');
     document.getElementById('engineWhisper').classList.toggle('active', state.engine === 'whisper');
   }
 
-  // ============ Recording ============
   async function toggleRecording() {
-    if (state.recording) {
-      stopRecording();
-    } else {
-      await startRecording();
-    }
+    state.recording ? stopRecording() : await startRecording();
   }
 
   async function startRecording() {
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-
-      const audioCtx = new AudioContext();
-      const source = audioCtx.createMediaStreamSource(stream);
-      state.analyzerNode = audioCtx.createAnalyser();
+      const ctx = new AudioContext();
+      const src = ctx.createMediaStreamSource(stream);
+      state.analyzerNode = ctx.createAnalyser();
       state.analyzerNode.fftSize = 128;
-      source.connect(state.analyzerNode);
+      src.connect(state.analyzerNode);
       animateWaveform();
 
       state.mediaRecorder = new MediaRecorder(stream);
       state.audioChunks = [];
-
-      state.mediaRecorder.ondataavailable = (e) => {
-        if (e.data.size > 0) state.audioChunks.push(e.data);
-      };
-
+      state.mediaRecorder.ondataavailable = e => { if (e.data.size > 0) state.audioChunks.push(e.data); };
       state.mediaRecorder.onstop = () => {
         state.audioBlob = new Blob(state.audioChunks, { type: 'audio/webm' });
         stream.getTracks().forEach(t => t.stop());
         cancelAnimationFrame(state.animFrame);
         resetWaveform();
-
-        if (state.engine === 'whisper') {
-          transcribeWithWhisper(state.audioBlob);
-        }
+        if (state.engine === 'whisper') transcribeWithWhisper(state.audioBlob);
       };
-
       state.mediaRecorder.start(1000);
 
-      if (state.engine === 'browser') {
-        startBrowserTranscription();
-      }
+      if (state.engine === 'browser') startBrowserTranscription();
 
       state.recording = true;
       state.startTime = Date.now();
       document.getElementById('recordBtn').classList.add('recording');
       document.getElementById('recordLabel').textContent = 'Recording... tap to stop';
-      document.getElementById('transcriptCard').classList.add('visible');
-      document.getElementById('transcriptStatus').textContent = state.engine === 'browser' ? 'Transcribing live...' : 'Will transcribe after recording';
+      document.getElementById('analyzeBtn').style.display = 'none';
       startTimer();
       hideError();
-
     } catch (err) {
-      showError('Microphone access denied. Please allow microphone access and try again.');
+      showError('Microphone access denied. Allow microphone access and try again.');
     }
   }
 
   function stopRecording() {
     state.recording = false;
     state.mediaRecorder.stop();
-    if (state.recognition) {
-      state.recognition.stop();
-      state.recognition = null;
-    }
+    if (state.recognition) { state.recognition.stop(); state.recognition = null; }
     clearInterval(state.timerInterval);
     document.getElementById('recordBtn').classList.remove('recording');
     document.getElementById('recordLabel').textContent = 'Recording complete';
-    document.getElementById('transcriptStatus').textContent = state.engine === 'whisper' ? 'Sending to Whisper...' : 'Transcription complete';
+    document.getElementById('analyzeBtn').style.display = 'inline-block';
   }
 
-  // ============ Timer ============
   function startTimer() {
     state.timerInterval = setInterval(() => {
-      const elapsed = Date.now() - state.startTime;
-      const mins = Math.floor(elapsed / 60000);
-      const secs = Math.floor((elapsed % 60000) / 1000);
-      document.getElementById('timer').textContent =
-        String(mins).padStart(2, '0') + ':' + String(secs).padStart(2, '0');
+      const e = Date.now() - state.startTime;
+      const m = Math.floor(e / 60000), s = Math.floor((e % 60000) / 1000);
+      document.getElementById('timer').textContent = String(m).padStart(2,'0') + ':' + String(s).padStart(2,'0');
     }, 200);
   }
 
-  // ============ Waveform ============
   function animateWaveform() {
     const bars = document.querySelectorAll('.waveform-bar');
     const data = new Uint8Array(state.analyzerNode.frequencyBinCount);
-
     function draw() {
       state.analyzerNode.getByteFrequencyData(data);
       const step = Math.floor(data.length / bars.length);
       bars.forEach((bar, i) => {
-        const value = data[i * step] || 0;
-        const height = Math.max(4, (value / 255) * 44);
-        bar.style.height = height + 'px';
+        bar.style.height = Math.max(4, (data[i * step] || 0) / 255 * 32) + 'px';
       });
       state.animFrame = requestAnimationFrame(draw);
     }
@@ -903,113 +591,55 @@
   }
 
   function resetWaveform() {
-    document.querySelectorAll('.waveform-bar').forEach(bar => {
-      bar.style.height = '4px';
-    });
+    document.querySelectorAll('.waveform-bar').forEach(b => b.style.height = '4px');
   }
 
-  // ============ Browser Transcription ============
   function startBrowserTranscription() {
-    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-    if (!SpeechRecognition) {
-      showError('Browser speech recognition not supported. Try Chrome or Edge, or switch to Whisper in settings.');
-      return;
-    }
-
-    state.recognition = new SpeechRecognition();
+    const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (!SR) { showError('Browser speech recognition not supported. Try Chrome or switch to Whisper.'); return; }
+    state.recognition = new SR();
     state.recognition.continuous = true;
     state.recognition.interimResults = true;
     state.recognition.lang = 'en-US';
-
-    let finalTranscript = '';
-
-    state.recognition.onresult = (event) => {
+    let final = '';
+    state.recognition.onresult = e => {
       let interim = '';
-      for (let i = event.resultIndex; i < event.results.length; i++) {
-        const result = event.results[i];
-        if (result.isFinal) {
-          finalTranscript += result[0].transcript + ' ';
-        } else {
-          interim += result[0].transcript;
-        }
+      for (let i = e.resultIndex; i < e.results.length; i++) {
+        if (e.results[i].isFinal) final += e.results[i][0].transcript + ' ';
+        else interim += e.results[i][0].transcript;
       }
-      const textArea = document.getElementById('transcriptText');
-      textArea.value = finalTranscript + interim;
-      state.transcript = finalTranscript;
-      localStorage.setItem('lastTranscript', textArea.value);
+      state.transcript = final + interim;
     };
-
-    state.recognition.onerror = (event) => {
-      if (event.error !== 'aborted' && event.error !== 'no-speech') {
-        console.warn('Speech recognition error:', event.error);
-      }
-    };
-
-    state.recognition.onend = () => {
-      if (state.recording && state.engine === 'browser') {
-        try { state.recognition.start(); } catch(e) {}
-      }
-    };
-
+    state.recognition.onerror = e => {};
+    state.recognition.onend = () => { if (state.recording && state.engine === 'browser') try { state.recognition.start(); } catch(x) {} };
     state.recognition.start();
   }
 
-  // ============ Whisper Transcription ============
-  async function transcribeWithWhisper(audioBlob) {
-    const apiKey = localStorage.getItem('openaiKey');
-    if (!apiKey) {
-      showError('OpenAI API key is required for Whisper transcription. Add it in Settings.');
-      return;
-    }
-
-    document.getElementById('transcriptStatus').textContent = 'Transcribing with Whisper...';
-
+  async function transcribeWithWhisper(blob) {
+    const key = localStorage.getItem('openaiKey');
+    if (!key) { showError('OpenAI API key required for Whisper. Add it in Settings.'); return; }
+    document.getElementById('recordLabel').textContent = 'Transcribing with Whisper...';
     try {
-      const formData = new FormData();
-      formData.append('file', audioBlob, 'sermon.webm');
-      formData.append('model', 'whisper-1');
-      formData.append('language', 'en');
-
-      const response = await fetch('https://api.openai.com/v1/audio/transcriptions', {
-        method: 'POST',
-        headers: { 'Authorization': `Bearer ${apiKey}` },
-        body: formData
+      const fd = new FormData();
+      fd.append('file', blob, 'sermon.webm');
+      fd.append('model', 'whisper-1');
+      fd.append('language', 'en');
+      const r = await fetch('https://api.openai.com/v1/audio/transcriptions', {
+        method: 'POST', headers: { 'Authorization': `Bearer ${key}` }, body: fd
       });
-
-      if (!response.ok) {
-        const err = await response.json();
-        throw new Error(err.error?.message || 'Whisper API error');
-      }
-
-      const data = await response.json();
-      document.getElementById('transcriptText').value = data.text;
-      localStorage.setItem('lastTranscript', data.text);
-      document.getElementById('transcriptStatus').textContent = 'Whisper transcription complete';
-
+      if (!r.ok) throw new Error((await r.json()).error?.message || 'Whisper error');
+      state.transcript = (await r.json()).text;
+      document.getElementById('recordLabel').textContent = 'Transcription complete';
     } catch (err) {
-      showError('Whisper transcription failed: ' + err.message);
-      document.getElementById('transcriptStatus').textContent = 'Transcription failed';
+      showError('Whisper failed: ' + err.message);
     }
   }
 
-  // ============ Claude Analysis ============
   async function analyzeSermon() {
-    const apiKey = localStorage.getItem('anthropicKey');
-    if (!apiKey) {
-      showError('Please add your Anthropic API key in Settings to analyze sermons.');
-      return;
-    }
-
-    const transcript = document.getElementById('transcriptText').value.trim();
-    if (!transcript) {
-      showError('No transcript to analyze. Record a sermon or paste a transcript first.');
-      return;
-    }
-
-    if (transcript.length < 100) {
-      showError('The transcript seems too short for a meaningful analysis. Try recording more or pasting a fuller transcript.');
-      return;
-    }
+    const key = localStorage.getItem('anthropicKey');
+    if (!key) { showError('Add your Anthropic API key in Settings.'); return; }
+    const t = state.transcript?.trim();
+    if (!t || t.length < 50) { showError('Record a sermon first — transcript is too short.'); return; }
 
     document.getElementById('analyzeBtn').disabled = true;
     document.getElementById('spinner').classList.add('visible');
@@ -1018,63 +648,38 @@
 
     const prompt = `You are a skilled theologian and sermon analyst. Analyze the following sermon transcript and return a JSON object with exactly these keys:
 
-1. "elevator_pitch": A compelling 1-2 sentence summary that someone could use to tell a friend what this sermon was about. Make it conversational and engaging.
+1. "elevator_pitch": A compelling 1-2 sentence summary someone could use to tell a friend about this sermon. Conversational and engaging.
 
-2. "main_points": An array of 3-5 main points from the sermon. Each should be a clear, complete sentence summarizing a key theme or teaching.
+2. "main_points": An array of 3-5 main points. Each a clear, complete sentence.
 
-3. "key_quotes": An array of exactly 12 direct quotes from the sermon that capture the arc of the entire message — from opening to closing. Select quotes that represent the full journey of the sermon, not just the highlights. Each quote should be a meaningful, standalone statement.
+3. "key_quotes": An array of exactly 12 direct quotes capturing the arc of the entire message — opening to closing. The full journey, not just highlights.
 
-4. "bible_verses": An array of 2-3 objects, each with "reference" (e.g., "John 3:16") and "relevance" (1-2 sentences explaining how this verse directly connects to this specific sermon's message). Choose verses that speak precisely to what was taught — avoid generic or commonly-cited verses unless they truly fit.
+4. "bible_verses": An array of 2-3 objects with "reference" and "relevance" (1-2 sentences on how it connects to this sermon). Choose verses that speak precisely to what was taught.
 
-5. "prayer": A heartfelt prayer (3-5 sentences) inspired by the specific themes, challenges, and encouragements from this sermon. It should feel like a natural response to what was preached.
+5. "prayer": A heartfelt prayer (3-5 sentences) inspired by the specific themes of this sermon.
 
-Return ONLY valid JSON, no markdown formatting, no code blocks, no extra text.
+Return ONLY valid JSON, no markdown, no code blocks.
 
 SERMON TRANSCRIPT:
-${transcript}`;
+${t}`;
 
     try {
-      const response = await fetch('https://api.anthropic.com/v1/messages', {
+      const r = await fetch('https://api.anthropic.com/v1/messages', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'x-api-key': apiKey,
+          'x-api-key': key,
           'anthropic-version': '2023-06-01',
           'anthropic-dangerous-direct-browser-access': 'true'
         },
-        body: JSON.stringify({
-          model: 'claude-sonnet-4-6',
-          max_tokens: 4096,
-          messages: [{
-            role: 'user',
-            content: prompt
-          }]
-        })
+        body: JSON.stringify({ model: 'claude-sonnet-4-6', max_tokens: 4096, messages: [{ role: 'user', content: prompt }] })
       });
-
-      if (!response.ok) {
-        const err = await response.json();
-        throw new Error(err.error?.message || `API error: ${response.status}`);
-      }
-
-      const data = await response.json();
-      const text = data.content[0].text;
-
+      if (!r.ok) throw new Error((await r.json()).error?.message || `API error: ${r.status}`);
+      const text = (await r.json()).content[0].text;
       let analysis;
-      try {
-        analysis = JSON.parse(text);
-      } catch {
-        const match = text.match(/\{[\s\S]*\}/);
-        if (match) {
-          analysis = JSON.parse(match[0]);
-        } else {
-          throw new Error('Could not parse analysis results');
-        }
-      }
-
+      try { analysis = JSON.parse(text); } catch { const m = text.match(/\{[\s\S]*\}/); if (m) analysis = JSON.parse(m[0]); else throw new Error('Could not parse results'); }
       state.analysisData = analysis;
       renderResults(analysis);
-
     } catch (err) {
       showError('Analysis failed: ' + err.message);
     } finally {
@@ -1083,137 +688,63 @@ ${transcript}`;
     }
   }
 
-  // ============ Render Results ============
-  function renderResults(data) {
-    document.getElementById('pitchContent').textContent = data.elevator_pitch || '';
-
-    const summaryHtml = '<ol>' + (data.main_points || []).map(p => `<li>${escapeHtml(p)}</li>`).join('') + '</ol>';
-    document.getElementById('summaryContent').innerHTML = summaryHtml;
-
-    const quotesHtml = (data.key_quotes || []).map((q, i) =>
-      `<div class="quote-item"><span class="quote-number">${i + 1}.</span> "${escapeHtml(q)}"</div>`
-    ).join('');
-    document.getElementById('quotesContent').innerHTML = quotesHtml;
-
-    const versesHtml = (data.bible_verses || []).map(v =>
-      `<p style="margin-bottom:10px"><span class="verse-ref">${escapeHtml(v.reference)}</span> — ${escapeHtml(v.relevance)}</p>`
-    ).join('');
-    document.getElementById('versesContent').innerHTML = versesHtml;
-
-    document.getElementById('prayerContent').textContent = data.prayer || '';
-
+  function renderResults(d) {
+    document.getElementById('pitchContent').textContent = d.elevator_pitch || '';
+    document.getElementById('summaryContent').innerHTML = '<ol>' + (d.main_points || []).map(p => `<li>${esc(p)}</li>`).join('') + '</ol>';
+    document.getElementById('quotesContent').innerHTML = (d.key_quotes || []).map((q, i) => `<div class="quote-item"><span class="quote-number">${i+1}.</span> "${esc(q)}"</div>`).join('');
+    document.getElementById('versesContent').innerHTML = (d.bible_verses || []).map(v => `<p style="margin-bottom:8px"><span class="verse-ref">${esc(v.reference)}</span> — ${esc(v.relevance)}</p>`).join('');
+    document.getElementById('prayerContent').textContent = d.prayer || '';
     document.getElementById('results').classList.add('visible');
     document.getElementById('results').scrollIntoView({ behavior: 'smooth' });
   }
 
-  function escapeHtml(str) {
-    const div = document.createElement('div');
-    div.textContent = str;
-    return div.innerHTML;
-  }
+  function esc(s) { const d = document.createElement('div'); d.textContent = s; return d.innerHTML; }
 
-  // ============ Copy & Download ============
   function copySection(btn, section) {
     if (!state.analysisData) return;
     const d = state.analysisData;
     let text = '';
-
     switch (section) {
-      case 'pitch':
-        text = d.elevator_pitch;
-        break;
-      case 'summary':
-        text = 'MAIN POINTS\n' + (d.main_points || []).map((p, i) => `${i + 1}. ${p}`).join('\n');
-        break;
-      case 'quotes':
-        text = '12 KEY QUOTES\n' + (d.key_quotes || []).map((q, i) => `${i + 1}. "${q}"`).join('\n');
-        break;
-      case 'verses':
-        text = 'SCRIPTURE REFERENCES\n' + (d.bible_verses || []).map(v => `${v.reference} — ${v.relevance}`).join('\n\n');
-        break;
-      case 'prayer':
-        text = 'PRAYER\n' + d.prayer;
-        break;
+      case 'pitch': text = d.elevator_pitch; break;
+      case 'summary': text = 'MAIN POINTS\n' + (d.main_points||[]).map((p,i) => `${i+1}. ${p}`).join('\n'); break;
+      case 'quotes': text = '12 KEY QUOTES\n' + (d.key_quotes||[]).map((q,i) => `${i+1}. "${q}"`).join('\n'); break;
+      case 'verses': text = 'SCRIPTURE\n' + (d.bible_verses||[]).map(v => `${v.reference} — ${v.relevance}`).join('\n\n'); break;
+      case 'prayer': text = 'PRAYER\n' + d.prayer; break;
     }
-
     navigator.clipboard.writeText(text).then(() => {
-      btn.textContent = 'Copied';
-      btn.classList.add('copied');
-      setTimeout(() => {
-        btn.textContent = 'Copy';
-        btn.classList.remove('copied');
-      }, 2000);
+      btn.textContent = 'Copied'; btn.classList.add('copied');
+      setTimeout(() => { btn.textContent = 'Copy'; btn.classList.remove('copied'); }, 2000);
     });
   }
 
   function copyAll() {
     if (!state.analysisData) return;
     const d = state.analysisData;
-    const text = [
-      'SERMON ANALYSIS',
-      '='.repeat(40),
-      '',
-      'ELEVATOR PITCH',
-      d.elevator_pitch,
-      '',
-      'MAIN POINTS',
-      ...(d.main_points || []).map((p, i) => `${i + 1}. ${p}`),
-      '',
-      '12 KEY QUOTES',
-      ...(d.key_quotes || []).map((q, i) => `${i + 1}. "${q}"`),
-      '',
-      'SCRIPTURE REFERENCES',
-      ...(d.bible_verses || []).map(v => `${v.reference} — ${v.relevance}`),
-      '',
-      'PRAYER',
-      d.prayer
-    ].join('\n');
-
-    navigator.clipboard.writeText(text);
+    navigator.clipboard.writeText([
+      'SERMON ANALYSIS', '='.repeat(40), '', 'ELEVATOR PITCH', d.elevator_pitch, '',
+      'MAIN POINTS', ...(d.main_points||[]).map((p,i) => `${i+1}. ${p}`), '',
+      '12 KEY QUOTES', ...(d.key_quotes||[]).map((q,i) => `${i+1}. "${q}"`), '',
+      'SCRIPTURE', ...(d.bible_verses||[]).map(v => `${v.reference} — ${v.relevance}`), '',
+      'PRAYER', d.prayer
+    ].join('\n'));
   }
 
   function downloadResults() {
     if (!state.analysisData) return;
     const d = state.analysisData;
-    const text = [
-      'SERMON ANALYSIS',
-      '='.repeat(40),
-      '',
-      'ELEVATOR PITCH',
-      d.elevator_pitch,
-      '',
-      'MAIN POINTS',
-      ...(d.main_points || []).map((p, i) => `${i + 1}. ${p}`),
-      '',
-      '12 KEY QUOTES',
-      ...(d.key_quotes || []).map((q, i) => `${i + 1}. "${q}"`),
-      '',
-      'SCRIPTURE REFERENCES',
-      ...(d.bible_verses || []).map(v => `${v.reference}\n${v.relevance}`),
-      '',
-      'PRAYER',
-      d.prayer
-    ].join('\n');
-
-    const blob = new Blob([text], { type: 'text/plain' });
-    const url = URL.createObjectURL(blob);
+    const text = ['SERMON ANALYSIS','='.repeat(40),'','ELEVATOR PITCH',d.elevator_pitch,'',
+      'MAIN POINTS',...(d.main_points||[]).map((p,i)=>`${i+1}. ${p}`),'',
+      '12 KEY QUOTES',...(d.key_quotes||[]).map((q,i)=>`${i+1}. "${q}"`),'',
+      'SCRIPTURE',...(d.bible_verses||[]).map(v=>`${v.reference}\n${v.relevance}`),'',
+      'PRAYER',d.prayer].join('\n');
     const a = document.createElement('a');
-    a.href = url;
-    a.download = `sermon-analysis-${new Date().toISOString().slice(0, 10)}.txt`;
+    a.href = URL.createObjectURL(new Blob([text], { type: 'text/plain' }));
+    a.download = `sermon-${new Date().toISOString().slice(0,10)}.txt`;
     a.click();
-    URL.revokeObjectURL(url);
   }
 
-  // ============ Error Handling ============
-  function showError(msg) {
-    const el = document.getElementById('errorMsg');
-    el.textContent = msg;
-    el.classList.add('visible');
-  }
-
-  function hideError() {
-    document.getElementById('errorMsg').classList.remove('visible');
-  }
+  function showError(msg) { const el = document.getElementById('errorMsg'); el.textContent = msg; el.classList.add('visible'); }
+  function hideError() { document.getElementById('errorMsg').classList.remove('visible'); }
 </script>
 </body>
 </html>
