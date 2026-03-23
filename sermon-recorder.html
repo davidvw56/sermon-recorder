@@ -1132,6 +1132,7 @@ ${t}`;
     const text = document.getElementById('pasteText').value.trim();
     if (!text || text.length < 50) { showError('Paste more text — too short to analyze.'); return; }
     state.transcript = text;
+    document.getElementById('pasteText').value = '';
     analyzeSermon();
   }
 
@@ -1151,6 +1152,7 @@ ${t}`;
       let transcript = await fetchYouTubeTranscript(videoId);
       if (!transcript || transcript.length < 50) throw new Error('Could not fetch transcript. The video may not have captions available.');
       state.transcript = transcript;
+      document.getElementById('youtubeUrl').value = '';
       document.getElementById('ytBtn').textContent = 'Fetch & Analyze';
       document.getElementById('ytBtn').disabled = false;
       analyzeSermon();
