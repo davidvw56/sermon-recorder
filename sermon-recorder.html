@@ -208,6 +208,68 @@
     transition: height 0.1s ease;
   }
 
+  /* ── Input Mode Toggle ── */
+  .input-modes {
+    display: flex; gap: 8px;
+    margin-top: 16px; justify-content: center;
+  }
+
+  .mode-btn {
+    padding: 8px 16px;
+    border: 1px solid var(--navy-light);
+    border-radius: 4px; background: var(--navy);
+    color: var(--gray-mid); font-size: 12px;
+    font-weight: 600; font-family: var(--font-body);
+    cursor: pointer;
+  }
+
+  .mode-btn:hover { border-color: var(--teal); color: var(--white); }
+
+  /* ── Text / URL Input ── */
+  .alt-input {
+    display: none;
+    width: 100%; max-width: 480px;
+    margin-top: 12px;
+  }
+
+  .alt-input.visible { display: block; }
+
+  .alt-input textarea {
+    width: 100%; min-height: 120px;
+    padding: 10px 12px;
+    border: 1px solid var(--navy-light);
+    border-radius: 4px; font-size: 13px;
+    font-family: var(--font-body);
+    background: var(--navy); color: var(--white);
+    resize: vertical; line-height: 1.5;
+  }
+
+  .alt-input textarea:focus {
+    outline: none; border-color: var(--teal);
+  }
+
+  .alt-input input {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid var(--navy-light);
+    border-radius: 4px; font-size: 13px;
+    font-family: var(--font-body);
+    background: var(--navy); color: var(--white);
+  }
+
+  .alt-input input:focus {
+    outline: none; border-color: var(--teal);
+  }
+
+  .alt-input label {
+    display: block; font-size: 12px;
+    color: var(--gray-mid); margin-bottom: 6px;
+  }
+
+  .alt-input .analyze-btn {
+    margin-top: 10px;
+  }
+
   /* ── Analyze Button ── */
   .analyze-btn {
     padding: 12px 32px;
@@ -440,6 +502,24 @@
     <div style="margin-top:16px">
       <button class="analyze-btn" id="analyzeBtn" onclick="analyzeSermon()" style="display:none">Analyze Sermon</button>
     </div>
+    <div class="input-modes">
+      <button class="mode-btn" onclick="showInput('text')">Paste Text</button>
+      <button class="mode-btn" onclick="showInput('youtube')">YouTube URL</button>
+    </div>
+  </div>
+
+  <!-- Paste Text Input -->
+  <div class="alt-input" id="textInput">
+    <label>Paste sermon transcript or notes</label>
+    <textarea id="pasteText" placeholder="Paste your sermon text here..."></textarea>
+    <button class="analyze-btn" onclick="analyzeFromText()">Analyze Sermon</button>
+  </div>
+
+  <!-- YouTube URL Input -->
+  <div class="alt-input" id="youtubeInput">
+    <label>YouTube sermon URL</label>
+    <input type="text" id="youtubeUrl" placeholder="https://www.youtube.com/watch?v=...">
+    <button class="analyze-btn" id="ytBtn" onclick="analyzeFromYouTube()">Fetch & Analyze</button>
   </div>
 
   <!-- Spinner -->
@@ -741,6 +821,95 @@ ${t}`;
     a.href = URL.createObjectURL(new Blob([text], { type: 'text/plain' }));
     a.download = `sermon-${new Date().toISOString().slice(0,10)}.txt`;
     a.click();
+  }
+
+  // ============ Input Modes ============
+  function showInput(mode) {
+    const textEl = document.getElementById('textInput');
+    const ytEl = document.getElementById('youtubeInput');
+    if (mode === 'text') {
+      textEl.classList.toggle('visible');
+      ytEl.classList.remove('visible');
+    } else {
+      ytEl.classList.toggle('visible');
+      textEl.classList.remove('visible');
+    }
+  }
+
+  function analyzeFromText() {
+    const text = document.getElementById('pasteText').value.trim();
+    if (!text || text.length < 50) { showError('Paste more text — too short to analyze.'); return; }
+    state.transcript = text;
+    analyzeSermon();
+  }
+
+  async function analyzeFromYouTube() {
+    const url = document.getElementById('youtubeUrl').value.trim();
+    if (!url) { showError('Enter a YouTube URL.'); return; }
+
+    const videoId = extractVideoId(url);
+    if (!videoId) { showError('Invalid YouTube URL. Use a standard youtube.com or youtu.be link.'); return; }
+
+    document.getElementById('ytBtn').disabled = true;
+    document.getElementById('ytBtn').textContent = 'Fetching transcript...';
+    hideError();
+
+    try {
+      // Try multiple free transcript APIs
+      let transcript = await fetchYouTubeTranscript(videoId);
+      if (!transcript || transcript.length < 50) throw new Error('Could not fetch transcript. The video may not have captions available.');
+      state.transcript = transcript;
+      document.getElementById('ytBtn').textContent = 'Fetch & Analyze';
+      document.getElementById('ytBtn').disabled = false;
+      analyzeSermon();
+    } catch (err) {
+      showError(err.message);
+      document.getElementById('ytBtn').textContent = 'Fetch & Analyze';
+      document.getElementById('ytBtn').disabled = false;
+    }
+  }
+
+  function extractVideoId(url) {
+    const patterns = [
+      /(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/|youtube\.com\/v\/)([a-zA-Z0-9_-]{11})/,
+      /^([a-zA-Z0-9_-]{11})$/
+    ];
+    for (const p of patterns) {
+      const m = url.match(p);
+      if (m) return m[1];
+    }
+    return null;
+  }
+
+  async function fetchYouTubeTranscript(videoId) {
+    // Use a public transcript proxy
+    const apis = [
+      `https://yt-transcript-api.vercel.app/api?videoId=${videoId}`,
+      `https://youtube-transcript-api-free.vercel.app/api/transcript?videoId=${videoId}`
+    ];
+
+    for (const apiUrl of apis) {
+      try {
+        const r = await fetch(apiUrl);
+        if (!r.ok) continue;
+        const data = await r.json();
+
+        // Handle different response formats
+        if (Array.isArray(data)) {
+          return data.map(item => item.text || item.snippet || '').join(' ');
+        }
+        if (data.transcript) {
+          if (Array.isArray(data.transcript)) return data.transcript.map(item => item.text || '').join(' ');
+          return data.transcript;
+        }
+        if (data.text) return data.text;
+      } catch (e) {
+        continue;
+      }
+    }
+
+    // Fallback: ask Claude to work with just the video URL context
+    throw new Error('Could not fetch YouTube transcript automatically. Try copying the transcript from YouTube and using "Paste Text" instead.');
   }
 
   function showError(msg) { const el = document.getElementById('errorMsg'); el.textContent = msg; el.classList.add('visible'); }
