@@ -706,6 +706,7 @@
       <div class="results-actions">
         <button class="btn-sm" onclick="copyAll()">Copy All</button>
         <button class="btn-sm" onclick="downloadResults()">Download</button>
+        <button class="btn-sm" onclick="shareResults()" id="shareBtn" style="display:none">Share</button>
       </div>
     </div>
 
@@ -783,6 +784,8 @@
         }
       };
     }).catch(() => {});
+    // Show Share button if supported
+    if (navigator.canShare) document.getElementById('shareBtn').style.display = '';
   })();
 
   function toggleSettings() { document.getElementById('settingsPanel').classList.toggle('open'); document.getElementById('historyPanel').classList.remove('open'); }
@@ -1106,10 +1109,8 @@ ${t}`;
     ].join('\n'));
   }
 
-  function downloadResults() {
-    if (!state.analysisData) return;
-    const d = state.analysisData;
-    const dlPts = (d.main_points||[]).map((p,i) => {
+  function buildResultsText(d) {
+    const pts = (d.main_points||[]).map((p,i) => {
       if (typeof p === 'object') {
         let t = `${i+1}. ${p.title}: ${p.explanation}`;
         if (p.sub_points) t += '\n' + p.sub_points.map(sp => `   - ${sp.title}: ${sp.explanation}`).join('\n');
@@ -1117,21 +1118,28 @@ ${t}`;
       }
       return `${i+1}. ${p}`;
     });
-    const dlConcl = (d.conclusions||[]).map((c,i) => typeof c === 'object' ? `${i+1}. ${c.title}: ${c.explanation}` : `${i+1}. ${c}`);
-    const dlStudy = [];
+    const concl = (d.conclusions||[]).map((c,i) => typeof c === 'object' ? `${i+1}. ${c.title}: ${c.explanation}` : `${i+1}. ${c}`);
+    const study = [];
     if (d.group_study) {
-      dlStudy.push('GROUP STUDY GUIDE', '');
-      if (d.group_study.intro_quote) dlStudy.push(`"${d.group_study.intro_quote}"`, '');
-      if (d.group_study.intro_text) dlStudy.push(d.group_study.intro_text, '');
-      if (d.group_study.questions) dlStudy.push(...d.group_study.questions.map(q => `Q${q.number}. ${q.question}`));
+      study.push('GROUP STUDY GUIDE', '');
+      if (d.group_study.intro_quote) study.push(`"${d.group_study.intro_quote}"`, '');
+      if (d.group_study.intro_text) study.push(d.group_study.intro_text, '');
+      if (d.group_study.questions) study.push(...d.group_study.questions.map(q => `Q${q.number}. ${q.question}`));
     }
-    const text = ['SERMON ANALYSIS','='.repeat(40),'','ELEVATOR PITCH',d.elevator_pitch,'',
-      'MAIN POINTS',...dlPts,'',
-      'CONCLUSIONS',...dlConcl,'',
+    const title = d.sermon_title ? [d.sermon_title, ''] : [];
+    return [...title, 'SERMON ANALYSIS','='.repeat(40),'','ELEVATOR PITCH',d.elevator_pitch,'',
+      'MAIN POINTS',...pts,'',
+      'CONCLUSIONS',...concl,'',
       '7 KEY QUOTES',...(d.key_quotes||[]).map((q,i)=>`${i+1}. "${q}"`),'',
-      ...dlStudy,'',
+      ...study,'',
       'SCRIPTURE',...(d.bible_verses||[]).map(v=>`${v.reference}\n${v.relevance}`),'',
       'PRAYER',d.prayer].join('\n');
+  }
+
+  function downloadResults() {
+    if (!state.analysisData) return;
+    const d = state.analysisData;
+    const text = buildResultsText(d);
     const titleSlug = (d.sermon_title || 'sermon').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/-+$/,'');
     const filename = `${titleSlug}-${new Date().toISOString().slice(0,10)}.txt`;
     if (state.saveDirHandle) {
@@ -1141,6 +1149,24 @@ ${t}`;
       a.href = URL.createObjectURL(new Blob([text], { type: 'text/plain' }));
       a.download = filename;
       a.click();
+    }
+  }
+
+  async function shareResults() {
+    if (!state.analysisData) return;
+    const d = state.analysisData;
+    const text = buildResultsText(d);
+    const titleSlug = (d.sermon_title || 'sermon').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/-+$/,'');
+    const filename = `${titleSlug}-${new Date().toISOString().slice(0,10)}.txt`;
+    const file = new File([text], filename, { type: 'text/plain' });
+    try {
+      if (navigator.canShare && navigator.canShare({ files: [file] })) {
+        await navigator.share({ title: d.sermon_title || 'Sermon Analysis', files: [file] });
+      } else {
+        await navigator.share({ title: d.sermon_title || 'Sermon Analysis', text: text });
+      }
+    } catch (e) {
+      if (e.name !== 'AbortError') showError('Share failed: ' + e.message);
     }
   }
 
