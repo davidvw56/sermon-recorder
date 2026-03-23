@@ -643,6 +643,14 @@
         <button class="engine-btn" id="engineWhisper" onclick="setEngine('whisper')">Whisper</button>
       </div>
     </div>
+    <div class="setting-group">
+      <label>Save Folder</label>
+      <small>Choose where downloaded files are saved</small>
+      <div style="display:flex;gap:8px;align-items:center;margin-top:6px">
+        <button class="engine-btn" onclick="pickSaveFolder()" style="flex:none;padding:8px 14px">Choose Folder</button>
+        <span id="saveFolderName" style="font-size:12px;color:var(--gray-mid);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">Default (Downloads)</span>
+      </div>
+    </div>
   </div>
 
   <!-- Error -->
@@ -749,7 +757,8 @@
   let state = {
     recording: false, mediaRecorder: null, audioChunks: [], audioBlob: null,
     timerInterval: null, startTime: null, recognition: null, transcript: '',
-    engine: 'browser', analyzerNode: null, animFrame: null, analysisData: null
+    engine: 'browser', analyzerNode: null, animFrame: null, analysisData: null,
+    saveDirHandle: null
   };
 
   (function init() {
@@ -763,6 +772,17 @@
       b.className = 'waveform-bar';
       wf.appendChild(b);
     }
+    // Restore saved folder handle
+    openHandleDB().then(db => {
+      const tx = db.transaction('handles', 'readonly');
+      const req = tx.objectStore('handles').get('saveDir');
+      req.onsuccess = () => {
+        if (req.result) {
+          state.saveDirHandle = req.result;
+          document.getElementById('saveFolderName').textContent = req.result.name;
+        }
+      };
+    }).catch(() => {});
   })();
 
   function toggleSettings() { document.getElementById('settingsPanel').classList.toggle('open'); document.getElementById('historyPanel').classList.remove('open'); }
@@ -1109,10 +1129,60 @@ ${t}`;
       ...dlStudy,'',
       'SCRIPTURE',...(d.bible_verses||[]).map(v=>`${v.reference}\n${v.relevance}`),'',
       'PRAYER',d.prayer].join('\n');
-    const a = document.createElement('a');
-    a.href = URL.createObjectURL(new Blob([text], { type: 'text/plain' }));
-    a.download = `sermon-${new Date().toISOString().slice(0,10)}.txt`;
-    a.click();
+    const filename = `sermon-${new Date().toISOString().slice(0,10)}.txt`;
+    if (state.saveDirHandle) {
+      saveToFolder(state.saveDirHandle, filename, text);
+    } else {
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(new Blob([text], { type: 'text/plain' }));
+      a.download = filename;
+      a.click();
+    }
+  }
+
+  async function pickSaveFolder() {
+    if (!window.showDirectoryPicker) {
+      showError('Your browser doesn\'t support folder selection. Use Chrome or Edge.');
+      return;
+    }
+    try {
+      const handle = await window.showDirectoryPicker({ mode: 'readwrite' });
+      state.saveDirHandle = handle;
+      document.getElementById('saveFolderName').textContent = handle.name;
+      // Persist handle in IndexedDB
+      const db = await openHandleDB();
+      const tx = db.transaction('handles', 'readwrite');
+      tx.objectStore('handles').put(handle, 'saveDir');
+    } catch (e) {
+      if (e.name !== 'AbortError') showError('Could not select folder: ' + e.message);
+    }
+  }
+
+  async function saveToFolder(dirHandle, filename, text) {
+    try {
+      const fileHandle = await dirHandle.getFileHandle(filename, { create: true });
+      const writable = await fileHandle.createWritable();
+      await writable.write(text);
+      await writable.close();
+    } catch (e) {
+      // Permission may have been revoked — fall back to regular download
+      showError('Folder access lost. Falling back to regular download.');
+      state.saveDirHandle = null;
+      document.getElementById('saveFolderName').textContent = 'Default (Downloads)';
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(new Blob([text], { type: 'text/plain' }));
+      a.download = filename;
+      a.click();
+    }
+  }
+
+  function openHandleDB() {
+    return new Promise((resolve, reject) => {
+      const req = indexedDB.open('SermonRecorderDB', 1);
+      req.onupgradeneeded = () => req.result.createObjectStore('handles');
+      req.onsuccess = () => resolve(req.result);
+      req.onerror = () => reject(req.error);
+    });
   }
 
   // ============ Input Modes ============
