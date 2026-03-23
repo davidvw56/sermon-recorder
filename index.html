@@ -178,9 +178,28 @@
     line-height: 1.6;
   }
 
+  /* ── Band Dividers ── */
+  .band-dark {
+    background: var(--navy-dark);
+    border-top: 1px solid rgba(42,127,165,0.2);
+    border-bottom: 1px solid rgba(42,127,165,0.2);
+  }
+
+  .band-mid {
+    background: var(--navy);
+    border-top: 1px solid rgba(42,127,165,0.15);
+    border-bottom: 1px solid rgba(42,127,165,0.15);
+  }
+
+  .band-deep {
+    background: var(--navy-deep);
+    border-top: 1px solid rgba(42,127,165,0.12);
+    border-bottom: 1px solid rgba(42,127,165,0.12);
+  }
+
   /* ── How It Works ── */
   .how-it-works {
-    background: var(--navy);
+    /* uses band-dark class */
   }
 
   .steps {
@@ -221,7 +240,7 @@
 
   /* ── Features ── */
   .features-section {
-    background: var(--navy-deep);
+    /* uses band-deep class */
   }
 
   .features-grid {
@@ -271,7 +290,7 @@
 
   /* ── What You Get ── */
   .output-section {
-    background: var(--navy);
+    /* uses band-mid class */
   }
 
   .output-cards {
@@ -313,8 +332,8 @@
 
   /* ── Testimonial / Quote ── */
   .quote-section {
-    background: var(--navy-deep);
     text-align: center;
+    /* uses band-dark class */
   }
 
   .big-quote {
@@ -338,7 +357,7 @@
 
   /* ── Use Cases ── */
   .use-cases {
-    background: var(--navy);
+    /* uses band-mid class */
   }
 
   .use-list {
@@ -474,7 +493,7 @@
 </div>
 
 <!-- How It Works -->
-<section class="how-it-works">
+<section class="how-it-works band-dark">
   <div class="section-center">
     <div class="section-overline">How It Works</div>
     <h2 class="section-title">Three Steps. One Powerful Output.</h2>
@@ -500,7 +519,7 @@
 </section>
 
 <!-- What You Get -->
-<section class="output-section">
+<section class="output-section band-mid">
   <div class="section-center">
     <div class="section-overline">What You Get</div>
     <h2 class="section-title">A Complete Sermon Toolkit — Instantly</h2>
@@ -541,7 +560,7 @@
 </section>
 
 <!-- Features -->
-<section class="features-section">
+<section class="features-section band-deep">
   <div class="section-center">
     <div class="section-overline">Features</div>
     <h2 class="section-title">Built for Real Ministry Moments</h2>
@@ -584,14 +603,14 @@
 </section>
 
 <!-- Quote -->
-<section class="quote-section">
+<section class="quote-section band-dark">
   <div class="section-center fade-up">
     <div class="big-quote">A sermon heard once touches the heart. A sermon studied, quoted, and discussed transforms a community.</div>
   </div>
 </section>
 
 <!-- Use Cases -->
-<section class="use-cases">
+<section class="use-cases band-mid">
   <div class="section-center">
     <div class="section-overline">Who It's For</div>
     <h2 class="section-title">From Sunday Morning to Wednesday Night</h2>
