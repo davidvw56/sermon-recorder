@@ -433,6 +433,43 @@
     color: var(--offwhite);
   }
 
+  /* ── Summary Points ── */
+  .summary-point {
+    margin-bottom: 14px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid var(--navy-light);
+  }
+
+  .summary-point:last-child {
+    margin-bottom: 0; padding-bottom: 0; border-bottom: none;
+  }
+
+  .summary-point-title {
+    font-weight: 700; font-size: 13px;
+    color: var(--white); margin-bottom: 4px;
+  }
+
+  .summary-point-text {
+    font-size: 13px; line-height: 1.6;
+    color: var(--offwhite);
+  }
+
+  .sub-point {
+    margin-top: 8px; margin-left: 16px;
+    padding-left: 12px;
+    border-left: 2px solid var(--navy-light);
+  }
+
+  .sub-point-title {
+    font-weight: 700; font-size: 12px;
+    color: var(--teal-border); margin-bottom: 2px;
+  }
+
+  .sub-point-text {
+    font-size: 12px; line-height: 1.5;
+    color: var(--gray-mid);
+  }
+
   /* ── Responsive ── */
   @media (max-width: 480px) {
     .record-btn { width: 68px; height: 68px; }
@@ -455,6 +492,7 @@
   .results.visible .result-card:nth-child(4) { animation-delay: 0.18s; }
   .results.visible .result-card:nth-child(5) { animation-delay: 0.24s; }
   .results.visible .result-card:nth-child(6) { animation-delay: 0.30s; }
+  .results.visible .result-card:nth-child(7) { animation-delay: 0.36s; }
 </style>
 </head>
 <body>
@@ -548,6 +586,12 @@
       <div class="overline">Summary</div>
       <h3>Main Points <button class="copy-btn" onclick="copySection(this, 'summary')">Copy</button></h3>
       <div id="summaryContent"></div>
+    </div>
+
+    <div class="result-card green-border" id="conclusionsCard">
+      <div class="overline">Takeaways</div>
+      <h3>Conclusions <button class="copy-btn" onclick="copySection(this, 'conclusions')">Copy</button></h3>
+      <div id="conclusionsContent"></div>
     </div>
 
     <div class="result-card gold-border" id="quotesCard">
@@ -730,13 +774,22 @@
 
 1. "elevator_pitch": A compelling 1-2 sentence summary someone could use to tell a friend about this sermon. Conversational and engaging.
 
-2. "main_points": An array of 3-5 main points. Each a clear, complete sentence.
+2. "main_points": An array of objects, each with:
+   - "title": A bold descriptive title for the point (e.g. "The Core Biblical Theme: God Dwells with His People")
+   - "explanation": A detailed 2-4 sentence explanation of this point as it was developed in the sermon
+   - "sub_points": (optional) An array of objects with "title" and "explanation" for any significant sub-points under this main point
+   Include 4-6 main points that thoroughly capture the sermon's content and structure.
 
-3. "key_quotes": An array of exactly 12 direct quotes capturing the arc of the entire message — opening to closing. The full journey, not just highlights.
+3. "conclusions": An array of objects, each with:
+   - "title": A bold descriptive title (e.g. "God's Desire for Intimacy")
+   - "explanation": A 2-3 sentence explanation of this conclusion or takeaway
+   Include 3-5 conclusions drawn from the sermon.
 
-4. "bible_verses": An array of 2-3 objects with "reference" and "relevance" (1-2 sentences on how it connects to this sermon). Choose verses that speak precisely to what was taught.
+4. "key_quotes": An array of exactly 12 direct quotes capturing the arc of the entire message — opening to closing. The full journey, not just highlights.
 
-5. "prayer": A heartfelt prayer (3-5 sentences) inspired by the specific themes of this sermon.
+5. "bible_verses": An array of 2-3 objects with "reference" and "relevance" (1-2 sentences on how it connects to this sermon). Choose verses that speak precisely to what was taught.
+
+6. "prayer": A heartfelt prayer (3-5 sentences) inspired by the specific themes of this sermon.
 
 Return ONLY valid JSON, no markdown, no code blocks.
 
@@ -770,7 +823,33 @@ ${t}`;
 
   function renderResults(d) {
     document.getElementById('pitchContent').textContent = d.elevator_pitch || '';
-    document.getElementById('summaryContent').innerHTML = '<ol>' + (d.main_points || []).map(p => `<li>${esc(p)}</li>`).join('') + '</ol>';
+
+    // Main Points — rich format with titles, explanations, sub-points
+    const points = d.main_points || [];
+    let summaryHtml = '';
+    if (points.length && typeof points[0] === 'object') {
+      summaryHtml = points.map(p => {
+        let html = `<div class="summary-point"><div class="summary-point-title">${esc(p.title)}</div><div class="summary-point-text">${esc(p.explanation)}</div>`;
+        if (p.sub_points && p.sub_points.length) {
+          html += p.sub_points.map(sp => `<div class="sub-point"><div class="sub-point-title">${esc(sp.title)}</div><div class="sub-point-text">${esc(sp.explanation)}</div></div>`).join('');
+        }
+        return html + '</div>';
+      }).join('');
+    } else {
+      summaryHtml = '<ol>' + points.map(p => `<li>${esc(typeof p === 'string' ? p : p.title || '')}</li>`).join('') + '</ol>';
+    }
+    document.getElementById('summaryContent').innerHTML = summaryHtml;
+
+    // Conclusions
+    const conclusions = d.conclusions || [];
+    let conclusionsHtml = '';
+    if (conclusions.length && typeof conclusions[0] === 'object') {
+      conclusionsHtml = conclusions.map(c => `<div class="summary-point"><div class="summary-point-title">${esc(c.title)}</div><div class="summary-point-text">${esc(c.explanation)}</div></div>`).join('');
+    } else {
+      conclusionsHtml = conclusions.map(c => `<p style="margin-bottom:8px">${esc(typeof c === 'string' ? c : '')}</p>`).join('');
+    }
+    document.getElementById('conclusionsContent').innerHTML = conclusionsHtml;
+
     document.getElementById('quotesContent').innerHTML = (d.key_quotes || []).map((q, i) => `<div class="quote-item"><span class="quote-number">${i+1}.</span> "${esc(q)}"</div>`).join('');
     document.getElementById('versesContent').innerHTML = (d.bible_verses || []).map(v => `<p style="margin-bottom:8px"><span class="verse-ref">${esc(v.reference)}</span> — ${esc(v.relevance)}</p>`).join('');
     document.getElementById('prayerContent').textContent = d.prayer || '';
@@ -786,7 +865,15 @@ ${t}`;
     let text = '';
     switch (section) {
       case 'pitch': text = d.elevator_pitch; break;
-      case 'summary': text = 'MAIN POINTS\n' + (d.main_points||[]).map((p,i) => `${i+1}. ${p}`).join('\n'); break;
+      case 'summary': text = 'MAIN POINTS\n' + (d.main_points||[]).map((p,i) => {
+        if (typeof p === 'object') {
+          let t = `${i+1}. ${p.title}: ${p.explanation}`;
+          if (p.sub_points) t += '\n' + p.sub_points.map(sp => `   - ${sp.title}: ${sp.explanation}`).join('\n');
+          return t;
+        }
+        return `${i+1}. ${p}`;
+      }).join('\n\n'); break;
+      case 'conclusions': text = 'CONCLUSIONS\n' + (d.conclusions||[]).map((c,i) => typeof c === 'object' ? `${i+1}. ${c.title}: ${c.explanation}` : `${i+1}. ${c}`).join('\n\n'); break;
       case 'quotes': text = '12 KEY QUOTES\n' + (d.key_quotes||[]).map((q,i) => `${i+1}. "${q}"`).join('\n'); break;
       case 'verses': text = 'SCRIPTURE\n' + (d.bible_verses||[]).map(v => `${v.reference} — ${v.relevance}`).join('\n\n'); break;
       case 'prayer': text = 'PRAYER\n' + d.prayer; break;
@@ -800,9 +887,19 @@ ${t}`;
   function copyAll() {
     if (!state.analysisData) return;
     const d = state.analysisData;
+    const mainPts = (d.main_points||[]).map((p,i) => {
+      if (typeof p === 'object') {
+        let t = `${i+1}. ${p.title}: ${p.explanation}`;
+        if (p.sub_points) t += '\n' + p.sub_points.map(sp => `   - ${sp.title}: ${sp.explanation}`).join('\n');
+        return t;
+      }
+      return `${i+1}. ${p}`;
+    });
+    const concl = (d.conclusions||[]).map((c,i) => typeof c === 'object' ? `${i+1}. ${c.title}: ${c.explanation}` : `${i+1}. ${c}`);
     navigator.clipboard.writeText([
       'SERMON ANALYSIS', '='.repeat(40), '', 'ELEVATOR PITCH', d.elevator_pitch, '',
-      'MAIN POINTS', ...(d.main_points||[]).map((p,i) => `${i+1}. ${p}`), '',
+      'MAIN POINTS', ...mainPts, '',
+      'CONCLUSIONS', ...concl, '',
       '12 KEY QUOTES', ...(d.key_quotes||[]).map((q,i) => `${i+1}. "${q}"`), '',
       'SCRIPTURE', ...(d.bible_verses||[]).map(v => `${v.reference} — ${v.relevance}`), '',
       'PRAYER', d.prayer
@@ -812,8 +909,18 @@ ${t}`;
   function downloadResults() {
     if (!state.analysisData) return;
     const d = state.analysisData;
+    const dlPts = (d.main_points||[]).map((p,i) => {
+      if (typeof p === 'object') {
+        let t = `${i+1}. ${p.title}: ${p.explanation}`;
+        if (p.sub_points) t += '\n' + p.sub_points.map(sp => `   - ${sp.title}: ${sp.explanation}`).join('\n');
+        return t;
+      }
+      return `${i+1}. ${p}`;
+    });
+    const dlConcl = (d.conclusions||[]).map((c,i) => typeof c === 'object' ? `${i+1}. ${c.title}: ${c.explanation}` : `${i+1}. ${c}`);
     const text = ['SERMON ANALYSIS','='.repeat(40),'','ELEVATOR PITCH',d.elevator_pitch,'',
-      'MAIN POINTS',...(d.main_points||[]).map((p,i)=>`${i+1}. ${p}`),'',
+      'MAIN POINTS',...dlPts,'',
+      'CONCLUSIONS',...dlConcl,'',
       '12 KEY QUOTES',...(d.key_quotes||[]).map((q,i)=>`${i+1}. "${q}"`),'',
       'SCRIPTURE',...(d.bible_verses||[]).map(v=>`${v.reference}\n${v.relevance}`),'',
       'PRAYER',d.prayer].join('\n');
