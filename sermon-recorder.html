@@ -702,7 +702,7 @@
   <!-- Results -->
   <div class="results" id="results">
     <div class="results-header">
-      <h2>Analysis</h2>
+      <h2 id="resultsTitle">Analysis</h2>
       <div class="results-actions">
         <button class="btn-sm" onclick="copyAll()">Copy All</button>
         <button class="btn-sm" onclick="downloadResults()">Download</button>
@@ -923,22 +923,24 @@
 
     const prompt = `You are a skilled theologian and sermon analyst. Analyze the following sermon transcript and return a JSON object with exactly these keys:
 
-1. "elevator_pitch": A compelling 1-2 sentence summary someone could use to tell a friend about this sermon. Conversational and engaging.
+1. "sermon_title": A concise 5-8 word title that captures the core purpose or theme of the sermon. Lead with the main idea, not a Bible reference. This should immediately tell someone what the sermon is about. Examples: "Finding Rest in God's Faithfulness", "Why Suffering Shapes Our Character", "The Power of Radical Generosity".
 
-2. "main_points": An array of objects, each with:
+2. "elevator_pitch": A compelling 1-2 sentence summary someone could use to tell a friend about this sermon. Conversational and engaging.
+
+3. "main_points": An array of objects, each with:
    - "title": A bold descriptive title for the point (e.g. "The Core Biblical Theme: God Dwells with His People")
    - "explanation": A detailed 2-4 sentence explanation of this point as it was developed in the sermon
    - "sub_points": (optional) An array of objects with "title" and "explanation" for any significant sub-points under this main point
    Include 4-6 main points that thoroughly capture the sermon's content and structure.
 
-3. "conclusions": An array of objects, each with:
+4. "conclusions": An array of objects, each with:
    - "title": A bold descriptive title (e.g. "God's Desire for Intimacy")
    - "explanation": A 2-3 sentence explanation of this conclusion or takeaway
    Include 3-5 conclusions drawn from the sermon.
 
-4. "key_quotes": An array of exactly 7 direct quotes capturing the arc of the entire message — opening to closing. The full journey, not just highlights.
+5. "key_quotes": An array of exactly 7 direct quotes capturing the arc of the entire message — opening to closing. The full journey, not just highlights.
 
-5. "group_study": An object with:
+6. "group_study": An object with:
    - "intro_quote": The single most meaningful or impactful quote from the sermon
    - "intro_text": A warm 2-3 sentence introduction that sets up the study using that quote, welcoming the group into the conversation
    - "questions": An array of exactly 7 objects, each with "number" (1-7), "question", and "purpose" ("opener", "subpoint", or "closer"):
@@ -946,9 +948,9 @@
      * Questions 2-6 (purpose: "subpoint"): Each tied to a specific main point or sub-point of the sermon. Thought-provoking and discussion-generating. Design these so that a leader could pick any 2-3 of them and still have a solid study session.
      * Question 7 (purpose: "closer"): A closing question that is both deeply reflective AND activating — it should send people out with something concrete to think about or do. This question is REQUIRED in every study.
 
-6. "bible_verses": An array of 2-3 objects with "reference" and "relevance" (1-2 sentences on how it connects to this sermon). Choose verses that speak precisely to what was taught.
+7. "bible_verses": An array of 2-3 objects with "reference" and "relevance" (1-2 sentences on how it connects to this sermon). Choose verses that speak precisely to what was taught.
 
-7. "prayer": A heartfelt prayer (3-5 sentences) inspired by the specific themes of this sermon.
+8. "prayer": A heartfelt prayer (3-5 sentences) inspired by the specific themes of this sermon.
 
 Return ONLY valid JSON, no markdown, no code blocks.
 
@@ -981,6 +983,7 @@ ${t}`;
   }
 
   function renderResults(d, skipSave) {
+    document.getElementById('resultsTitle').textContent = d.sermon_title || 'Analysis';
     document.getElementById('pitchContent').textContent = d.elevator_pitch || '';
 
     // Main Points — rich format with titles, explanations, sub-points
@@ -1129,7 +1132,8 @@ ${t}`;
       ...dlStudy,'',
       'SCRIPTURE',...(d.bible_verses||[]).map(v=>`${v.reference}\n${v.relevance}`),'',
       'PRAYER',d.prayer].join('\n');
-    const filename = `sermon-${new Date().toISOString().slice(0,10)}.txt`;
+    const titleSlug = (d.sermon_title || 'sermon').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/-+$/,'');
+    const filename = `${titleSlug}-${new Date().toISOString().slice(0,10)}.txt`;
     if (state.saveDirHandle) {
       saveToFolder(state.saveDirHandle, filename, text);
     } else {
@@ -1307,7 +1311,7 @@ ${t}`;
     el.innerHTML = history.map(h => `<div class="history-item" onclick="loadFromHistory(${h.id})">
       <div class="history-item-content">
         <div class="history-item-date">${esc(h.date)}</div>
-        <div class="history-item-pitch">${esc(h.analysis.elevator_pitch || 'Untitled sermon')}</div>
+        <div class="history-item-pitch">${esc(h.analysis.sermon_title || h.analysis.elevator_pitch || 'Untitled sermon')}</div>
       </div>
       <button class="history-delete" onclick="event.stopPropagation(); deleteFromHistory(${h.id})">×</button>
     </div>`).join('');
