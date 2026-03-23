@@ -180,22 +180,33 @@
 
   /* ── Band Dividers ── */
   .band-dark {
-    background: var(--navy-dark);
+    background: var(--navy);
+    color: var(--white);
     border-top: 1px solid rgba(42,127,165,0.2);
     border-bottom: 1px solid rgba(42,127,165,0.2);
   }
 
-  .band-mid {
-    background: var(--navy);
-    border-top: 1px solid rgba(42,127,165,0.15);
-    border-bottom: 1px solid rgba(42,127,165,0.15);
+  .band-light {
+    background: var(--offwhite);
+    color: var(--charcoal);
+    border-top: 1px solid var(--gray-light);
+    border-bottom: 1px solid var(--gray-light);
   }
 
-  .band-deep {
-    background: var(--navy-deep);
-    border-top: 1px solid rgba(42,127,165,0.12);
-    border-bottom: 1px solid rgba(42,127,165,0.12);
+  .band-light .section-overline { color: var(--teal); }
+  .band-light .section-title { color: var(--navy); }
+  .band-light .section-sub { color: #5A5F6B; }
+
+  .band-white {
+    background: var(--white);
+    color: var(--charcoal);
+    border-top: 1px solid var(--gray-light);
+    border-bottom: 1px solid var(--gray-light);
   }
+
+  .band-white .section-overline { color: var(--teal); }
+  .band-white .section-title { color: var(--navy); }
+  .band-white .section-sub { color: #5A5F6B; }
 
   /* ── How It Works ── */
   .how-it-works {
@@ -229,12 +240,13 @@
   .step h3 {
     font-family: var(--font-display);
     font-size: 18px; font-weight: 700;
+    color: var(--navy);
     margin-bottom: 8px;
   }
 
   .step p {
     font-size: 14px;
-    color: var(--gray-mid);
+    color: #5A5F6B;
     line-height: 1.6;
   }
 
@@ -250,14 +262,14 @@
   }
 
   .feature-card {
-    background: var(--navy);
-    border: 1px solid var(--navy-light);
+    background: var(--white);
+    border: 1px solid var(--gray-light);
     border-radius: 6px;
     padding: 24px;
-    transition: border-color 0.2s;
+    transition: border-color 0.2s, box-shadow 0.2s;
   }
 
-  .feature-card:hover { border-color: var(--teal); }
+  .feature-card:hover { border-color: var(--teal); box-shadow: 0 2px 12px rgba(42,127,165,0.1); }
 
   .feature-icon {
     font-size: 28px;
@@ -267,12 +279,13 @@
   .feature-card h3 {
     font-family: var(--font-display);
     font-size: 16px; font-weight: 700;
+    color: var(--navy);
     margin-bottom: 6px;
   }
 
   .feature-card p {
     font-size: 13px;
-    color: var(--gray-mid);
+    color: #5A5F6B;
     line-height: 1.6;
   }
 
@@ -300,7 +313,7 @@
   }
 
   .output-card {
-    background: var(--navy-deep);
+    background: var(--navy);
     border: 1px solid var(--navy-light);
     border-left: 4px solid var(--teal);
     border-radius: 4px;
@@ -314,13 +327,14 @@
     font-size: 10px; font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.12em;
-    color: var(--gray-mid);
+    color: var(--teal-border);
     margin-bottom: 4px;
   }
 
   .output-card h3 {
     font-family: var(--font-display);
     font-size: 15px; font-weight: 600;
+    color: var(--white);
     margin-bottom: 8px;
   }
 
@@ -344,7 +358,7 @@
     line-height: 1.6;
     max-width: 680px;
     margin: 0 auto 20px;
-    color: var(--teal-border);
+    color: var(--offwhite);
   }
 
   .big-quote::before { content: '\201C'; }
@@ -373,8 +387,8 @@
     align-items: flex-start;
     gap: 12px;
     padding: 16px;
-    background: var(--navy-deep);
-    border: 1px solid var(--navy-light);
+    background: var(--white);
+    border: 1px solid var(--gray-light);
     border-radius: 4px;
   }
 
@@ -392,11 +406,11 @@
   .use-item p {
     font-size: 13px;
     line-height: 1.5;
-    color: var(--offwhite);
+    color: #5A5F6B;
   }
 
   .use-item strong {
-    color: var(--white);
+    color: var(--navy);
   }
 
   /* ── CTA Bottom ── */
@@ -493,7 +507,7 @@
 </div>
 
 <!-- How It Works -->
-<section class="how-it-works band-dark">
+<section class="how-it-works band-white">
   <div class="section-center">
     <div class="section-overline">How It Works</div>
     <h2 class="section-title">Three Steps. One Powerful Output.</h2>
@@ -519,7 +533,7 @@
 </section>
 
 <!-- What You Get -->
-<section class="output-section band-mid">
+<section class="output-section band-dark">
   <div class="section-center">
     <div class="section-overline">What You Get</div>
     <h2 class="section-title">A Complete Sermon Toolkit — Instantly</h2>
@@ -560,7 +574,7 @@
 </section>
 
 <!-- Features -->
-<section class="features-section band-deep">
+<section class="features-section band-light">
   <div class="section-center">
     <div class="section-overline">Features</div>
     <h2 class="section-title">Built for Real Ministry Moments</h2>
@@ -603,14 +617,14 @@
 </section>
 
 <!-- Quote -->
-<section class="quote-section band-dark">
+<section class="quote-section band-dark" style="padding:60px 24px">
   <div class="section-center fade-up">
     <div class="big-quote">A sermon heard once touches the heart. A sermon studied, quoted, and discussed transforms a community.</div>
   </div>
 </section>
 
 <!-- Use Cases -->
-<section class="use-cases band-mid">
+<section class="use-cases band-white">
   <div class="section-center">
     <div class="section-overline">Who It's For</div>
     <h2 class="section-title">From Sunday Morning to Wednesday Night</h2>
