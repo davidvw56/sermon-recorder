@@ -682,9 +682,18 @@
 
   <!-- YouTube Link Input -->
   <div class="alt-input" id="youtubeInput">
-    <label>YouTube sermon URL</label>
+    <label>Paste a YouTube link to get transcript instructions</label>
     <input type="text" id="youtubeUrl" placeholder="https://www.youtube.com/watch?v=...">
-    <button class="analyze-btn" id="ytBtn" onclick="analyzeFromYouTube()">Fetch & Analyze</button>
+    <button class="analyze-btn" id="ytBtn" onclick="analyzeFromYouTube()">Get Transcript</button>
+    <div id="ytInstructions" style="display:none; margin-top:12px; padding:12px; background:var(--navy); border:1px solid var(--navy-light); border-radius:4px; font-size:12px; line-height:1.6; color:var(--offwhite);">
+      <strong style="color:var(--teal)">How to grab the transcript:</strong><br>
+      1. Click the link below to open the video<br>
+      2. Below the video, click <strong>"...more"</strong> in the description<br>
+      3. Click <strong>"Show transcript"</strong><br>
+      4. Select all the transcript text and copy it<br>
+      5. Come back here and use <strong>"Paste Text"</strong><br>
+      <a id="ytLink" href="#" target="_blank" style="display:inline-block; margin-top:8px; color:var(--teal); text-decoration:underline;">Open video on YouTube</a>
+    </div>
   </div>
 
   <!-- History -->
@@ -1236,31 +1245,22 @@ ${t}`;
     analyzeSermon();
   }
 
-  async function analyzeFromYouTube() {
+  function analyzeFromYouTube() {
     const url = document.getElementById('youtubeUrl').value.trim();
     if (!url) { showError('Enter a YouTube link.'); return; }
 
     const videoId = extractVideoId(url);
     if (!videoId) { showError('Invalid YouTube link. Use a standard youtube.com or youtu.be link.'); return; }
 
-    document.getElementById('ytBtn').disabled = true;
-    document.getElementById('ytBtn').textContent = 'Fetching transcript...';
     hideError();
+    // Show instructions with link to the video
+    const instrEl = document.getElementById('ytInstructions');
+    const linkEl = document.getElementById('ytLink');
+    linkEl.href = `https://www.youtube.com/watch?v=${videoId}`;
+    instrEl.style.display = 'block';
 
-    try {
-      // Try multiple free transcript APIs
-      let transcript = await fetchYouTubeTranscript(videoId);
-      if (!transcript || transcript.length < 50) throw new Error('Could not fetch transcript. The video may not have captions available.');
-      state.transcript = transcript;
-      document.getElementById('youtubeUrl').value = '';
-      document.getElementById('ytBtn').textContent = 'Fetch & Analyze';
-      document.getElementById('ytBtn').disabled = false;
-      analyzeSermon();
-    } catch (err) {
-      showError(err.message);
-      document.getElementById('ytBtn').textContent = 'Fetch & Analyze';
-      document.getElementById('ytBtn').disabled = false;
-    }
+    // Also show the paste text area so they can paste right away
+    document.getElementById('textInput').classList.add('visible');
   }
 
   function extractVideoId(url) {
@@ -1275,36 +1275,6 @@ ${t}`;
     return null;
   }
 
-  async function fetchYouTubeTranscript(videoId) {
-    // Use a public transcript proxy
-    const apis = [
-      `https://yt-transcript-api.vercel.app/api?videoId=${videoId}`,
-      `https://youtube-transcript-api-free.vercel.app/api/transcript?videoId=${videoId}`
-    ];
-
-    for (const apiUrl of apis) {
-      try {
-        const r = await fetch(apiUrl);
-        if (!r.ok) continue;
-        const data = await r.json();
-
-        // Handle different response formats
-        if (Array.isArray(data)) {
-          return data.map(item => item.text || item.snippet || '').join(' ');
-        }
-        if (data.transcript) {
-          if (Array.isArray(data.transcript)) return data.transcript.map(item => item.text || '').join(' ');
-          return data.transcript;
-        }
-        if (data.text) return data.text;
-      } catch (e) {
-        continue;
-      }
-    }
-
-    // Fallback: ask Claude to work with just the video URL context
-    throw new Error('Could not fetch YouTube transcript automatically. Try copying the transcript from YouTube and using "Paste Text" instead.');
-  }
 
   // ============ History ============
   function toggleHistory() {
