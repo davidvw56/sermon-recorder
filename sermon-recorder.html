@@ -669,7 +669,7 @@
     </div>
     <div class="input-modes">
       <button class="mode-btn" onclick="showInput('text')">Paste Text</button>
-      <button class="mode-btn" onclick="showInput('youtube')">YouTube URL</button>
+      <button class="mode-btn" onclick="showInput('youtube')">YouTube Link</button>
     </div>
   </div>
 
@@ -680,7 +680,7 @@
     <button class="analyze-btn" onclick="analyzeFromText()">Analyze Sermon</button>
   </div>
 
-  <!-- YouTube URL Input -->
+  <!-- YouTube Link Input -->
   <div class="alt-input" id="youtubeInput">
     <label>YouTube sermon URL</label>
     <input type="text" id="youtubeUrl" placeholder="https://www.youtube.com/watch?v=...">
@@ -1238,10 +1238,10 @@ ${t}`;
 
   async function analyzeFromYouTube() {
     const url = document.getElementById('youtubeUrl').value.trim();
-    if (!url) { showError('Enter a YouTube URL.'); return; }
+    if (!url) { showError('Enter a YouTube link.'); return; }
 
     const videoId = extractVideoId(url);
-    if (!videoId) { showError('Invalid YouTube URL. Use a standard youtube.com or youtu.be link.'); return; }
+    if (!videoId) { showError('Invalid YouTube link. Use a standard youtube.com or youtu.be link.'); return; }
 
     document.getElementById('ytBtn').disabled = true;
     document.getElementById('ytBtn').textContent = 'Fetching transcript...';
