@@ -710,14 +710,12 @@
 
   <!-- Results -->
   <div class="results" id="results">
-    <div class="results-header">
-      <h2 id="resultsTitle">Analysis</h2>
-      <div class="results-actions">
-        <button class="btn-sm" onclick="copyAll()">Copy All</button>
-        <button class="btn-sm" onclick="downloadResults()">Download</button>
-        <button class="btn-sm" onclick="shareResults()" id="shareBtn" style="display:none">Share</button>
-      </div>
+    <div class="results-actions" style="display:flex;gap:6px;margin-bottom:12px;">
+      <button class="btn-sm" onclick="copyAll()">Copy All</button>
+      <button class="btn-sm" onclick="downloadResults()">Download</button>
+      <button class="btn-sm" onclick="shareResults()" id="shareBtn" style="display:none">Share</button>
     </div>
+    <h2 id="resultsTitle" style="font-family:var(--font-display);font-size:20px;font-weight:700;margin-bottom:12px;">Analysis</h2>
 
     <div class="result-card navy-accent" id="pitchCard">
       <div class="overline">Elevator Pitch</div>
@@ -1275,7 +1273,7 @@ ${t}`;
 
   function extractVideoId(url) {
     const patterns = [
-      /(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/|youtube\.com\/v\/)([a-zA-Z0-9_-]{11})/,
+      /(?:youtube\.com\/watch\?.*v=|youtu\.be\/|youtube\.com\/embed\/|youtube\.com\/v\/|youtube\.com\/shorts\/|youtube\.com\/live\/)([a-zA-Z0-9_-]{11})/,
       /^([a-zA-Z0-9_-]{11})$/
     ];
     for (const p of patterns) {
