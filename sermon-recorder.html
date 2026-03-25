@@ -394,6 +394,19 @@
   .copy-btn:hover { border-color: var(--teal); color: var(--teal); }
   .copy-btn.copied { background: var(--teal); color: var(--white); border-color: var(--teal); }
 
+  .listen-btn {
+    background: none;
+    border: 1px solid var(--navy-light);
+    border-radius: 4px; padding: 2px 8px;
+    font-size: 10px; font-weight: 600;
+    font-family: var(--font-body);
+    cursor: pointer; color: var(--gray-mid);
+    margin-left: 4px;
+  }
+
+  .listen-btn:hover { border-color: var(--gold); color: var(--gold); }
+  .listen-btn.speaking { background: var(--gold); color: var(--white); border-color: var(--gold); }
+
   .result-card p, .result-card li {
     font-size: 13px; line-height: 1.6; color: var(--offwhite);
   }
@@ -719,43 +732,43 @@
 
     <div class="result-card navy-accent" id="pitchCard">
       <div class="overline">Elevator Pitch</div>
-      <h3><span></span><button class="copy-btn" onclick="copySection(this, 'pitch')">Copy</button></h3>
+      <h3><span></span><button class="copy-btn" onclick="copySection(this, 'pitch')">Copy</button><button class="listen-btn" onclick="speakSection(this, 'pitch')">Listen</button></h3>
       <div class="elevator-pitch" id="pitchContent"></div>
     </div>
 
     <div class="result-card" id="summaryCard">
       <div class="overline">Summary</div>
-      <h3>Main Points <button class="copy-btn" onclick="copySection(this, 'summary')">Copy</button></h3>
+      <h3>Main Points <button class="copy-btn" onclick="copySection(this, 'summary')">Copy</button><button class="listen-btn" onclick="speakSection(this, 'summary')">Listen</button></h3>
       <div id="summaryContent"></div>
     </div>
 
     <div class="result-card green-border" id="conclusionsCard">
       <div class="overline">Takeaways</div>
-      <h3>Conclusions <button class="copy-btn" onclick="copySection(this, 'conclusions')">Copy</button></h3>
+      <h3>Conclusions <button class="copy-btn" onclick="copySection(this, 'conclusions')">Copy</button><button class="listen-btn" onclick="speakSection(this, 'conclusions')">Listen</button></h3>
       <div id="conclusionsContent"></div>
     </div>
 
     <div class="result-card gold-border" id="quotesCard">
       <div class="overline">Sermon Arc</div>
-      <h3>7 Key Quotes <button class="copy-btn" onclick="copySection(this, 'quotes')">Copy</button></h3>
+      <h3>7 Key Quotes <button class="copy-btn" onclick="copySection(this, 'quotes')">Copy</button><button class="listen-btn" onclick="speakSection(this, 'quotes')">Listen</button></h3>
       <div id="quotesContent"></div>
     </div>
 
     <div class="result-card gold-border" id="studyCard">
       <div class="overline">Small Group</div>
-      <h3>Group Study Guide <button class="copy-btn" onclick="copySection(this, 'study')">Copy</button></h3>
+      <h3>Group Study Guide <button class="copy-btn" onclick="copySection(this, 'study')">Copy</button><button class="listen-btn" onclick="speakSection(this, 'study')">Listen</button></h3>
       <div id="studyContent"></div>
     </div>
 
     <div class="result-card green-border" id="versesCard">
       <div class="overline">Scripture</div>
-      <h3>References <button class="copy-btn" onclick="copySection(this, 'verses')">Copy</button></h3>
+      <h3>References <button class="copy-btn" onclick="copySection(this, 'verses')">Copy</button><button class="listen-btn" onclick="speakSection(this, 'verses')">Listen</button></h3>
       <div id="versesContent"></div>
     </div>
 
     <div class="result-card navy-accent" id="applicationCard">
       <div class="overline">Response</div>
-      <h3>Application <button class="copy-btn" onclick="copySection(this, 'application')">Copy</button></h3>
+      <h3>Application <button class="copy-btn" onclick="copySection(this, 'application')">Copy</button><button class="listen-btn" onclick="speakSection(this, 'application')">Listen</button></h3>
       <div id="applicationContent"></div>
     </div>
   </div>
@@ -1087,6 +1100,54 @@ ${t}`;
       btn.textContent = 'Copied'; btn.classList.add('copied');
       setTimeout(() => { btn.textContent = 'Copy'; btn.classList.remove('copied'); }, 2000);
     });
+  }
+
+  function speakSection(btn, section) {
+    // If already speaking, stop
+    if (speechSynthesis.speaking) {
+      speechSynthesis.cancel();
+      document.querySelectorAll('.listen-btn.speaking').forEach(b => {
+        b.textContent = 'Listen'; b.classList.remove('speaking');
+      });
+      // If clicking the same button that was speaking, just stop
+      if (btn.classList.contains('speaking')) return;
+    }
+
+    if (!state.analysisData) return;
+    const d = state.analysisData;
+    let text = '';
+    switch (section) {
+      case 'pitch': text = d.elevator_pitch; break;
+      case 'summary': text = (d.main_points||[]).map((p,i) => {
+        if (typeof p === 'object') {
+          let t = `Point ${i+1}. ${p.title}. ${p.explanation}`;
+          if (p.sub_points) t += ' ' + p.sub_points.map(sp => `${sp.title}. ${sp.explanation}`).join(' ');
+          return t;
+        }
+        return p;
+      }).join('. '); break;
+      case 'conclusions': text = (d.conclusions||[]).map((c,i) => typeof c === 'object' ? `${c.title}. ${c.explanation}` : c).join('. '); break;
+      case 'quotes': text = (d.key_quotes||[]).map((q,i) => `Quote ${i+1}. ${q}`).join('. '); break;
+      case 'study': {
+        const s = d.group_study;
+        if (s) {
+          text = '';
+          if (s.intro_quote) text += s.intro_quote + '. ';
+          if (s.intro_text) text += s.intro_text + ' ';
+          if (s.questions) text += s.questions.map(q => `Question ${q.number}. ${q.question}`).join('. ');
+        }
+      } break;
+      case 'verses': text = (d.bible_verses||[]).map(v => `${v.reference}. ${v.relevance}`).join('. '); break;
+      case 'application': text = (d.application||[]).map((a,i) => `${i+1}. ${a.question}. ${a.prompt}`).join('. '); break;
+    }
+    if (!text) return;
+
+    const utter = new SpeechSynthesisUtterance(text);
+    utter.rate = 0.95;
+    btn.textContent = 'Stop'; btn.classList.add('speaking');
+    utter.onend = () => { btn.textContent = 'Listen'; btn.classList.remove('speaking'); };
+    utter.onerror = () => { btn.textContent = 'Listen'; btn.classList.remove('speaking'); };
+    speechSynthesis.speak(utter);
   }
 
   function copyAll() {
