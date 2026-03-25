@@ -682,9 +682,9 @@
 
   <!-- YouTube Link Input -->
   <div class="alt-input" id="youtubeInput">
-    <label>Paste a YouTube link to get transcript instructions</label>
+    <label>Paste a YouTube link</label>
     <input type="text" id="youtubeUrl" placeholder="https://www.youtube.com/watch?v=...">
-    <button class="analyze-btn" id="ytBtn" onclick="analyzeFromYouTube()">Get Transcript</button>
+    <button class="analyze-btn" id="ytBtn" onclick="analyzeFromYouTube()">Summarize</button>
     <div id="ytInstructions" style="display:none; margin-top:12px; padding:12px; background:var(--navy); border:1px solid var(--navy-light); border-radius:4px; font-size:12px; line-height:1.6; color:var(--offwhite);">
       <strong style="color:var(--teal)">How to grab the transcript:</strong><br>
       1. Click the link below to open the video<br>
@@ -1253,7 +1253,7 @@ ${t}`;
     if (!videoId) { showError('Invalid YouTube link. Use a standard youtube.com or youtu.be link.'); return; }
 
     document.getElementById('ytBtn').disabled = true;
-    document.getElementById('ytBtn').textContent = 'Fetching transcript...';
+    document.getElementById('ytBtn').textContent = 'Summarizing...';
     document.getElementById('ytInstructions').style.display = 'none';
     hideError();
 
@@ -1263,12 +1263,12 @@ ${t}`;
       if (!transcript || transcript.length < 50) throw new Error('Could not fetch transcript. The video may not have captions available.');
       state.transcript = transcript;
       document.getElementById('youtubeUrl').value = '';
-      document.getElementById('ytBtn').textContent = 'Get Transcript';
+      document.getElementById('ytBtn').textContent = 'Summarize';
       document.getElementById('ytBtn').disabled = false;
       analyzeSermon();
     } catch (err) {
       showError(err.message || 'Could not fetch YouTube transcript.');
-      document.getElementById('ytBtn').textContent = 'Get Transcript';
+      document.getElementById('ytBtn').textContent = 'Summarize';
       document.getElementById('ytBtn').disabled = false;
     }
   }
