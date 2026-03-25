@@ -1258,22 +1258,18 @@ ${t}`;
     hideError();
 
     try {
-      const transcript = await fetchYouTubeTranscript(videoId);
-      if (!transcript || transcript.length < 50) throw new Error('no transcript');
+      const ytFullUrl = `https://www.youtube.com/watch?v=${videoId}`;
+      const transcript = await fetchYouTubeTranscript(ytFullUrl);
+      if (!transcript || transcript.length < 50) throw new Error('Could not fetch transcript. The video may not have captions available.');
       state.transcript = transcript;
       document.getElementById('youtubeUrl').value = '';
       document.getElementById('ytBtn').textContent = 'Get Transcript';
       document.getElementById('ytBtn').disabled = false;
       analyzeSermon();
     } catch (err) {
-      // Auto-fetch failed — show manual instructions
+      showError(err.message || 'Could not fetch YouTube transcript.');
       document.getElementById('ytBtn').textContent = 'Get Transcript';
       document.getElementById('ytBtn').disabled = false;
-      const instrEl = document.getElementById('ytInstructions');
-      const linkEl = document.getElementById('ytLink');
-      linkEl.href = `https://www.youtube.com/watch?v=${videoId}`;
-      instrEl.style.display = 'block';
-      document.getElementById('textInput').classList.add('visible');
     }
   }
 
@@ -1289,51 +1285,46 @@ ${t}`;
     return null;
   }
 
-  async function fetchYouTubeTranscript(videoId) {
-    // Try multiple CORS proxies to fetch YouTube page and extract captions
-    const proxies = [
-      (u) => `https://api.allorigins.win/raw?url=${encodeURIComponent(u)}`,
-      (u) => `https://corsproxy.io/?${encodeURIComponent(u)}`,
-      (u) => `https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(u)}`
-    ];
+  async function fetchYouTubeTranscript(ytUrl) {
+    // Use Supadata API for reliable YouTube transcript fetching
+    const SUPADATA_KEY = 'sd_48d0ed641ddeffa218adf8127bd72f7e';
+    const apiUrl = `https://api.supadata.ai/v1/transcript?url=${encodeURIComponent(ytUrl)}&text=true&lang=en`;
 
-    const ytUrl = `https://www.youtube.com/watch?v=${videoId}`;
+    const r = await fetch(apiUrl, {
+      headers: { 'x-api-key': SUPADATA_KEY }
+    });
 
-    for (const proxy of proxies) {
-      try {
-        const r = await fetch(proxy(ytUrl), { signal: AbortSignal.timeout(10000) });
-        if (!r.ok) continue;
-        const html = await r.text();
-
-        // Extract captions track URL from page data
-        const captionMatch = html.match(/"captionTracks":\s*(\[.*?\])/);
-        if (!captionMatch) continue;
-
-        const tracks = JSON.parse(captionMatch[1]);
-        const track = tracks.find(t => t.languageCode === 'en') || tracks.find(t => t.languageCode?.startsWith('en')) || tracks[0];
-        if (!track || !track.baseUrl) continue;
-
-        const captionUrl = track.baseUrl.replace(/\\u0026/g, '&');
-        const capR = await fetch(proxy(captionUrl), { signal: AbortSignal.timeout(10000) });
-        if (!capR.ok) continue;
-        const xml = await capR.text();
-
-        // Parse XML captions
-        const texts = [];
-        const regex = /<text[^>]*>([\s\S]*?)<\/text>/g;
-        let m;
-        while ((m = regex.exec(xml)) !== null) {
-          let t = m[1].replace(/&amp;/g,'&').replace(/&lt;/g,'<').replace(/&gt;/g,'>').replace(/&quot;/g,'"').replace(/&#39;/g,"'").replace(/\n/g,' ').trim();
-          if (t) texts.push(t);
-        }
-
-        if (texts.length > 0) return texts.join(' ');
-      } catch (e) {
-        continue;
-      }
+    if (!r.ok) {
+      const err = await r.json().catch(() => ({}));
+      if (r.status === 404) throw new Error('Video not found or is private.');
+      if (r.status === 403) throw new Error('Video is restricted or requires authentication.');
+      throw new Error(err.message || `Transcript fetch failed (${r.status})`);
     }
 
-    throw new Error('Could not fetch transcript automatically.');
+    const data = await r.json();
+
+    // Handle async processing (job-based response)
+    if (r.status === 202 && data.jobId) {
+      // Poll for result
+      for (let i = 0; i < 30; i++) {
+        await new Promise(resolve => setTimeout(resolve, 2000));
+        const pollR = await fetch(`https://api.supadata.ai/v1/transcript/${data.jobId}`, {
+          headers: { 'x-api-key': SUPADATA_KEY }
+        });
+        const pollData = await pollR.json();
+        if (pollData.status === 'completed' && pollData.content) return pollData.content;
+        if (pollData.status === 'failed') throw new Error(pollData.error || 'Transcript processing failed.');
+      }
+      throw new Error('Transcript processing timed out.');
+    }
+
+    // Direct response
+    if (data.content) {
+      if (typeof data.content === 'string') return data.content;
+      if (Array.isArray(data.content)) return data.content.map(s => s.text || '').join(' ');
+    }
+
+    throw new Error('No transcript available for this video.');
   }
 
 
