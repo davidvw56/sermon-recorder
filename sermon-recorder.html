@@ -631,40 +631,12 @@
   <h1>Sermon Recorder</h1>
   <div class="nav-links">
     <button onclick="toggleHistory()">History</button>
-    <button onclick="toggleSettings()">Settings</button>
   </div>
 </nav>
 
 <div class="main">
-  <!-- Settings -->
-  <div class="settings-panel" id="settingsPanel">
-    <h3>Configuration</h3>
-    <div class="setting-group">
-      <label>Anthropic API Key</label>
-      <small>Required for analysis — console.anthropic.com</small>
-      <input type="password" id="anthropicKey" placeholder="sk-ant-..." oninput="saveSetting('anthropicKey', this.value)">
-    </div>
-    <div class="setting-group">
-      <label>OpenAI API Key (optional)</label>
-      <small>Only for Whisper transcription</small>
-      <input type="password" id="openaiKey" placeholder="sk-..." oninput="saveSetting('openaiKey', this.value)">
-    </div>
-    <div class="setting-group">
-      <label>Transcription Engine</label>
-      <div class="engine-toggle">
-        <button class="engine-btn active" id="engineBrowser" onclick="setEngine('browser')">Browser (Free)</button>
-        <button class="engine-btn" id="engineWhisper" onclick="setEngine('whisper')">Whisper</button>
-      </div>
-    </div>
-    <div class="setting-group">
-      <label>Save Folder</label>
-      <small>Choose where downloaded files are saved</small>
-      <div style="display:flex;gap:8px;align-items:center;margin-top:6px">
-        <button class="engine-btn" onclick="pickSaveFolder()" style="flex:none;padding:8px 14px">Choose Folder</button>
-        <span id="saveFolderName" style="font-size:12px;color:var(--gray-mid);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">Default (Downloads)</span>
-      </div>
-    </div>
-  </div>
+  <!-- Save folder name display (hidden, used by JS) -->
+  <span id="saveFolderName" style="display:none">Default (Downloads)</span>
 
   <!-- Error -->
   <div class="error-msg" id="errorMsg"></div>
@@ -731,7 +703,7 @@
     <h2 id="resultsTitle" style="font-family:var(--font-display);font-size:20px;font-weight:700;margin-bottom:12px;">Analysis</h2>
 
     <div class="result-card navy-accent" id="pitchCard">
-      <div class="overline">Elevator Pitch</div>
+      <div class="overline">Introduction</div>
       <h3><span></span><button class="copy-btn" onclick="copySection(this, 'pitch')">Copy</button><button class="listen-btn" onclick="speakSection(this, 'pitch')">Listen</button></h3>
       <div class="elevator-pitch" id="pitchContent"></div>
     </div>
@@ -775,18 +747,21 @@
 </div>
 
 <script>
+  // ── Worker URL — update after deploying to Cloudflare ──
+  const WORKER_URL = 'https://sermon-summary-api.david-vanwinkle1.workers.dev';
+
   let state = {
     recording: false, mediaRecorder: null, audioChunks: [], audioBlob: null,
     timerInterval: null, startTime: null, recognition: null, transcript: '',
     engine: 'browser', analyzerNode: null, animFrame: null, analysisData: null,
-    saveDirHandle: null
+    saveDirHandle: null,
+    mode: 'community' // 'community' or 'personal'
   };
 
   (function init() {
-    document.getElementById('anthropicKey').value = localStorage.getItem('anthropicKey') || '';
-    document.getElementById('openaiKey').value = localStorage.getItem('openaiKey') || '';
-    state.engine = localStorage.getItem('engine') || 'browser';
-    updateEngineUI();
+    // Hardcoded settings — community mode, browser transcription engine
+    state.engine = 'browser';
+    state.mode = 'community';
     const wf = document.getElementById('waveform');
     for (let i = 0; i < 32; i++) {
       const b = document.createElement('div');
@@ -808,13 +783,7 @@
     if (navigator.canShare) document.getElementById('shareBtn').style.display = '';
   })();
 
-  function toggleSettings() { document.getElementById('settingsPanel').classList.toggle('open'); document.getElementById('historyPanel').classList.remove('open'); }
-  function saveSetting(k, v) { localStorage.setItem(k, v); }
-  function setEngine(e) { state.engine = e; localStorage.setItem('engine', e); updateEngineUI(); }
-  function updateEngineUI() {
-    document.getElementById('engineBrowser').classList.toggle('active', state.engine === 'browser');
-    document.getElementById('engineWhisper').classList.toggle('active', state.engine === 'whisper');
-  }
+  // Settings removed — all config is hardcoded. Ask Claude to change if needed.
 
   async function toggleRecording() {
     state.recording ? stopRecording() : await startRecording();
@@ -934,8 +903,6 @@
   }
 
   async function analyzeSermon() {
-    const key = localStorage.getItem('anthropicKey');
-    if (!key) { showError('Add your Anthropic API key in Settings.'); return; }
     const t = state.transcript?.trim();
     if (!t || t.length < 50) { showError('Record a sermon first — transcript is too short.'); return; }
 
@@ -984,15 +951,11 @@ SERMON TRANSCRIPT:
 ${t}`;
 
     try {
-      const r = await fetch('https://api.anthropic.com/v1/messages', {
+      const apiPayload = { model: 'claude-sonnet-4-6', max_tokens: 8000, messages: [{ role: 'user', content: prompt }] };
+      const r = await fetch(WORKER_URL + '/api/analyze', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'x-api-key': key,
-          'anthropic-version': '2023-06-01',
-          'anthropic-dangerous-direct-browser-access': 'true'
-        },
-        body: JSON.stringify({ model: 'claude-sonnet-4-6', max_tokens: 8000, messages: [{ role: 'user', content: prompt }] })
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(apiPayload)
       });
       if (!r.ok) throw new Error((await r.json()).error?.message || `API error: ${r.status}`);
       const text = (await r.json()).content[0].text;
@@ -1102,16 +1065,21 @@ ${t}`;
     });
   }
 
+  let currentSpeechBtn = null;
+
+  function stopSpeech() {
+    speechSynthesis.cancel();
+    document.querySelectorAll('.listen-btn.speaking').forEach(b => {
+      b.textContent = 'Listen'; b.classList.remove('speaking');
+    });
+    currentSpeechBtn = null;
+  }
+
   function speakSection(btn, section) {
-    // If already speaking, stop
-    if (speechSynthesis.speaking) {
-      speechSynthesis.cancel();
-      document.querySelectorAll('.listen-btn.speaking').forEach(b => {
-        b.textContent = 'Listen'; b.classList.remove('speaking');
-      });
-      // If clicking the same button that was speaking, just stop
-      if (btn.classList.contains('speaking')) return;
-    }
+    const wasSpeaking = btn.classList.contains('speaking');
+    // Always stop any current speech first
+    stopSpeech();
+    if (wasSpeaking) return;
 
     if (!state.analysisData) return;
     const d = state.analysisData;
@@ -1142,12 +1110,33 @@ ${t}`;
     }
     if (!text) return;
 
-    const utter = new SpeechSynthesisUtterance(text);
-    utter.rate = 0.95;
+    // Split long text into chunks under 200 chars (mobile Chrome limit)
+    const sentences = text.match(/[^.!?]+[.!?]+/g) || [text];
+    const chunks = [];
+    let current = '';
+    for (const s of sentences) {
+      if ((current + s).length > 200 && current) { chunks.push(current); current = ''; }
+      current += s;
+    }
+    if (current) chunks.push(current);
+
+    currentSpeechBtn = btn;
     btn.textContent = 'Stop'; btn.classList.add('speaking');
-    utter.onend = () => { btn.textContent = 'Listen'; btn.classList.remove('speaking'); };
-    utter.onerror = () => { btn.textContent = 'Listen'; btn.classList.remove('speaking'); };
-    speechSynthesis.speak(utter);
+
+    let i = 0;
+    function speakNext() {
+      if (i >= chunks.length || currentSpeechBtn !== btn) {
+        btn.textContent = 'Listen'; btn.classList.remove('speaking');
+        currentSpeechBtn = null;
+        return;
+      }
+      const utter = new SpeechSynthesisUtterance(chunks[i]);
+      utter.rate = 0.95;
+      utter.onend = () => { i++; speakNext(); };
+      utter.onerror = () => { btn.textContent = 'Listen'; btn.classList.remove('speaking'); currentSpeechBtn = null; };
+      speechSynthesis.speak(utter);
+    }
+    speakNext();
   }
 
   function copyAll() {
@@ -1170,7 +1159,7 @@ ${t}`;
       if (d.group_study.questions) studyLines.push(...d.group_study.questions.map(q => `Q${q.number}. ${q.question}`));
     }
     navigator.clipboard.writeText([
-      'SERMON ANALYSIS', '='.repeat(40), '', 'ELEVATOR PITCH', d.elevator_pitch, '',
+      'SERMON ANALYSIS', '='.repeat(40), '', 'INTRODUCTION', d.elevator_pitch, '',
       'MAIN POINTS', ...mainPts, '',
       'CONCLUSIONS', ...concl, '',
       '7 KEY QUOTES', ...(d.key_quotes||[]).map((q,i) => `${i+1}. "${q}"`), '',
@@ -1198,7 +1187,7 @@ ${t}`;
       if (d.group_study.questions) study.push(...d.group_study.questions.map(q => `Q${q.number}. ${q.question}`));
     }
     const title = d.sermon_title ? [d.sermon_title, ''] : [];
-    return [...title, 'SERMON ANALYSIS','='.repeat(40),'','ELEVATOR PITCH',d.elevator_pitch,'',
+    return [...title, 'SERMON ANALYSIS','='.repeat(40),'','INTRODUCTION',d.elevator_pitch,'',
       'MAIN POINTS',...pts,'',
       'CONCLUSIONS',...concl,'',
       '7 KEY QUOTES',...(d.key_quotes||[]).map((q,i)=>`${i+1}. "${q}"`),'',
@@ -1348,13 +1337,7 @@ ${t}`;
   }
 
   async function fetchYouTubeTranscript(ytUrl) {
-    // Use Supadata API for reliable YouTube transcript fetching
-    const SUPADATA_KEY = 'sd_48d0ed641ddeffa218adf8127bd72f7e';
-    const apiUrl = `https://api.supadata.ai/v1/transcript?url=${encodeURIComponent(ytUrl)}&text=true&lang=en`;
-
-    const r = await fetch(apiUrl, {
-      headers: { 'x-api-key': SUPADATA_KEY }
-    });
+    const r = await fetch(`${WORKER_URL}/api/transcript?url=${encodeURIComponent(ytUrl)}`);
 
     if (!r.ok) {
       const err = await r.json().catch(() => ({}));
@@ -1367,12 +1350,9 @@ ${t}`;
 
     // Handle async processing (job-based response)
     if (r.status === 202 && data.jobId) {
-      // Poll for result
       for (let i = 0; i < 30; i++) {
         await new Promise(resolve => setTimeout(resolve, 2000));
-        const pollR = await fetch(`https://api.supadata.ai/v1/transcript/${data.jobId}`, {
-          headers: { 'x-api-key': SUPADATA_KEY }
-        });
+        const pollR = await fetch(`${WORKER_URL}/api/transcript/${data.jobId}`);
         const pollData = await pollR.json();
         if (pollData.status === 'completed' && pollData.content) return pollData.content;
         if (pollData.status === 'failed') throw new Error(pollData.error || 'Transcript processing failed.');
@@ -1394,7 +1374,7 @@ ${t}`;
   function toggleHistory() {
     const panel = document.getElementById('historyPanel');
     panel.classList.toggle('open');
-    document.getElementById('settingsPanel').classList.remove('open');
+    // Settings panel removed
     if (panel.classList.contains('open')) renderHistory();
   }
 

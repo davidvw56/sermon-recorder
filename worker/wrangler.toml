@@ -1,0 +1,9 @@
+name = "sermon-summary-api"
+main = "worker.js"
+compatibility_date = "2024-01-01"
+
+# Secrets (set via `wrangler secret put ANTHROPIC_KEY` and `wrangler secret put SUPADATA_KEY`)
+# ANTHROPIC_KEY - your Anthropic API key
+# SUPADATA_KEY - your Supadata API key
+
+# Rate limiting uses in-memory Map (resets on worker restart, which is fine for light usage)
