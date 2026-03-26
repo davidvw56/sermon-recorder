@@ -762,6 +762,10 @@
     // Hardcoded settings — community mode, browser transcription engine
     state.engine = 'browser';
     state.mode = 'community';
+    // Hide Listen buttons on iOS (all iOS browsers use Safari's limited speech engine)
+    if (/iPad|iPhone|iPod/.test(navigator.userAgent)) {
+      document.querySelectorAll('.listen-btn').forEach(b => b.style.display = 'none');
+    }
     const wf = document.getElementById('waveform');
     for (let i = 0; i < 32; i++) {
       const b = document.createElement('div');
