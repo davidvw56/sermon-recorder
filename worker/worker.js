@@ -5,6 +5,7 @@ const ALLOWED_ORIGINS = [
   'https://davidvw56.github.io',
   'http://localhost',
   'http://127.0.0.1',
+  'null', // file:// origins send "null"
 ];
 
 const DAILY_LIMIT = 50; // max analyses per IP per day

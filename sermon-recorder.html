@@ -1307,24 +1307,35 @@ ${t}`;
     const videoId = extractVideoId(url);
     if (!videoId) { showError('Invalid YouTube link. Use a standard youtube.com or youtu.be link.'); return; }
 
-    document.getElementById('ytBtn').disabled = true;
-    document.getElementById('ytBtn').textContent = 'Summarizing...';
-    document.getElementById('ytInstructions').style.display = 'none';
+    const ytBtn = document.getElementById('ytBtn');
+    const ytInst = document.getElementById('ytInstructions');
+    ytBtn.disabled = true;
+    ytBtn.textContent = 'Fetching transcript...';
+    ytInst.style.display = 'none';
     hideError();
 
     try {
       const ytFullUrl = `https://www.youtube.com/watch?v=${videoId}`;
-      const transcript = await fetchYouTubeTranscript(ytFullUrl);
+      const transcript = await fetchYouTubeTranscript(ytFullUrl, ytBtn);
       if (!transcript || transcript.length < 50) throw new Error('Could not fetch transcript. The video may not have captions available.');
       state.transcript = transcript;
       document.getElementById('youtubeUrl').value = '';
-      document.getElementById('ytBtn').textContent = 'Summarize';
-      document.getElementById('ytBtn').disabled = false;
+      ytBtn.textContent = 'Summarize';
+      ytBtn.disabled = false;
       analyzeSermon();
     } catch (err) {
-      showError(err.message || 'Could not fetch YouTube transcript.');
-      document.getElementById('ytBtn').textContent = 'Summarize';
-      document.getElementById('ytBtn').disabled = false;
+      // Show manual fallback instructions on timeout or transcript failure
+      const isTimeout = err.message?.includes('timed out');
+      const msg = isTimeout
+        ? 'Transcript fetch timed out. Try the manual method below, or try a video with closed captions (CC).'
+        : (err.message || 'Could not fetch YouTube transcript.');
+      showError(msg);
+      if (isTimeout || err.message?.includes('No transcript')) {
+        document.getElementById('ytLink').href = `https://www.youtube.com/watch?v=${videoId}`;
+        ytInst.style.display = 'block';
+      }
+      ytBtn.textContent = 'Summarize';
+      ytBtn.disabled = false;
     }
   }
 
@@ -1340,7 +1351,7 @@ ${t}`;
     return null;
   }
 
-  async function fetchYouTubeTranscript(ytUrl) {
+  async function fetchYouTubeTranscript(ytUrl, statusBtn) {
     const r = await fetch(`${WORKER_URL}/api/transcript?url=${encodeURIComponent(ytUrl)}`);
 
     if (!r.ok) {
@@ -1354,14 +1365,16 @@ ${t}`;
 
     // Handle async processing (job-based response)
     if (r.status === 202 && data.jobId) {
-      for (let i = 0; i < 30; i++) {
+      const maxPolls = 45; // ~90 seconds
+      for (let i = 0; i < maxPolls; i++) {
+        if (statusBtn) statusBtn.textContent = `Processing... ${Math.round(((i+1)/maxPolls)*100)}%`;
         await new Promise(resolve => setTimeout(resolve, 2000));
         const pollR = await fetch(`${WORKER_URL}/api/transcript/${data.jobId}`);
         const pollData = await pollR.json();
         if (pollData.status === 'completed' && pollData.content) return pollData.content;
         if (pollData.status === 'failed') throw new Error(pollData.error || 'Transcript processing failed.');
       }
-      throw new Error('Transcript processing timed out.');
+      throw new Error('Transcript processing timed out. This video may not have captions, or the service is slow.');
     }
 
     // Direct response
