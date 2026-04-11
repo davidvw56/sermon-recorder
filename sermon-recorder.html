@@ -147,6 +147,152 @@
     color: var(--teal);
   }
 
+  /* ── Report Type Selector ── */
+  .report-selector {
+    margin: 16px 0 8px;
+  }
+  .report-selector-label {
+    font-size: 11px; font-weight: 700; letter-spacing: 1.5px;
+    text-transform: uppercase; color: var(--gray-mid); margin-bottom: 8px;
+  }
+  .report-toggle { display: flex; gap: 6px; }
+  .report-btn {
+    flex: 1; padding: 10px 8px;
+    border: 1px solid var(--navy-light); border-radius: 6px;
+    background: var(--navy-deep); cursor: pointer;
+    text-align: center; display: flex; flex-direction: column;
+    align-items: center; gap: 2px; transition: all 0.2s ease;
+  }
+  .report-btn strong {
+    font-size: 12px; font-weight: 700; color: var(--gray-mid);
+    font-family: var(--font-body);
+  }
+  .report-btn small {
+    font-size: 10px; color: var(--gray-mid); opacity: 0.6;
+    font-family: var(--font-body);
+  }
+  .report-btn.active {
+    border-color: var(--teal);
+    background: rgba(42,127,165,0.12);
+  }
+  .report-btn.active strong { color: var(--teal); }
+  .report-btn.active small { color: var(--teal); opacity: 0.8; }
+  .report-btn:hover { border-color: var(--teal); }
+
+  /* ── Coaching Report Styles ── */
+  .coaching-report { color: var(--white); }
+  .score-circle-wrap { text-align: center; margin: 20px 0; }
+  .score-circle {
+    width: 120px; height: 120px; border-radius: 50%;
+    display: inline-flex; align-items: center; justify-content: center;
+    flex-direction: column; border: 4px solid;
+  }
+  .score-circle .score-num { font-size: 36px; font-weight: 800; font-family: var(--font-display); }
+  .score-circle .score-label { font-size: 10px; text-transform: uppercase; letter-spacing: 1px; opacity: 0.7; }
+  .score-green { border-color: var(--green); color: var(--green); }
+  .score-gold { border-color: var(--gold); color: var(--gold); }
+  .score-red { border-color: var(--red); color: var(--red); }
+
+  .tier-group { margin-bottom: 16px; }
+  .tier-header {
+    font-size: 11px; font-weight: 700; letter-spacing: 1.5px;
+    text-transform: uppercase; color: var(--teal); margin-bottom: 8px;
+    padding-bottom: 4px; border-bottom: 1px solid var(--navy-light);
+  }
+  .dim-row { display: flex; align-items: center; gap: 10px; margin-bottom: 6px; }
+  .dim-name { width: 180px; font-size: 12px; font-weight: 600; flex-shrink: 0; }
+  .dim-dots { display: flex; gap: 4px; }
+  .dim-dot {
+    width: 14px; height: 14px; border-radius: 50%;
+    border: 2px solid var(--teal); background: transparent;
+  }
+  .dim-dot.filled { background: var(--teal); }
+  .dim-summary { font-size: 11px; color: var(--gray-mid); margin: 0 0 10px 190px; }
+
+  .coaching-card {
+    background: var(--navy); border-radius: 8px; padding: 14px;
+    margin-bottom: 12px; border-left: 3px solid;
+  }
+  .coaching-card.strength { border-color: var(--green); }
+  .coaching-card.improvement { border-color: var(--gold); }
+  .coaching-card.toolkit { border-color: var(--teal); }
+  .coaching-card h4 { font-size: 14px; font-weight: 700; margin-bottom: 6px; }
+  .coaching-card p { font-size: 12px; line-height: 1.6; color: var(--gray-mid); margin-bottom: 4px; }
+  .coaching-card .evidence-quote {
+    font-style: italic; font-size: 12px; color: var(--teal);
+    padding: 6px 10px; background: rgba(42,127,165,0.08);
+    border-radius: 4px; margin-top: 6px;
+  }
+  .coaching-card .exercise {
+    font-size: 12px; color: var(--gold); margin-top: 6px;
+    padding: 6px 10px; background: rgba(184,134,11,0.08); border-radius: 4px;
+  }
+
+  /* ── Candidate Report Styles ── */
+  .candidate-report { color: var(--white); }
+  .exec-summary {
+    background: var(--navy); border-radius: 8px; padding: 16px;
+    border-left: 3px solid var(--teal); margin-bottom: 16px;
+    font-size: 13px; line-height: 1.8;
+  }
+  .chart-pair { display: flex; gap: 16px; margin: 16px 0; flex-wrap: wrap; }
+  .chart-box {
+    flex: 1; min-width: 280px; background: var(--navy);
+    border-radius: 8px; padding: 16px; text-align: center;
+  }
+  .chart-box h4 { font-size: 13px; font-weight: 700; margin-bottom: 10px; }
+  .chart-box canvas { max-width: 100%; }
+
+  .bar-section { margin-bottom: 16px; }
+  .bar-section h4 {
+    font-size: 11px; font-weight: 700; letter-spacing: 1.5px;
+    text-transform: uppercase; margin-bottom: 10px;
+    padding-bottom: 4px; border-bottom: 1px solid var(--navy-light);
+  }
+  .bar-row { margin-bottom: 10px; }
+  .bar-row-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 3px; }
+  .bar-label { font-size: 12px; font-weight: 600; }
+  .bar-score { font-size: 12px; font-weight: 700; }
+  .bar-track { height: 8px; background: var(--navy); border-radius: 4px; overflow: hidden; }
+  .bar-fill { height: 100%; border-radius: 4px; transition: width 0.6s ease; }
+  .bar-fill-blue { background: linear-gradient(90deg, var(--teal), #6bb3f0); }
+  .bar-fill-gold { background: linear-gradient(90deg, var(--gold), #e8c96a); }
+  .bar-desc { font-size: 11px; color: var(--gray-mid); margin-top: 3px; }
+  .conf-badge {
+    display: inline-block; padding: 1px 6px; border-radius: 3px;
+    font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;
+    margin-left: 6px;
+  }
+  .conf-high { background: rgba(27,110,58,0.2); color: var(--green); }
+  .conf-medium { background: rgba(184,134,11,0.2); color: var(--gold); }
+  .conf-low { background: rgba(176,39,29,0.2); color: var(--red); }
+
+  .fit-columns { display: flex; gap: 12px; margin: 12px 0; flex-wrap: wrap; }
+  .fit-col {
+    flex: 1; min-width: 250px; background: var(--navy);
+    border-radius: 8px; padding: 14px;
+  }
+  .fit-col h4 { font-size: 13px; font-weight: 700; margin-bottom: 8px; }
+  .fit-col.conservative { border-left: 3px solid var(--red); }
+  .fit-col.progressive { border-left: 3px solid var(--gold); }
+  .fit-item {
+    font-size: 12px; color: var(--gray-mid); padding: 6px 0;
+    border-bottom: 1px solid var(--navy-light);
+  }
+  .fit-item:last-child { border-bottom: none; }
+
+  .signal-item {
+    font-size: 12px; padding: 8px 12px; margin-bottom: 6px;
+    background: rgba(42,127,165,0.08); border-left: 3px solid var(--teal);
+    border-radius: 0 4px 4px 0;
+  }
+  .committee-q {
+    font-size: 12px; padding: 8px 0;
+    border-bottom: 1px solid var(--navy-light); line-height: 1.6;
+  }
+  .committee-q:last-child { border-bottom: none; }
+  .committee-q strong { color: var(--teal); }
+
   /* ── Recorder ── */
   .recorder {
     text-align: center;
@@ -658,6 +804,25 @@
     </div>
   </div>
 
+  <!-- Report Type Selector -->
+  <div class="report-selector" id="reportSelector">
+    <div class="report-selector-label">Report Type</div>
+    <div class="report-toggle">
+      <button class="report-btn active" id="btn-summary" onclick="selectReportType('summary')">
+        <strong>Summary</strong>
+        <small>Study guide &amp; quotes</small>
+      </button>
+      <button class="report-btn" id="btn-coaching" onclick="selectReportType('coaching')">
+        <strong>Coaching</strong>
+        <small>Scored feedback</small>
+      </button>
+      <button class="report-btn" id="btn-candidate" onclick="selectReportType('candidate')">
+        <strong>Candidate</strong>
+        <small>Search committee</small>
+      </button>
+    </div>
+  </div>
+
   <!-- Paste Text Input -->
   <div class="alt-input" id="textInput">
     <label>Paste sermon transcript or notes</label>
@@ -755,7 +920,8 @@
     timerInterval: null, startTime: null, recognition: null, transcript: '',
     engine: 'browser', analyzerNode: null, animFrame: null, analysisData: null,
     saveDirHandle: null,
-    mode: 'community' // 'community' or 'personal'
+    mode: 'community', // 'community' or 'personal'
+    reportType: 'summary' // 'summary', 'coaching', or 'candidate'
   };
 
   (function init() {
@@ -788,6 +954,12 @@
   })();
 
   // Settings removed — all config is hardcoded. Ask Claude to change if needed.
+
+  function selectReportType(type) {
+    state.reportType = type;
+    document.querySelectorAll('.report-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById('btn-' + type).classList.add('active');
+  }
 
   async function toggleRecording() {
     state.recording ? stopRecording() : await startRecording();
@@ -915,48 +1087,12 @@
     document.getElementById('results').classList.remove('visible');
     hideError();
 
-    const prompt = `You are a skilled theologian and sermon analyst. Analyze the following sermon transcript and return a JSON object with exactly these keys:
-
-1. "sermon_title": A concise 5-8 word title that captures the core purpose or theme of the sermon. Lead with the main idea, not a Bible reference. This should immediately tell someone what the sermon is about. Examples: "Finding Rest in God's Faithfulness", "Why Suffering Shapes Our Character", "The Power of Radical Generosity".
-
-2. "elevator_pitch": A compelling 1-2 sentence summary someone could use to tell a friend about this sermon. Conversational and engaging.
-
-3. "main_points": An array of objects, each with:
-   - "title": A bold descriptive title for the point (e.g. "The Core Biblical Theme: God Dwells with His People")
-   - "explanation": A detailed 2-4 sentence explanation of this point as it was developed in the sermon
-   - "sub_points": (optional) An array of objects with "title" and "explanation" for any significant sub-points under this main point
-   Include 4-6 main points that thoroughly capture the sermon's content and structure.
-
-4. "conclusions": An array of objects, each with:
-   - "title": A bold descriptive title (e.g. "God's Desire for Intimacy")
-   - "explanation": A 2-3 sentence explanation of this conclusion or takeaway
-   Include 3-5 conclusions drawn from the sermon.
-
-5. "key_quotes": An array of exactly 7 direct quotes capturing the arc of the entire message — opening to closing. The full journey, not just highlights.
-
-6. "group_study": An object with:
-   - "intro_quote": The single most meaningful or impactful quote from the sermon
-   - "intro_text": A warm 2-3 sentence introduction that sets up the study using that quote, welcoming the group into the conversation
-   - "questions": An array of exactly 5 objects, each with "number" (1-5), "question", and "purpose" ("opener", "subpoint", or "closer"):
-     * Question 1 (purpose: "opener"): A welcoming, broad opening question that is easy to answer and invites everyone into the conversation. This question is REQUIRED in every study.
-     * Questions 2-4 (purpose: "subpoint"): Each tied to a specific main point or sub-point of the sermon. Thought-provoking and discussion-generating.
-     * Question 5 (purpose: "closer"): A closing question that is both deeply reflective AND activating — it should send people out with something concrete to think about or do. This question is REQUIRED in every study.
-
-7. "bible_verses": An array of 2-3 objects with "reference" and "relevance" (1-2 sentences on how it connects to this sermon). Choose verses that speak precisely to what was taught.
-
-8. "application": An array of exactly 4 objects, each with "question" and "prompt":
-   - Question 1: A reflective question about what it would look like to live out the message of this sermon in the listener's own life. The "prompt" should give a brief, specific nudge drawn from the sermon's themes to help them think concretely.
-   - Question 2: A question about who the listener should tell about the message of this sermon and what they would say. The "prompt" should help them think about a specific person or situation from the sermon's context.
-   - Question 3: A prompt to choose one or two verses from this sermon to meditate on over the next week. The "prompt" should explain why meditating on God's word matters, drawing directly from what the pastor taught in this sermon about the power or importance of Scripture, and encourage the listener to let it shape their thinking throughout the week.
-   - Question 4: A prompt to create a personal prayer to God based on the message of this sermon. The "prompt" should offer a starting point or theme drawn directly from the sermon to help them begin.
-
-Return ONLY valid JSON, no markdown, no code blocks.
-
-SERMON TRANSCRIPT:
-${t}`;
+    const reportType = state.reportType || 'summary';
+    const prompt = getPromptForType(reportType, t);
+    const maxTokens = reportType === 'candidate' ? 16000 : 8000;
 
     try {
-      const apiPayload = { model: 'claude-sonnet-4-6', max_tokens: 8000, messages: [{ role: 'user', content: prompt }] };
+      const apiPayload = { model: 'claude-sonnet-4-6', max_tokens: maxTokens, messages: [{ role: 'user', content: prompt }] };
       const r = await fetch(WORKER_URL + '/api/analyze', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -976,11 +1112,176 @@ ${t}`;
     }
   }
 
-  function renderResults(d, skipSave) {
-    document.getElementById('resultsTitle').textContent = d.sermon_title || 'Analysis';
-    document.getElementById('pitchContent').textContent = d.elevator_pitch || '';
+  function getPromptForType(type, transcript) {
+    if (type === 'coaching') return getCoachingPrompt(transcript);
+    if (type === 'candidate') return getCandidatePrompt(transcript);
+    return getSummaryPrompt(transcript);
+  }
 
-    // Main Points — rich format with titles, explanations, sub-points
+  function getSummaryPrompt(t) {
+    return `You are a skilled theologian and sermon analyst. Analyze the following sermon transcript and return a JSON object with exactly these keys:
+
+1. "sermon_title": A concise 5-8 word title that captures the core purpose or theme of the sermon. Lead with the main idea, not a Bible reference.
+
+2. "elevator_pitch": A compelling 1-2 sentence summary someone could use to tell a friend about this sermon.
+
+3. "main_points": An array of objects, each with:
+   - "title": A bold descriptive title
+   - "explanation": A detailed 2-4 sentence explanation
+   - "sub_points": (optional) An array of objects with "title" and "explanation"
+   Include 4-6 main points.
+
+4. "conclusions": An array of objects, each with "title" and "explanation" (2-3 sentences). Include 3-5 conclusions.
+
+5. "key_quotes": An array of exactly 7 direct quotes capturing the arc of the entire message — opening to closing.
+
+6. "group_study": An object with:
+   - "intro_quote": The single most meaningful quote from the sermon
+   - "intro_text": A warm 2-3 sentence introduction
+   - "questions": An array of exactly 5 objects with "number" (1-5), "question", and "purpose" ("opener", "subpoint", or "closer"):
+     * Q1 (opener): Welcoming, broad, easy to answer
+     * Q2-4 (subpoint): Tied to specific main points, thought-provoking
+     * Q5 (closer): Deeply reflective AND activating
+
+7. "bible_verses": An array of 2-3 objects with "reference" and "relevance".
+
+8. "application": An array of exactly 4 objects with "question" and "prompt":
+   - Q1: How to live out this message
+   - Q2: Who to tell about it
+   - Q3: Verses to meditate on
+   - Q4: A personal prayer prompt
+
+Return ONLY valid JSON, no markdown, no code blocks.
+
+SERMON TRANSCRIPT:
+${t}`;
+  }
+
+  function getCoachingPrompt(t) {
+    return `You are an expert sermon coach and homiletics professor. Analyze this sermon transcript and produce a detailed coaching evaluation. Return a JSON object with these keys:
+
+1. "sermon_title": A concise 5-8 word title capturing the sermon's theme.
+
+2. "speaker_name": The full name of the speaker/preacher. Infer from the transcript (introductions, references, self-mentions). If uncertain, use "Unknown Speaker".
+
+3. "sermon_date": The date the sermon was delivered, if mentioned or inferable from the transcript (format: "Month Day, Year" e.g. "April 6, 2025"). If not determinable, use "Date Unknown".
+
+4. "overall_score": A single number 0-100 representing the weighted overall score. Use this weighting:
+   - Foundation tier (45% total): Biblical Depth 15%, Application Specificity 15%, Gospel Clarity 15%
+   - Craft tier (30% total): Structural Clarity 10%, Illustration Effectiveness 10%, Opening & Closing Power 10%
+   - Connection tier (15% total): Vulnerability & Authenticity 7.5%, Audience Engagement 7.5%
+   - Style tier (10% total): Contemporary Relevance 5%, Intellectual Depth 5%
+
+5. "dimensions": An array of exactly 10 objects, each with:
+   - "name": Dimension name (use exactly these names: "Biblical Depth & Integrity", "Application Specificity", "Gospel Clarity", "Structural Clarity", "Illustration Effectiveness", "Opening & Closing Power", "Vulnerability & Authenticity", "Audience Engagement", "Contemporary Relevance", "Intellectual Depth")
+   - "tier": One of "Foundation", "Craft", "Connection", "Style"
+   - "score": Integer 1-5 (1=needs significant work, 3=competent, 5=exceptional)
+   - "summary": 2 sentences explaining the score with specific observations from the sermon
+   - "evidence": A direct quote from the transcript that supports the score
+
+6. "strengths": An array of 2-3 objects, each with:
+   - "title": What they did well (e.g. "Masterful Use of Personal Story")
+   - "explanation": 2-3 sentences explaining why this was effective
+   - "quote": A direct quote demonstrating the strength
+
+7. "improvements": An array of exactly 3 objects (the 3 highest-impact improvements), each with:
+   - "title": What to improve
+   - "current_state": 1-2 sentences describing what they're currently doing
+   - "target_state": 1-2 sentences describing what excellence looks like
+   - "exercise": A specific, actionable practice exercise they can do this week
+
+8. "toolkit": An array of 2-3 objects, each with:
+   - "title": Resource or technique name
+   - "description": What it is and why it helps
+   - "action": One specific thing to try in their next sermon
+
+Return ONLY valid JSON, no markdown, no code blocks. Be honest but encouraging — this is a coaching tool, not a critique.
+
+SERMON TRANSCRIPT:
+${t}`;
+  }
+
+  function getCandidatePrompt(t) {
+    return `You are an expert at evaluating pastoral candidates for church search committees. Analyze this sermon transcript using TWO rubrics — Teaching Style and Theological Fit. Return a JSON object with these keys:
+
+1. "sermon_title": A concise 5-8 word title capturing the sermon's theme.
+
+2. "speaker_name": The full name of the speaker/preacher. Infer from the transcript (introductions, references, self-mentions). If uncertain, use "Unknown Speaker".
+
+3. "sermon_date": The date the sermon was delivered, if mentioned or inferable from the transcript (format: "Month Day, Year" e.g. "April 6, 2025"). If not determinable, use "Date Unknown".
+
+4. "executive_summary": A 3-5 sentence narrative paragraph describing who this person is as a preacher — their style, strengths, theological positioning, and what kind of church they'd be the best fit for.
+
+5. "teaching_style": An array of exactly 10 objects, each with:
+   - "name": Use exactly these names: "Biblical Methodology", "Application Specificity", "Gospel Urgency", "Structural Approach", "Intellectual Complexity", "Illustration Density", "Vulnerability Level", "Interaction Style", "Contemporary Relevance", "Institutional Integration"
+   - "tier": One of "Core Preaching", "Communication Craft", "Engagement & Style", "Institutional"
+   - "score": Number 1-5 (these are TENDENCIES not quality: e.g., Structure 2 = organic/conversational, 5 = highly outlined)
+   - "description": 2 sentences describing what was observed
+   - "evidence": A direct quote or specific observation from the transcript
+
+6. "theological_fit": An array of exactly 9 objects, each with:
+   - "name": Use exactly these names: "Gender Roles", "Spiritual Gifts", "View of Scripture", "Salvation Emphasis", "Cultural Engagement", "Social Justice", "Political Signaling", "Leadership Style", "Ecclesiology"
+   - "score": Number 1-5 (these are SPECTRA: Gender Roles 1=complementarian/5=egalitarian, Scripture 1=strict inerrancy/5=progressive hermeneutic, Salvation 1=decisional/5=process-oriented, Cultural Engagement 1=counter-cultural/5=culturally engaged, Social Justice 1=individual gospel/5=justice-embedded gospel, Political Signaling 1=conservative signals/5=progressive signals, Leadership 1=CEO-visionary/5=shepherd-relational, Ecclesiology 1=attractional/5=missional)
+   - "confidence": "High", "Medium", or "Low" — based on how much evidence the transcript provided
+   - "description": 2 sentences explaining the assessment
+   - "evidence": A direct quote or observation supporting the score
+
+7. "strengths": An array of 2-3 objects with:
+   - "title": Strength area
+   - "evidence": A direct quote demonstrating it
+   - "significance": Why this matters for a church considering this candidate
+
+8. "growth_areas": An array of 2-3 objects with:
+   - "title": Area for development
+   - "observation": What was noticed
+   - "context": Why this matters (style difference vs. deficiency — be nuanced)
+
+9. "fit_analysis": An object with:
+   - "conservative_concerns": Array of 2-3 strings — signals that might concern more conservative/traditional churches
+   - "progressive_concerns": Array of 2-3 strings — signals that might concern more progressive/mainline churches
+
+10. "key_signals": An array of 3-5 strings — the most revealing moments/statements from the sermon that tell you who this person is
+
+11. "committee_questions": An array of 5-7 recommended follow-up questions for the search committee to ask in an interview, based on areas where the transcript evidence was insufficient or ambiguous
+
+Return ONLY valid JSON, no markdown, no code blocks. Be analytical and objective — this is an assessment tool for decision-makers, not a coaching report.
+
+SERMON TRANSCRIPT:
+${t}`;
+  }
+
+  function renderResults(d, skipSave) {
+    const reportType = state.reportType || 'summary';
+    const container = document.getElementById('results');
+
+    // Show/hide summary-specific cards
+    const summaryCards = ['pitchCard','summaryCard','conclusionsCard','quotesCard','studyCard','versesCard','applicationCard'];
+    summaryCards.forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.style.display = reportType === 'summary' ? '' : 'none';
+    });
+
+    // Remove previous dynamic report
+    const prev = container.querySelector('.coaching-report, .candidate-report');
+    if (prev) prev.remove();
+
+    document.getElementById('resultsTitle').textContent = d.sermon_title || 'Analysis';
+
+    if (reportType === 'summary') {
+      renderSummaryResults(d);
+    } else if (reportType === 'coaching') {
+      renderCoachingResults(d, container);
+    } else if (reportType === 'candidate') {
+      renderCandidateResults(d, container);
+    }
+
+    container.classList.add('visible');
+    container.scrollIntoView({ behavior: 'smooth' });
+    if (!skipSave) saveToHistory(d);
+  }
+
+  function renderSummaryResults(d) {
+    document.getElementById('pitchContent').textContent = d.elevator_pitch || '';
     const points = d.main_points || [];
     let summaryHtml = '';
     if (points.length && typeof points[0] === 'object') {
@@ -995,8 +1296,6 @@ ${t}`;
       summaryHtml = '<ol>' + points.map(p => `<li>${esc(typeof p === 'string' ? p : p.title || '')}</li>`).join('') + '</ol>';
     }
     document.getElementById('summaryContent').innerHTML = summaryHtml;
-
-    // Conclusions
     const conclusions = d.conclusions || [];
     let conclusionsHtml = '';
     if (conclusions.length && typeof conclusions[0] === 'object') {
@@ -1005,10 +1304,7 @@ ${t}`;
       conclusionsHtml = conclusions.map(c => `<p style="margin-bottom:8px">${esc(typeof c === 'string' ? c : '')}</p>`).join('');
     }
     document.getElementById('conclusionsContent').innerHTML = conclusionsHtml;
-
     document.getElementById('quotesContent').innerHTML = (d.key_quotes || []).map((q, i) => `<div class="quote-item"><span class="quote-number">${i+1}.</span> "${esc(q)}"</div>`).join('');
-
-    // Group Study
     const study = d.group_study;
     if (study) {
       let studyHtml = '';
@@ -1024,14 +1320,313 @@ ${t}`;
       }
       document.getElementById('studyContent').innerHTML = studyHtml;
     }
-
     document.getElementById('versesContent').innerHTML = (d.bible_verses || []).map(v => `<p style="margin-bottom:8px"><span class="verse-ref">${esc(v.reference)}</span> — ${esc(v.relevance)}</p>`).join('');
     document.getElementById('applicationContent').innerHTML = (d.application || []).map((a, i) => `<div style="margin-bottom:14px;padding-bottom:14px;border-bottom:1px solid var(--navy-light)"><div style="font-weight:700;font-size:13px;color:var(--white);margin-bottom:4px"><span style="color:var(--teal)">${i+1}.</span> ${esc(a.question)}</div><div style="font-size:12px;line-height:1.5;color:var(--gray-mid);margin-left:16px;padding-left:12px;border-left:2px solid var(--navy-light)">${esc(a.prompt)}</div></div>`).join('');
-    document.getElementById('results').classList.add('visible');
-    document.getElementById('results').scrollIntoView({ behavior: 'smooth' });
+  }
 
-    // Save to history
-    if (!skipSave) saveToHistory(d);
+  // ── Coaching Report Renderer ──
+  function renderCoachingResults(d, container) {
+    const score = d.overall_score || 0;
+    const scoreClass = score >= 75 ? 'score-green' : score >= 50 ? 'score-gold' : 'score-red';
+    const dims = d.dimensions || [];
+    const tiers = ['Foundation', 'Craft', 'Connection', 'Style'];
+
+    let html = '<div class="coaching-report">';
+
+    // Speaker & Date header
+    const speaker = d.speaker_name && d.speaker_name !== 'Unknown Speaker' ? d.speaker_name : '';
+    const sDate = d.sermon_date && d.sermon_date !== 'Date Unknown' ? d.sermon_date : '';
+    if (speaker || sDate) {
+      html += `<div style="text-align:center;margin-bottom:16px;color:var(--gray-mid)">`;
+      if (speaker) html += `<div style="font-size:18px;font-weight:700;color:var(--text)">${esc(speaker)}</div>`;
+      if (sDate) html += `<div style="font-size:13px;margin-top:2px">${esc(sDate)}</div>`;
+      html += `</div>`;
+    }
+
+    // Overall Score
+    html += `<div class="score-circle-wrap">
+      <div class="score-circle ${scoreClass}">
+        <div class="score-num">${score}</div>
+        <div class="score-label">Overall</div>
+      </div>
+    </div>`;
+
+    // SVG Radar Chart
+    html += buildRadarSVG(dims);
+
+    // Scorecard by Tier
+    html += '<div style="margin:20px 0">';
+    tiers.forEach(tier => {
+      const tierDims = dims.filter(d => d.tier === tier);
+      if (!tierDims.length) return;
+      html += `<div class="tier-group"><div class="tier-header">${esc(tier)}</div>`;
+      tierDims.forEach(dim => {
+        html += `<div class="dim-row"><div class="dim-name">${esc(dim.name)}</div><div class="dim-dots">`;
+        for (let i = 1; i <= 5; i++) html += `<div class="dim-dot${i <= dim.score ? ' filled' : ''}"></div>`;
+        html += `</div></div>`;
+        html += `<div class="dim-summary">${esc(dim.summary)}</div>`;
+      });
+      html += '</div>';
+    });
+    html += '</div>';
+
+    // Strengths
+    if (d.strengths && d.strengths.length) {
+      html += '<div class="tier-header" style="margin-top:20px">What You Did Well</div>';
+      d.strengths.forEach(s => {
+        html += `<div class="coaching-card strength"><h4>${esc(s.title)}</h4><p>${esc(s.explanation)}</p>`;
+        if (s.quote) html += `<div class="evidence-quote">"${esc(s.quote)}"</div>`;
+        html += '</div>';
+      });
+    }
+
+    // Improvements
+    if (d.improvements && d.improvements.length) {
+      html += '<div class="tier-header" style="margin-top:20px">Your 3 Highest-Impact Improvements</div>';
+      d.improvements.forEach(imp => {
+        html += `<div class="coaching-card improvement"><h4>${esc(imp.title)}</h4>`;
+        html += `<p><strong style="color:var(--white)">Now:</strong> ${esc(imp.current_state)}</p>`;
+        html += `<p><strong style="color:var(--white)">Target:</strong> ${esc(imp.target_state)}</p>`;
+        if (imp.exercise) html += `<div class="exercise">🎯 ${esc(imp.exercise)}</div>`;
+        html += '</div>';
+      });
+    }
+
+    // Toolkit
+    if (d.toolkit && d.toolkit.length) {
+      html += '<div class="tier-header" style="margin-top:20px">Equipping Toolkit</div>';
+      d.toolkit.forEach(t => {
+        html += `<div class="coaching-card toolkit"><h4>${esc(t.title)}</h4><p>${esc(t.description)}</p>`;
+        if (t.action) html += `<div class="exercise">${esc(t.action)}</div>`;
+        html += '</div>';
+      });
+    }
+
+    html += '</div>';
+    container.querySelector('#applicationCard').insertAdjacentHTML('afterend', html);
+  }
+
+  function buildRadarSVG(dims) {
+    const n = dims.length;
+    if (n === 0) return '';
+    const cx = 160, cy = 160, R = 120;
+    let svg = `<div style="text-align:center;margin:16px 0"><svg width="320" height="320" viewBox="0 0 320 320">`;
+
+    // Grid rings
+    for (let ring = 1; ring <= 5; ring++) {
+      const r = (ring / 5) * R;
+      let pts = [];
+      for (let i = 0; i < n; i++) {
+        const angle = (2 * Math.PI * i / n) - Math.PI / 2;
+        pts.push(`${cx + r * Math.cos(angle)},${cy + r * Math.sin(angle)}`);
+      }
+      svg += `<polygon points="${pts.join(' ')}" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>`;
+    }
+
+    // Axis lines
+    for (let i = 0; i < n; i++) {
+      const angle = (2 * Math.PI * i / n) - Math.PI / 2;
+      svg += `<line x1="${cx}" y1="${cy}" x2="${cx + R * Math.cos(angle)}" y2="${cy + R * Math.sin(angle)}" stroke="rgba(255,255,255,0.08)" stroke-width="1"/>`;
+    }
+
+    // Data polygon
+    let dataPts = [];
+    for (let i = 0; i < n; i++) {
+      const angle = (2 * Math.PI * i / n) - Math.PI / 2;
+      const r = ((dims[i].score || 0) / 5) * R;
+      dataPts.push(`${cx + r * Math.cos(angle)},${cy + r * Math.sin(angle)}`);
+    }
+    svg += `<polygon points="${dataPts.join(' ')}" fill="rgba(42,127,165,0.2)" stroke="rgba(42,127,165,0.8)" stroke-width="2"/>`;
+
+    // Data points
+    for (let i = 0; i < n; i++) {
+      const angle = (2 * Math.PI * i / n) - Math.PI / 2;
+      const r = ((dims[i].score || 0) / 5) * R;
+      svg += `<circle cx="${cx + r * Math.cos(angle)}" cy="${cy + r * Math.sin(angle)}" r="3" fill="#2A7FA5"/>`;
+    }
+
+    // Labels
+    for (let i = 0; i < n; i++) {
+      const angle = (2 * Math.PI * i / n) - Math.PI / 2;
+      const lx = cx + (R + 18) * Math.cos(angle);
+      const ly = cy + (R + 18) * Math.sin(angle);
+      const anchor = Math.abs(Math.cos(angle)) < 0.1 ? 'middle' : Math.cos(angle) > 0 ? 'start' : 'end';
+      // Shorten long names
+      const shortName = dims[i].name.replace('& Integrity','').replace('& Authenticity','').replace('Effectiveness','').replace('Specificity','').trim();
+      svg += `<text x="${lx}" y="${ly}" text-anchor="${anchor}" dominant-baseline="middle" fill="rgba(255,255,255,0.7)" font-size="8" font-family="var(--font-body)">${esc(shortName)}</text>`;
+    }
+
+    svg += '</svg></div>';
+    return svg;
+  }
+
+  // ── Candidate Report Renderer ──
+  async function renderCandidateResults(d, container) {
+    const teaching = d.teaching_style || [];
+    const theology = d.theological_fit || [];
+
+    let html = '<div class="candidate-report">';
+
+    // Speaker & Date header
+    const speaker = d.speaker_name && d.speaker_name !== 'Unknown Speaker' ? d.speaker_name : '';
+    const sDate = d.sermon_date && d.sermon_date !== 'Date Unknown' ? d.sermon_date : '';
+    if (speaker || sDate) {
+      html += `<div style="text-align:center;margin-bottom:16px;color:var(--gray-mid)">`;
+      if (speaker) html += `<div style="font-size:18px;font-weight:700;color:var(--text)">${esc(speaker)}</div>`;
+      if (sDate) html += `<div style="font-size:13px;margin-top:2px">${esc(sDate)}</div>`;
+      html += `</div>`;
+    }
+
+    // Executive Summary
+    if (d.executive_summary) {
+      html += `<div class="exec-summary">${esc(d.executive_summary)}</div>`;
+    }
+
+    // Radar chart placeholders
+    html += `<div class="chart-pair">
+      <div class="chart-box"><h4 style="color:var(--teal)">Teaching Style</h4><canvas id="candidateRadar1" width="300" height="300"></canvas></div>
+      <div class="chart-box"><h4 style="color:var(--gold)">Theological Fit</h4><canvas id="candidateRadar2" width="300" height="300"></canvas></div>
+    </div>`;
+
+    // Teaching Style Detail
+    html += '<div class="bar-section"><h4 style="color:var(--teal)">Teaching Style Profile</h4>';
+    const teachingTiers = { 'Core Preaching': [], 'Communication Craft': [], 'Engagement & Style': [], 'Institutional': [] };
+    teaching.forEach(t => { if (teachingTiers[t.tier]) teachingTiers[t.tier].push(t); else teachingTiers['Core Preaching'].push(t); });
+    Object.entries(teachingTiers).forEach(([tier, items]) => {
+      if (!items.length) return;
+      html += `<div style="font-size:10px;font-weight:700;color:var(--gray-mid);text-transform:uppercase;letter-spacing:1px;margin:12px 0 6px">${esc(tier)}</div>`;
+      items.forEach(t => {
+        const pct = (t.score / 5) * 100;
+        html += `<div class="bar-row">
+          <div class="bar-row-top"><span class="bar-label">${esc(t.name)}</span><span class="bar-score">${t.score}/5</span></div>
+          <div class="bar-track"><div class="bar-fill bar-fill-blue" style="width:${pct}%"></div></div>
+          <div class="bar-desc">${esc(t.description || '')}</div>
+        </div>`;
+      });
+    });
+    html += '</div>';
+
+    // Theological Fit Detail
+    html += '<div class="bar-section"><h4 style="color:var(--gold)">Theological Fit Profile</h4>';
+    theology.forEach(t => {
+      const pct = (t.score / 5) * 100;
+      const confClass = t.confidence === 'High' ? 'conf-high' : t.confidence === 'Medium' ? 'conf-medium' : 'conf-low';
+      html += `<div class="bar-row">
+        <div class="bar-row-top">
+          <span class="bar-label">${esc(t.name)} <span class="conf-badge ${confClass}">${esc(t.confidence || 'Low')}</span></span>
+          <span class="bar-score">${t.score}/5</span>
+        </div>
+        <div class="bar-track"><div class="bar-fill bar-fill-gold" style="width:${pct}%"></div></div>
+        <div class="bar-desc">${esc(t.description || '')}</div>
+      </div>`;
+    });
+    html += '</div>';
+
+    // Strengths
+    if (d.strengths && d.strengths.length) {
+      html += '<div class="bar-section"><h4 style="color:var(--green)">Strengths</h4>';
+      d.strengths.forEach(s => {
+        html += `<div class="coaching-card strength"><h4>${esc(s.title)}</h4>`;
+        if (s.evidence) html += `<div class="evidence-quote">"${esc(s.evidence)}"</div>`;
+        if (s.significance) html += `<p style="margin-top:6px">${esc(s.significance)}</p>`;
+        html += '</div>';
+      });
+      html += '</div>';
+    }
+
+    // Growth Areas
+    if (d.growth_areas && d.growth_areas.length) {
+      html += '<div class="bar-section"><h4 style="color:var(--gold)">Growth Areas</h4>';
+      d.growth_areas.forEach(g => {
+        html += `<div class="coaching-card improvement"><h4>${esc(g.title)}</h4>`;
+        if (g.observation) html += `<p>${esc(g.observation)}</p>`;
+        if (g.context) html += `<p style="font-style:italic">${esc(g.context)}</p>`;
+        html += '</div>';
+      });
+      html += '</div>';
+    }
+
+    // Fit Analysis
+    if (d.fit_analysis) {
+      html += '<div class="bar-section"><h4>Fit Analysis</h4><div class="fit-columns">';
+      html += '<div class="fit-col conservative"><h4 style="color:var(--red)">⚠ Potential Concerns for Conservative Churches</h4>';
+      (d.fit_analysis.conservative_concerns || []).forEach(c => html += `<div class="fit-item">${esc(c)}</div>`);
+      html += '</div>';
+      html += '<div class="fit-col progressive"><h4 style="color:var(--gold)">⚠ Potential Concerns for Progressive Churches</h4>';
+      (d.fit_analysis.progressive_concerns || []).forEach(c => html += `<div class="fit-item">${esc(c)}</div>`);
+      html += '</div></div></div>';
+    }
+
+    // Key Signals
+    if (d.key_signals && d.key_signals.length) {
+      html += '<div class="bar-section"><h4 style="color:var(--teal)">Key Signals</h4>';
+      d.key_signals.forEach(s => html += `<div class="signal-item">${esc(s)}</div>`);
+      html += '</div>';
+    }
+
+    // Committee Questions
+    if (d.committee_questions && d.committee_questions.length) {
+      html += '<div class="bar-section"><h4>Recommended Follow-Up Questions</h4>';
+      d.committee_questions.forEach((q, i) => html += `<div class="committee-q"><strong>${i+1}.</strong> ${esc(q)}</div>`);
+      html += '</div>';
+    }
+
+    html += '</div>';
+    container.querySelector('#applicationCard').insertAdjacentHTML('afterend', html);
+
+    // Load Chart.js and render radars
+    await loadChartJs();
+    renderCandidateRadars(teaching, theology);
+  }
+
+  function loadChartJs() {
+    return new Promise((resolve, reject) => {
+      if (window.Chart) return resolve();
+      const s = document.createElement('script');
+      s.src = 'https://cdn.jsdelivr.net/npm/chart.js';
+      s.onload = resolve;
+      s.onerror = () => resolve(); // degrade gracefully
+      document.head.appendChild(s);
+    });
+  }
+
+  function renderCandidateRadars(teaching, theology) {
+    if (!window.Chart) return;
+    const chartOpts = (color, bgColor) => ({
+      type: 'radar',
+      options: {
+        responsive: true,
+        scales: { r: { min: 0, max: 5, ticks: { stepSize: 1, color: 'rgba(255,255,255,0.4)', backdropColor: 'transparent' }, grid: { color: 'rgba(255,255,255,0.1)' }, pointLabels: { color: 'rgba(255,255,255,0.7)', font: { size: 9 } } } },
+        plugins: { legend: { display: false } }
+      }
+    });
+
+    // Teaching Style radar
+    const ctx1 = document.getElementById('candidateRadar1');
+    if (ctx1) {
+      new Chart(ctx1, {
+        ...chartOpts(),
+        type: 'radar',
+        data: {
+          labels: teaching.map(t => t.name.length > 16 ? t.name.substring(0,14) + '…' : t.name),
+          datasets: [{ data: teaching.map(t => t.score), backgroundColor: 'rgba(42,127,165,0.15)', borderColor: 'rgba(42,127,165,0.8)', borderWidth: 2, pointBackgroundColor: '#2A7FA5', pointRadius: 3 }]
+        },
+        options: { responsive: true, scales: { r: { min: 0, max: 5, ticks: { stepSize: 1, color: 'rgba(255,255,255,0.4)', backdropColor: 'transparent' }, grid: { color: 'rgba(255,255,255,0.1)' }, pointLabels: { color: 'rgba(255,255,255,0.7)', font: { size: 9 } } } }, plugins: { legend: { display: false } } }
+      });
+    }
+
+    // Theological Fit radar
+    const ctx2 = document.getElementById('candidateRadar2');
+    if (ctx2) {
+      new Chart(ctx2, {
+        type: 'radar',
+        data: {
+          labels: theology.map(t => t.name.length > 16 ? t.name.substring(0,14) + '…' : t.name),
+          datasets: [{ data: theology.map(t => t.score), backgroundColor: 'rgba(184,134,11,0.15)', borderColor: 'rgba(184,134,11,0.8)', borderWidth: 2, pointBackgroundColor: '#B8860B', pointRadius: 3 }]
+        },
+        options: { responsive: true, scales: { r: { min: 0, max: 5, ticks: { stepSize: 1, color: 'rgba(255,255,255,0.4)', backdropColor: 'transparent' }, grid: { color: 'rgba(255,255,255,0.1)' }, pointLabels: { color: 'rgba(255,255,255,0.7)', font: { size: 9 } } } }, plugins: { legend: { display: false } } }
+      });
+    }
   }
 
   function esc(s) { const d = document.createElement('div'); d.textContent = s; return d.innerHTML; }
@@ -1146,35 +1741,17 @@ ${t}`;
 
   function copyAll() {
     if (!state.analysisData) return;
-    const d = state.analysisData;
-    const mainPts = (d.main_points||[]).map((p,i) => {
-      if (typeof p === 'object') {
-        let t = `${i+1}. ${p.title}: ${p.explanation}`;
-        if (p.sub_points) t += '\n' + p.sub_points.map(sp => `   - ${sp.title}: ${sp.explanation}`).join('\n');
-        return t;
-      }
-      return `${i+1}. ${p}`;
-    });
-    const concl = (d.conclusions||[]).map((c,i) => typeof c === 'object' ? `${i+1}. ${c.title}: ${c.explanation}` : `${i+1}. ${c}`);
-    const studyLines = [];
-    if (d.group_study) {
-      studyLines.push('GROUP STUDY GUIDE', '');
-      if (d.group_study.intro_quote) studyLines.push(`"${d.group_study.intro_quote}"`, '');
-      if (d.group_study.intro_text) studyLines.push(d.group_study.intro_text, '');
-      if (d.group_study.questions) studyLines.push(...d.group_study.questions.map(q => `Q${q.number}. ${q.question}`));
-    }
-    navigator.clipboard.writeText([
-      'SERMON ANALYSIS', '='.repeat(40), '', 'INTRODUCTION', d.elevator_pitch, '',
-      'MAIN POINTS', ...mainPts, '',
-      'CONCLUSIONS', ...concl, '',
-      '7 KEY QUOTES', ...(d.key_quotes||[]).map((q,i) => `${i+1}. "${q}"`), '',
-      ...studyLines, '',
-      'SCRIPTURE', ...(d.bible_verses||[]).map(v => `${v.reference} — ${v.relevance}`), '',
-      'APPLICATION', ...(d.application||[]).map((a,i) => `${i+1}. ${a.question}\n   ${a.prompt}`)
-    ].join('\n'));
+    navigator.clipboard.writeText(buildResultsText(state.analysisData));
   }
 
   function buildResultsText(d) {
+    const type = state.reportType || 'summary';
+    if (type === 'coaching') return buildCoachingText(d);
+    if (type === 'candidate') return buildCandidateText(d);
+    return buildSummaryText(d);
+  }
+
+  function buildSummaryText(d) {
     const pts = (d.main_points||[]).map((p,i) => {
       if (typeof p === 'object') {
         let t = `${i+1}. ${p.title}: ${p.explanation}`;
@@ -1199,6 +1776,57 @@ ${t}`;
       ...study,'',
       'SCRIPTURE',...(d.bible_verses||[]).map(v=>`${v.reference}\n${v.relevance}`),'',
       'APPLICATION',...(d.application||[]).map((a,i)=>`${i+1}. ${a.question}\n   ${a.prompt}`)].join('\n');
+  }
+
+  function buildCoachingText(d) {
+    const lines = [d.sermon_title || 'Sermon'];
+    if (d.speaker_name) lines.push(`Speaker: ${d.speaker_name}`);
+    if (d.sermon_date) lines.push(`Date: ${d.sermon_date}`);
+    lines.push('', 'COACHING REPORT', '='.repeat(40), '',
+      `OVERALL SCORE: ${d.overall_score || 0}/100`, '');
+    const tiers = ['Foundation', 'Craft', 'Connection', 'Style'];
+    tiers.forEach(tier => {
+      const dims = (d.dimensions || []).filter(dim => dim.tier === tier);
+      if (!dims.length) return;
+      lines.push(tier.toUpperCase());
+      dims.forEach(dim => lines.push(`  ${dim.name}: ${dim.score}/5 — ${dim.summary}`));
+      lines.push('');
+    });
+    lines.push('STRENGTHS');
+    (d.strengths || []).forEach(s => lines.push(`• ${s.title}: ${s.explanation}`, s.quote ? `  "${s.quote}"` : '', ''));
+    lines.push('TOP 3 IMPROVEMENTS');
+    (d.improvements || []).forEach(imp => lines.push(`• ${imp.title}`, `  Now: ${imp.current_state}`, `  Target: ${imp.target_state}`, `  Exercise: ${imp.exercise}`, ''));
+    lines.push('TOOLKIT');
+    (d.toolkit || []).forEach(t => lines.push(`• ${t.title}: ${t.description}`, `  Action: ${t.action}`, ''));
+    return lines.join('\n');
+  }
+
+  function buildCandidateText(d) {
+    const lines = [d.sermon_title || 'Sermon'];
+    if (d.speaker_name) lines.push(`Speaker: ${d.speaker_name}`);
+    if (d.sermon_date) lines.push(`Date: ${d.sermon_date}`);
+    lines.push('', 'PASTORAL SEARCH REPORT', '='.repeat(40), '',
+      'EXECUTIVE SUMMARY', d.executive_summary || '', '');
+    lines.push('TEACHING STYLE');
+    (d.teaching_style || []).forEach(t => lines.push(`  ${t.name}: ${t.score}/5 — ${t.description}`));
+    lines.push('', 'THEOLOGICAL FIT');
+    (d.theological_fit || []).forEach(t => lines.push(`  ${t.name}: ${t.score}/5 [${t.confidence}] — ${t.description}`));
+    lines.push('', 'STRENGTHS');
+    (d.strengths || []).forEach(s => lines.push(`• ${s.title}`, s.evidence ? `  "${s.evidence}"` : '', ''));
+    lines.push('GROWTH AREAS');
+    (d.growth_areas || []).forEach(g => lines.push(`• ${g.title}: ${g.observation}`, ''));
+    if (d.fit_analysis) {
+      lines.push('FIT ANALYSIS', 'Conservative concerns:');
+      (d.fit_analysis.conservative_concerns || []).forEach(c => lines.push(`  • ${c}`));
+      lines.push('Progressive concerns:');
+      (d.fit_analysis.progressive_concerns || []).forEach(c => lines.push(`  • ${c}`));
+      lines.push('');
+    }
+    lines.push('KEY SIGNALS');
+    (d.key_signals || []).forEach(s => lines.push(`• ${s}`));
+    lines.push('', 'FOLLOW-UP QUESTIONS');
+    (d.committee_questions || []).forEach((q, i) => lines.push(`${i+1}. ${q}`));
+    return lines.join('\n');
   }
 
   function downloadResults() {
@@ -1353,6 +1981,19 @@ ${t}`;
   }
 
   async function fetchYouTubeTranscript(ytUrl, statusBtn) {
+    // Try Supadata (free, instant — works for videos with captions/CC)
+    try {
+      const transcript = await fetchSupadataTranscript(ytUrl, statusBtn);
+      if (transcript && transcript.length >= 50) return transcript;
+    } catch (supadataErr) {
+      console.log('Supadata failed:', supadataErr.message);
+    }
+
+    // No captions available — tell the user
+    throw new Error('No captions found for this video. This often happens with livestream replays. Try a video with CC (closed captions), or paste the transcript manually below.');
+  }
+
+  async function fetchSupadataTranscript(ytUrl, statusBtn) {
     const r = await fetch(`${WORKER_URL}/api/transcript?url=${encodeURIComponent(ytUrl)}`);
 
     if (!r.ok) {
@@ -1368,14 +2009,14 @@ ${t}`;
     if (r.status === 202 && data.jobId) {
       const maxPolls = 45; // ~90 seconds
       for (let i = 0; i < maxPolls; i++) {
-        if (statusBtn) statusBtn.textContent = `Processing... ${Math.round(((i+1)/maxPolls)*100)}%`;
+        if (statusBtn) statusBtn.textContent = `Fetching captions... ${Math.round(((i+1)/maxPolls)*100)}%`;
         await new Promise(resolve => setTimeout(resolve, 2000));
         const pollR = await fetch(`${WORKER_URL}/api/transcript/${data.jobId}`);
         const pollData = await pollR.json();
         if (pollData.status === 'completed' && pollData.content) return pollData.content;
         if (pollData.status === 'failed') throw new Error(pollData.error || 'Transcript processing failed.');
       }
-      throw new Error('Transcript processing timed out. This video may not have captions, or the service is slow.');
+      throw new Error('Supadata timed out');
     }
 
     // Direct response
@@ -1384,7 +2025,28 @@ ${t}`;
       if (Array.isArray(data.content)) return data.content.map(s => s.text || '').join(' ');
     }
 
-    throw new Error('No transcript available for this video.');
+    throw new Error('No captions available');
+  }
+
+  async function fetchWhisperTranscript(ytUrl, statusBtn) {
+    if (statusBtn) statusBtn.textContent = 'Extracting audio & transcribing (1-3 min)...';
+
+    const r = await fetch(`${WORKER_URL}/api/transcribe`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ url: ytUrl })
+    });
+
+    if (!r.ok) {
+      const err = await r.json().catch(() => ({}));
+      throw new Error(err.error || `Whisper transcription failed (${r.status})`);
+    }
+
+    const data = await r.json();
+    if (!data.transcript || data.transcript.length < 50) {
+      throw new Error('Audio transcription returned insufficient content.');
+    }
+    return data.transcript;
   }
 
 
@@ -1402,7 +2064,8 @@ ${t}`;
       id: Date.now(),
       date: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
       transcript: state.transcript?.substring(0, 500) || '',
-      analysis: analysis
+      analysis: analysis,
+      reportType: state.reportType || 'summary'
     };
     history.unshift(entry);
     if (history.length > 50) history.length = 50;
@@ -1419,7 +2082,7 @@ ${t}`;
     el.innerHTML = history.map(h => `<div class="history-item" onclick="loadFromHistory(${h.id})">
       <div class="history-item-content">
         <div class="history-item-date">${esc(h.date)}</div>
-        <div class="history-item-pitch">${esc(h.analysis.sermon_title || h.analysis.elevator_pitch || 'Untitled sermon')}</div>
+        <div class="history-item-pitch">${esc(h.analysis.sermon_title || h.analysis.elevator_pitch || 'Untitled sermon')}${h.reportType && h.reportType !== 'summary' ? ` <span style="font-size:9px;color:var(--teal);text-transform:uppercase;letter-spacing:0.5px">${esc(h.reportType)}</span>` : ''}</div>
       </div>
       <button class="history-delete" onclick="event.stopPropagation(); deleteFromHistory(${h.id})">×</button>
     </div>`).join('');
@@ -1431,6 +2094,7 @@ ${t}`;
     if (!entry) return;
     state.analysisData = entry.analysis;
     state.transcript = entry.transcript;
+    if (entry.reportType) selectReportType(entry.reportType);
     renderResults(entry.analysis, true);
     document.getElementById('historyPanel').classList.remove('open');
   }

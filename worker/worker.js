@@ -69,7 +69,7 @@ export default {
         // Only pass through safe fields
         const payload = {
           model: body.model || 'claude-sonnet-4-6',
-          max_tokens: Math.min(body.max_tokens || 8000, 8000),
+          max_tokens: Math.min(body.max_tokens || 8000, 16000),
           messages: body.messages,
         };
 
@@ -122,9 +122,37 @@ export default {
         });
       }
 
+      // POST /api/transcribe — fallback: proxy to Railway transcript service
+      if (path === '/api/transcribe' && request.method === 'POST') {
+        if (!checkRate(ip)) {
+          return json({ error: 'Daily limit reached. Please try again tomorrow.' }, 429, cors);
+        }
+
+        const body = await request.json();
+        if (!body.url) return json({ error: 'Missing url parameter' }, 400, cors);
+
+        const serviceUrl = env.TRANSCRIPT_SERVICE_URL; // e.g. https://your-app.railway.app
+        if (!serviceUrl) return json({ error: 'Transcript service not configured' }, 500, cors);
+
+        const resp = await fetch(`${serviceUrl}/transcribe`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${env.TRANSCRIPT_SERVICE_SECRET || ''}`,
+          },
+          body: JSON.stringify({ url: body.url }),
+        });
+
+        const data = await resp.text();
+        return new Response(data, {
+          status: resp.status,
+          headers: { ...cors, 'Content-Type': 'application/json' },
+        });
+      }
+
       // Health check
       if (path === '/api/health') {
-        return json({ status: 'ok', rateLimit: DAILY_LIMIT }, 200, cors);
+        return json({ status: 'ok', rateLimit: DAILY_LIMIT, whisperFallback: !!env.TRANSCRIPT_SERVICE_URL }, 200, cors);
       }
 
       return json({ error: 'Not found' }, 404, cors);
