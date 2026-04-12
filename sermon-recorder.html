@@ -1838,23 +1838,23 @@ ${t}`;
     if (!state.analysisData) return;
     const d = state.analysisData;
     const reportType = state.reportType || 'summary';
+    const titleSlug = (d.sermon_title || 'sermon').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/-+$/,'');
 
+    let content, filename;
     if (reportType === 'summary') {
-      // Summary still downloads as plain text
-      const text = buildResultsText(d);
-      const titleSlug = (d.sermon_title || 'sermon').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/-+$/,'');
-      const filename = `${titleSlug}-${new Date().toISOString().slice(0,10)}.txt`;
-      const a = document.createElement('a');
-      a.href = URL.createObjectURL(new Blob([text], { type: 'text/plain' }));
-      a.download = filename;
-      a.click();
+      content = buildResultsText(d);
+      filename = `${titleSlug}-${new Date().toISOString().slice(0,10)}.txt`;
     } else {
-      // Coaching & Candidate download as styled HTML
-      const html = buildReportHTML(d, reportType);
-      const titleSlug = (d.sermon_title || 'sermon').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/-+$/,'');
-      const filename = `${titleSlug}-${new Date().toISOString().slice(0,10)}.html`;
+      content = buildReportHTML(d, reportType);
+      filename = `${titleSlug}-${new Date().toISOString().slice(0,10)}.html`;
+    }
+
+    if (state.saveDirHandle) {
+      saveToFolder(state.saveDirHandle, filename, content);
+    } else {
+      const mimeType = reportType === 'summary' ? 'text/plain' : 'text/html';
       const a = document.createElement('a');
-      a.href = URL.createObjectURL(new Blob([html], { type: 'text/html' }));
+      a.href = URL.createObjectURL(new Blob([content], { type: mimeType }));
       a.download = filename;
       a.click();
     }
