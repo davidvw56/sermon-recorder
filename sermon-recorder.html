@@ -982,6 +982,8 @@
 
       state.mediaRecorder = new MediaRecorder(stream);
       state.audioChunks = [];
+      state.transcript = '';
+      state.recognitionRestarts = 0;
       state.mediaRecorder.ondataavailable = e => { if (e.data.size > 0) state.audioChunks.push(e.data); };
       state.mediaRecorder.onstop = () => {
         state.audioBlob = new Blob(state.audioChunks, { type: 'audio/webm' });
@@ -1009,11 +1011,19 @@
   function stopRecording() {
     state.recording = false;
     state.mediaRecorder.stop();
-    if (state.recognition) { state.recognition.stop(); state.recognition = null; }
+    // Stop recognition — onend will fire but won't restart since state.recording is false
+    if (state.recognition) {
+      try { state.recognition.stop(); } catch(e) {}
+      state.recognition = null;
+    }
     clearInterval(state.timerInterval);
     document.getElementById('recordBtn').classList.remove('recording');
-    document.getElementById('recordLabel').textContent = 'Recording complete';
+    const wc = (state.transcript || '').trim().split(/\s+/).filter(w => w).length;
+    document.getElementById('recordLabel').textContent = 'Recording complete — ' + wc + ' words captured';
     document.getElementById('analyzeBtn').style.display = 'inline-block';
+    if (wc < 10) {
+      showError('Warning: Very few words were captured (' + wc + '). The transcript may be too short to analyze. Try recording again in a quieter environment or use a closer microphone.');
+    }
   }
 
   function startTimer() {
@@ -1045,22 +1055,63 @@
   function startBrowserTranscription() {
     const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
     if (!SR) { showError('Browser speech recognition not supported. Try Chrome or switch to Whisper.'); return; }
-    state.recognition = new SR();
-    state.recognition.continuous = true;
-    state.recognition.interimResults = true;
-    state.recognition.lang = 'en-US';
-    let final = '';
-    state.recognition.onresult = e => {
+    const rec = new SR();
+    state.recognition = rec;
+    rec.continuous = true;
+    rec.interimResults = true;
+    rec.lang = 'en-US';
+
+    // Accumulated final transcript persists across recognition restarts
+    let finalText = state.transcript || '';
+
+    rec.onresult = e => {
       let interim = '';
       for (let i = e.resultIndex; i < e.results.length; i++) {
-        if (e.results[i].isFinal) final += e.results[i][0].transcript + ' ';
+        if (e.results[i].isFinal) finalText += e.results[i][0].transcript + ' ';
         else interim += e.results[i][0].transcript;
       }
-      state.transcript = final + interim;
+      state.transcript = finalText + interim;
+      // Show live word count so user knows transcription is working
+      const wc = state.transcript.trim().split(/\s+/).filter(w => w).length;
+      const label = document.getElementById('recordLabel');
+      if (label && state.recording) label.textContent = 'Recording... ' + wc + ' words captured';
     };
-    state.recognition.onerror = e => {};
-    state.recognition.onend = () => { if (state.recording && state.engine === 'browser') try { state.recognition.start(); } catch(x) {} };
-    state.recognition.start();
+
+    rec.onerror = e => {
+      console.warn('SpeechRecognition error:', e.error);
+      // 'no-speech' and 'aborted' are recoverable — just let onend restart
+      // 'network' or 'not-allowed' are fatal
+      if (e.error === 'not-allowed') {
+        showError('Microphone permission denied for speech recognition.');
+      }
+    };
+
+    rec.onend = () => {
+      // Flush: make sure finalText is saved even if onresult didn't fire
+      if (finalText.trim()) state.transcript = finalText;
+
+      if (state.recording && state.engine === 'browser') {
+        // Auto-restart — browser kills recognition periodically
+        state.recognitionRestarts = (state.recognitionRestarts || 0) + 1;
+        console.log('SpeechRecognition restarting (restart #' + state.recognitionRestarts + '), transcript length: ' + (state.transcript || '').length);
+        setTimeout(() => {
+          if (!state.recording) return;
+          try {
+            rec.start();
+          } catch(x) {
+            console.warn('SpeechRecognition restart failed, creating new instance');
+            // If restart fails, create a fresh recognition instance
+            startBrowserTranscription();
+          }
+        }, 300);
+      }
+    };
+
+    try {
+      rec.start();
+    } catch(e) {
+      showError('Could not start speech recognition: ' + e.message);
+    }
   }
 
   async function transcribeWithWhisper(blob) {
