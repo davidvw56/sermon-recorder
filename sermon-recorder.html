@@ -1890,25 +1890,38 @@ ${t}`;
     const title = d.sermon_title || 'Sermon Analysis';
     const speaker = d.speaker_name || '';
     const sDate = d.sermon_date || '';
-    const reportLabel = reportType === 'coaching' ? 'Coaching Report' : 'Pastoral Search Report';
+    const reportLabels = { summary: 'Sermon Summary', coaching: 'Coaching Report', candidate: 'Pastoral Search Report' };
+    const reportLabel = reportLabels[reportType] || 'Sermon Analysis';
 
-    // Grab the rendered report HTML from the DOM, converting canvases to images
-    const reportEl = document.querySelector('.coaching-report, .candidate-report');
+    // Grab the rendered report HTML from the DOM
     let reportContent = '';
-    if (reportEl) {
-      const clone = reportEl.cloneNode(true);
-      // Convert canvas elements to inline images
-      const origCanvases = reportEl.querySelectorAll('canvas');
-      const cloneCanvases = clone.querySelectorAll('canvas');
-      origCanvases.forEach((canvas, i) => {
-        try {
-          const img = document.createElement('img');
-          img.src = canvas.toDataURL('image/png');
-          img.style.maxWidth = '100%';
-          cloneCanvases[i].parentNode.replaceChild(img, cloneCanvases[i]);
-        } catch(e) { /* canvas tainted or empty */ }
-      });
-      reportContent = clone.outerHTML;
+    if (reportType === 'summary') {
+      // Capture summary cards
+      const cardIds = ['pitchCard','summaryCard','conclusionsCard','quotesCard','studyCard','versesCard','applicationCard'];
+      const cards = cardIds.map(id => document.getElementById(id)).filter(el => el && el.style.display !== 'none');
+      reportContent = '<div class="summary-report">' + cards.map(c => {
+        const clone = c.cloneNode(true);
+        // Remove Copy/Listen buttons from export
+        clone.querySelectorAll('.copy-btn, .listen-btn').forEach(b => b.remove());
+        return clone.outerHTML;
+      }).join('') + '</div>';
+    } else {
+      const reportEl = document.querySelector('.coaching-report, .candidate-report');
+      if (reportEl) {
+        const clone = reportEl.cloneNode(true);
+        // Convert canvas elements to inline images
+        const origCanvases = reportEl.querySelectorAll('canvas');
+        const cloneCanvases = clone.querySelectorAll('canvas');
+        origCanvases.forEach((canvas, i) => {
+          try {
+            const img = document.createElement('img');
+            img.src = canvas.toDataURL('image/png');
+            img.style.maxWidth = '100%';
+            cloneCanvases[i].parentNode.replaceChild(img, cloneCanvases[i]);
+          } catch(e) { /* canvas tainted or empty */ }
+        });
+        reportContent = clone.outerHTML;
+      }
     }
 
     return `<!DOCTYPE html>
@@ -2008,11 +2021,25 @@ ${t}`;
     .dim-name { width: auto; }
     .dim-summary { margin-left: 0 !important; margin-bottom: 16px; }
   }
+  /* Summary */
+  .result-card { background: var(--navy); border: 1px solid var(--navy-light); border-radius: 8px; padding: 16px; margin-bottom: 12px; border-left: 3px solid var(--navy-light); }
+  .result-card.navy-accent { border-left-color: var(--teal-border); }
+  .result-card.gold-border { border-left-color: var(--gold); }
+  .result-card.green-border { border-left-color: var(--green); }
+  .result-card h3 { font-family: var(--font-display); font-size: 14px; font-weight: 600; margin-bottom: 8px; }
+  .result-card p, .result-card li { font-size: 13px; line-height: 1.6; color: var(--offwhite); }
+  .result-card ol { padding-left: 1.2rem; }
+  .result-card li { margin-bottom: 4px; }
+  .overline { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; color: var(--teal); margin-bottom: 4px; }
+  .elevator-pitch { font-family: var(--font-display); font-size: 16px; font-weight: 600; line-height: 1.6; color: var(--offwhite); }
+  .quote-item { padding: 8px 12px; margin-bottom: 6px; background: rgba(42,127,165,0.08); border-left: 3px solid var(--teal); border-radius: 0 4px 4px 0; font-size: 13px; font-style: italic; }
+
   @media print {
     body { background: white; color: #222; }
-    .coaching-report, .candidate-report { color: #222; }
-    .exec-summary, .coaching-card, .fit-col, .chart-box { background: #f5f5f5; }
+    .coaching-report, .candidate-report, .summary-report { color: #222; }
+    .exec-summary, .coaching-card, .fit-col, .chart-box, .result-card { background: #f5f5f5; }
     .dim-summary, .bar-desc, .coaching-card p, .fit-item { color: #555; }
+    .result-card p, .result-card li { color: #333; }
   }
 </style>
 </head>
@@ -2035,16 +2062,9 @@ ${t}`;
     const reportType = state.reportType || 'summary';
     const titleSlug = (d.sermon_title || 'sermon').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/-+$/,'');
 
-    let content, filename, mimeType;
-    if (reportType === 'summary') {
-      content = buildResultsText(d);
-      filename = `${titleSlug}-${new Date().toISOString().slice(0,10)}.txt`;
-      mimeType = 'text/plain';
-    } else {
-      content = buildReportHTML(d, reportType);
-      filename = `${titleSlug}-${new Date().toISOString().slice(0,10)}.html`;
-      mimeType = 'text/html';
-    }
+    const content = buildReportHTML(d, reportType);
+    const filename = `${titleSlug}-${new Date().toISOString().slice(0,10)}.html`;
+    const mimeType = 'text/html';
 
     // Try Web Share API first (works on mobile for OneDrive, Drive, etc.)
     // Some browsers reject text/html files, so try multiple MIME types
