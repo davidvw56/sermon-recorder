@@ -1079,10 +1079,13 @@
 
     rec.onerror = e => {
       console.warn('SpeechRecognition error:', e.error);
-      // 'no-speech' and 'aborted' are recoverable — just let onend restart
-      // 'network' or 'not-allowed' are fatal
+      // Show error type but don't stop recording — onend will try to restart
       if (e.error === 'not-allowed') {
-        showError('Microphone permission denied for speech recognition.');
+        showError('Speech recognition permission issue — recording continues but transcript may not capture. Try closing other apps using the mic, or reload the page.');
+      } else if (e.error === 'network') {
+        showError('Speech recognition network error — check internet connection. Recording continues.');
+      } else if (e.error !== 'no-speech' && e.error !== 'aborted') {
+        showError('Speech recognition: ' + e.error + ' — will retry automatically.');
       }
     };
 
