@@ -865,10 +865,11 @@
 
   <!-- Results -->
   <div class="results" id="results">
-    <div class="results-actions" style="display:flex;gap:6px;margin-bottom:12px;">
+    <div class="results-actions" style="display:flex;gap:6px;align-items:center;margin-bottom:12px;flex-wrap:wrap;">
       <button class="btn-sm" onclick="copyAll()">Copy All</button>
-      <button class="btn-sm" onclick="downloadResults()">Download</button>
+      <button class="btn-sm" onclick="saveResults()" id="saveBtn">💾 Save</button>
       <button class="btn-sm" onclick="shareResults()" id="shareBtn" style="display:none">Share</button>
+      <span id="saveFolderDisplay" style="font-size:10px;color:var(--gray-mid);cursor:pointer;margin-left:4px;" onclick="pickSaveFolder()" title="Click to change save folder"></span>
     </div>
     <h2 id="resultsTitle" style="font-family:var(--font-display);font-size:20px;font-weight:700;margin-bottom:12px;">Analysis</h2>
 
@@ -951,6 +952,7 @@
         if (req.result) {
           state.saveDirHandle = req.result;
           document.getElementById('saveFolderName').textContent = req.result.name;
+          updateSaveFolderDisplay(req.result.name);
         }
       };
     }).catch(() => {});
@@ -1834,8 +1836,18 @@ ${t}`;
     return lines.join('\n');
   }
 
-  function downloadResults() {
+  async function saveResults() {
     if (!state.analysisData) return;
+
+    // If no folder selected yet, prompt for one
+    if (!state.saveDirHandle) {
+      if (window.showDirectoryPicker) {
+        await pickSaveFolder();
+        if (!state.saveDirHandle) return; // user cancelled
+      }
+      // If browser doesn't support folder picker, fall through to browser download
+    }
+
     const d = state.analysisData;
     const reportType = state.reportType || 'summary';
     const titleSlug = (d.sermon_title || 'sermon').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/-+$/,'');
@@ -1850,14 +1862,31 @@ ${t}`;
     }
 
     if (state.saveDirHandle) {
-      saveToFolder(state.saveDirHandle, filename, content);
+      await saveToFolder(state.saveDirHandle, filename, content);
+      showSaveConfirmation(filename);
     } else {
+      // Fallback for browsers without folder picker
       const mimeType = reportType === 'summary' ? 'text/plain' : 'text/html';
       const a = document.createElement('a');
       a.href = URL.createObjectURL(new Blob([content], { type: mimeType }));
       a.download = filename;
       a.click();
     }
+  }
+
+  function updateSaveFolderDisplay(folderName) {
+    const el = document.getElementById('saveFolderDisplay');
+    if (el) {
+      el.innerHTML = folderName ? `📁 ${esc(folderName)} <span style="opacity:0.5;font-size:9px">(change)</span>` : '';
+    }
+  }
+
+  function showSaveConfirmation(filename) {
+    const btn = document.getElementById('saveBtn');
+    const original = btn.innerHTML;
+    btn.innerHTML = '✅ Saved!';
+    btn.style.borderColor = 'var(--green)';
+    setTimeout(() => { btn.innerHTML = original; btn.style.borderColor = ''; }, 2000);
   }
 
   function buildReportHTML(d, reportType) {
@@ -2040,6 +2069,7 @@ ${t}`;
       const handle = await window.showDirectoryPicker({ mode: 'readwrite' });
       state.saveDirHandle = handle;
       document.getElementById('saveFolderName').textContent = handle.name;
+      updateSaveFolderDisplay(handle.name);
       // Persist handle in IndexedDB
       const db = await openHandleDB();
       const tx = db.transaction('handles', 'readwrite');
@@ -2060,8 +2090,10 @@ ${t}`;
       showError('Folder access lost. Falling back to regular download.');
       state.saveDirHandle = null;
       document.getElementById('saveFolderName').textContent = 'Default (Downloads)';
+      updateSaveFolderDisplay('');
+      const ext = filename.endsWith('.html') ? 'text/html' : 'text/plain';
       const a = document.createElement('a');
-      a.href = URL.createObjectURL(new Blob([text], { type: 'text/plain' }));
+      a.href = URL.createObjectURL(new Blob([text], { type: ext }));
       a.download = filename;
       a.click();
     }
