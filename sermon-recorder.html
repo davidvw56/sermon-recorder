@@ -201,6 +201,11 @@
   }
   .dim-row { display: flex; align-items: center; gap: 10px; margin-bottom: 6px; }
   .dim-name { width: 180px; font-size: 12px; font-weight: 600; flex-shrink: 0; }
+  @media (max-width: 500px) {
+    .dim-row { flex-direction: column; align-items: flex-start; gap: 4px; margin-bottom: 4px; }
+    .dim-name { width: auto; }
+    .dim-summary { margin-left: 0 !important; margin-bottom: 16px; }
+  }
   .dim-dots { display: flex; gap: 4px; }
   .dim-dot {
     width: 14px; height: 14px; border-radius: 50%;
@@ -1409,8 +1414,8 @@ ${t}`;
   function buildRadarSVG(dims) {
     const n = dims.length;
     if (n === 0) return '';
-    const cx = 160, cy = 160, R = 120;
-    let svg = `<div style="text-align:center;margin:16px 0"><svg width="320" height="320" viewBox="0 0 320 320">`;
+    const cx = 220, cy = 180, R = 110;
+    let svg = `<div style="text-align:center;margin:16px 0"><svg width="100%" viewBox="0 0 440 360" style="max-width:440px">`;
 
     // Grid rings
     for (let ring = 1; ring <= 5; ring++) {
@@ -1448,8 +1453,8 @@ ${t}`;
     // Labels
     for (let i = 0; i < n; i++) {
       const angle = (2 * Math.PI * i / n) - Math.PI / 2;
-      const lx = cx + (R + 18) * Math.cos(angle);
-      const ly = cy + (R + 18) * Math.sin(angle);
+      const lx = cx + (R + 22) * Math.cos(angle);
+      const ly = cy + (R + 22) * Math.sin(angle);
       const anchor = Math.abs(Math.cos(angle)) < 0.1 ? 'middle' : Math.cos(angle) > 0 ? 'start' : 'end';
       // Shorten long names
       const shortName = dims[i].name.replace('& Integrity','').replace('& Authenticity','').replace('Effectiveness','').replace('Specificity','').trim();
