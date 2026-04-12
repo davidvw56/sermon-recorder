@@ -2074,38 +2074,20 @@ ${t}`;
   function shareReport() {
     if (!state.shareCache && !state.analysisData) return;
 
-    // Use pre-built cache (built right after render) so share() fires instantly
-    let html, filename, title;
+    let html;
     if (state.shareCache) {
       html = state.shareCache.html;
-      filename = state.shareCache.filename;
-      title = state.shareCache.title;
     } else {
-      // Fallback: build now (may lose gesture on slow devices)
       const d = state.analysisData;
       const rt = state.reportType || 'summary';
-      const slug = (d.sermon_title || 'sermon').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/-+$/,'');
       html = buildReportHTML(d, rt);
-      filename = `${slug}-${new Date().toISOString().slice(0,10)}.html`;
-      title = d.sermon_title || 'Sermon Analysis';
     }
 
-    if (!navigator.share) {
-      showError('Share is not supported on this browser');
-      return;
-    }
-
-    const file = new File([html], filename, { type: 'application/octet-stream' });
-    if (navigator.canShare && navigator.canShare({ files: [file] })) {
-      navigator.share({ title: title, files: [file] }).catch(e => {
-        if (e.name !== 'AbortError') showError('Share failed: ' + e.message);
-      });
-    } else {
-      const text = buildResultsText(state.analysisData);
-      navigator.share({ title: title, text: text }).catch(e => {
-        if (e.name !== 'AbortError') showError('Share failed: ' + e.message);
-      });
-    }
+    // Open the report in a new tab as a standalone HTML page
+    // User can then use browser ⋮ → Share or ⋮ → Save/Download
+    const blob = new Blob([html], { type: 'text/html' });
+    const url = URL.createObjectURL(blob);
+    window.open(url, '_blank');
   }
 
   async function pickSaveFolder() {
