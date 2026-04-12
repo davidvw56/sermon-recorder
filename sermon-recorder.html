@@ -1021,8 +1021,19 @@
     const wc = (state.transcript || '').trim().split(/\s+/).filter(w => w).length;
     document.getElementById('recordLabel').textContent = 'Recording complete — ' + wc + ' words captured';
     document.getElementById('analyzeBtn').style.display = 'inline-block';
-    if (wc < 10) {
-      showError('Warning: Very few words were captured (' + wc + '). The transcript may be too short to analyze. Try recording again in a quieter environment or use a closer microphone.');
+
+    // If browser recognition captured nothing but we have audio, offer Whisper fallback
+    if (wc < 10 && state.audioChunks.length > 0) {
+      const key = localStorage.getItem('openaiKey');
+      if (key) {
+        document.getElementById('recordLabel').textContent = 'Browser transcription failed — sending to Whisper...';
+        // Build blob and transcribe with Whisper
+        state.audioBlob = new Blob(state.audioChunks, { type: 'audio/webm' });
+        transcribeWithWhisper(state.audioBlob);
+      } else {
+        showError('Browser transcription captured 0 words. Add your OpenAI API key to enable Whisper fallback transcription.');
+        promptForOpenAIKey();
+      }
     }
   }
 
@@ -1117,24 +1128,74 @@
     }
   }
 
+  function promptForOpenAIKey() {
+    const key = prompt('Enter your OpenAI API key for Whisper transcription:');
+    if (key && key.trim().startsWith('sk-')) {
+      localStorage.setItem('openaiKey', key.trim());
+      showSaveConfirmation('API key saved');
+      // If we have audio waiting, transcribe now
+      if (state.audioBlob || state.audioChunks.length > 0) {
+        if (!state.audioBlob) state.audioBlob = new Blob(state.audioChunks, { type: 'audio/webm' });
+        document.getElementById('recordLabel').textContent = 'Sending to Whisper...';
+        transcribeWithWhisper(state.audioBlob);
+      }
+    } else if (key !== null) {
+      showError('Invalid API key. It should start with "sk-".');
+    }
+  }
+
   async function transcribeWithWhisper(blob) {
     const key = localStorage.getItem('openaiKey');
-    if (!key) { showError('OpenAI API key required for Whisper. Add it in Settings.'); return; }
+    if (!key) { promptForOpenAIKey(); return; }
     document.getElementById('recordLabel').textContent = 'Transcribing with Whisper...';
+    document.getElementById('analyzeBtn').style.display = 'none';
     try {
+      // Whisper has a 25MB limit — check file size
+      const sizeMB = blob.size / (1024 * 1024);
+      if (sizeMB > 24) {
+        document.getElementById('recordLabel').textContent = `Audio is ${sizeMB.toFixed(1)}MB — splitting for Whisper...`;
+        state.transcript = await transcribeWhisperChunked(blob, key);
+      } else {
+        const fd = new FormData();
+        fd.append('file', blob, 'sermon.webm');
+        fd.append('model', 'whisper-1');
+        fd.append('language', 'en');
+        const r = await fetch('https://api.openai.com/v1/audio/transcriptions', {
+          method: 'POST', headers: { 'Authorization': `Bearer ${key}` }, body: fd
+        });
+        if (!r.ok) throw new Error((await r.json()).error?.message || 'Whisper error');
+        state.transcript = (await r.json()).text;
+      }
+      const wc = state.transcript.trim().split(/\s+/).filter(w => w).length;
+      document.getElementById('recordLabel').textContent = 'Whisper transcription complete — ' + wc + ' words captured';
+      document.getElementById('analyzeBtn').style.display = 'inline-block';
+    } catch (err) {
+      showError('Whisper failed: ' + err.message);
+      document.getElementById('analyzeBtn').style.display = 'inline-block';
+    }
+  }
+
+  async function transcribeWhisperChunked(blob, key) {
+    // Split audio into ~20MB chunks and transcribe each
+    const chunkSize = 20 * 1024 * 1024; // 20MB
+    const chunks = [];
+    for (let i = 0; i < blob.size; i += chunkSize) {
+      chunks.push(blob.slice(i, Math.min(i + chunkSize, blob.size), blob.type));
+    }
+    let fullText = '';
+    for (let i = 0; i < chunks.length; i++) {
+      document.getElementById('recordLabel').textContent = `Transcribing part ${i+1}/${chunks.length}...`;
       const fd = new FormData();
-      fd.append('file', blob, 'sermon.webm');
+      fd.append('file', chunks[i], `sermon-part${i+1}.webm`);
       fd.append('model', 'whisper-1');
       fd.append('language', 'en');
       const r = await fetch('https://api.openai.com/v1/audio/transcriptions', {
         method: 'POST', headers: { 'Authorization': `Bearer ${key}` }, body: fd
       });
-      if (!r.ok) throw new Error((await r.json()).error?.message || 'Whisper error');
-      state.transcript = (await r.json()).text;
-      document.getElementById('recordLabel').textContent = 'Transcription complete';
-    } catch (err) {
-      showError('Whisper failed: ' + err.message);
+      if (!r.ok) throw new Error((await r.json()).error?.message || 'Whisper error on part ' + (i+1));
+      fullText += (await r.json()).text + ' ';
     }
+    return fullText.trim();
   }
 
   async function analyzeSermon() {
