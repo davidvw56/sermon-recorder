@@ -990,9 +990,26 @@
         stream.getTracks().forEach(t => t.stop());
         cancelAnimationFrame(state.animFrame);
         resetWaveform();
-        if (state.engine === 'whisper') transcribeWithWhisper(state.audioBlob);
+        const sizeMB = (state.audioBlob.size / (1024*1024)).toFixed(1);
+        console.log('Audio blob: ' + sizeMB + 'MB, ' + state.audioChunks.length + ' chunks');
+        if (state.engine === 'whisper') {
+          transcribeWithWhisper(state.audioBlob);
+        } else {
+          // Browser engine — check if transcript is empty, fallback to Whisper
+          const wc = (state.transcript || '').trim().split(/\s+/).filter(w => w).length;
+          if (wc < 10) {
+            const key = localStorage.getItem('openaiKey');
+            if (key) {
+              document.getElementById('recordLabel').textContent = 'Browser transcription failed — sending ' + sizeMB + 'MB to Whisper...';
+              transcribeWithWhisper(state.audioBlob);
+            } else {
+              showError('Browser transcription captured ' + wc + ' words. Add an OpenAI API key to enable Whisper fallback.');
+              promptForOpenAIKey();
+            }
+          }
+        }
       };
-      state.mediaRecorder.start(1000);
+      state.mediaRecorder.start();
 
       if (state.engine === 'browser') startBrowserTranscription();
 
@@ -1021,20 +1038,8 @@
     const wc = (state.transcript || '').trim().split(/\s+/).filter(w => w).length;
     document.getElementById('recordLabel').textContent = 'Recording complete — ' + wc + ' words captured';
     document.getElementById('analyzeBtn').style.display = 'inline-block';
-
-    // If browser recognition captured nothing but we have audio, offer Whisper fallback
-    if (wc < 10 && state.audioChunks.length > 0) {
-      const key = localStorage.getItem('openaiKey');
-      if (key) {
-        document.getElementById('recordLabel').textContent = 'Browser transcription failed — sending to Whisper...';
-        // Build blob and transcribe with Whisper
-        state.audioBlob = new Blob(state.audioChunks, { type: 'audio/webm' });
-        transcribeWithWhisper(state.audioBlob);
-      } else {
-        showError('Browser transcription captured 0 words. Add your OpenAI API key to enable Whisper fallback transcription.');
-        promptForOpenAIKey();
-      }
-    }
+    // Whisper fallback (if needed) is handled in the mediaRecorder.onstop callback
+    // after the complete audio blob is assembled
   }
 
   function startTimer() {
