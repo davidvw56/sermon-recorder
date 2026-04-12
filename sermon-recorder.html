@@ -867,7 +867,7 @@
   <div class="results" id="results">
     <div class="results-actions" style="display:flex;gap:6px;align-items:center;margin-bottom:12px;flex-wrap:wrap;">
       <button class="btn-sm" onclick="copyAll()">Copy All</button>
-      <button class="btn-sm" onclick="shareReport()" id="shareBtn">Share</button>
+      <button class="btn-sm" id="shareBtn">Share</button>
     </div>
     <h2 id="resultsTitle" style="font-family:var(--font-display);font-size:20px;font-weight:700;margin-bottom:12px;">Analysis</h2>
 
@@ -1283,16 +1283,19 @@ ${t}`;
     container.scrollIntoView({ behavior: 'smooth' });
     if (!skipSave) saveToHistory(d);
 
-    // Pre-build share HTML after charts render (needs canvas to be drawn)
+    // Pre-build share File after charts render (needs canvas to be drawn)
+    // This must be ready BEFORE the user taps Share so navigator.share()
+    // can fire synchronously in the click handler (Android gesture requirement)
     setTimeout(() => {
       try {
         const rt = state.reportType || 'summary';
         const slug = (d.sermon_title || 'sermon').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/-+$/,'');
-        state.shareCache = {
-          html: buildReportHTML(d, rt),
-          filename: `${slug}-${new Date().toISOString().slice(0,10)}.html`,
-          title: d.sermon_title || 'Sermon Analysis'
-        };
+        const html = buildReportHTML(d, rt);
+        const fname = `${slug}-${new Date().toISOString().slice(0,10)}.html`;
+        const title = d.sermon_title || 'Sermon Analysis';
+        state.shareFile = new File([html], fname, { type: 'application/octet-stream' });
+        state.shareTitle = title;
+        state.shareHTML = html;
       } catch(e) { console.warn('Share cache build failed', e); }
     }, 500);
   }
@@ -2071,24 +2074,18 @@ ${t}`;
 </html>`;
   }
 
-  function shareReport() {
-    if (!state.shareCache && !state.analysisData) return;
-
-    let html;
-    if (state.shareCache) {
-      html = state.shareCache.html;
-    } else {
-      const d = state.analysisData;
-      const rt = state.reportType || 'summary';
-      html = buildReportHTML(d, rt);
+  // Bind Share button via addEventListener so the gesture is preserved
+  // The handler must be 100% synchronous up to the navigator.share() call
+  document.getElementById('shareBtn').addEventListener('click', function() {
+    if (!state.shareFile) {
+      showError('Report not ready yet — please wait a moment and try again');
+      return;
     }
-
-    // Open the report in a new tab as a standalone HTML page
-    // User can then use browser ⋮ → Share or ⋮ → Save/Download
-    const blob = new Blob([html], { type: 'text/html' });
-    const url = URL.createObjectURL(blob);
-    window.open(url, '_blank');
-  }
+    // This MUST be the very first async call — no file creation, no DOM work
+    navigator.share({ title: state.shareTitle, files: [state.shareFile] }).catch(function(e) {
+      if (e.name !== 'AbortError') showError('Share failed: ' + e.message);
+    });
+  });
 
   async function pickSaveFolder() {
     if (!window.showDirectoryPicker) {
