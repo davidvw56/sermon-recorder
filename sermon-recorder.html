@@ -1282,6 +1282,19 @@ ${t}`;
     container.classList.add('visible');
     container.scrollIntoView({ behavior: 'smooth' });
     if (!skipSave) saveToHistory(d);
+
+    // Pre-build share HTML after charts render (needs canvas to be drawn)
+    setTimeout(() => {
+      try {
+        const rt = state.reportType || 'summary';
+        const slug = (d.sermon_title || 'sermon').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/-+$/,'');
+        state.shareCache = {
+          html: buildReportHTML(d, rt),
+          filename: `${slug}-${new Date().toISOString().slice(0,10)}.html`,
+          title: d.sermon_title || 'Sermon Analysis'
+        };
+      } catch(e) { console.warn('Share cache build failed', e); }
+    }, 500);
   }
 
   function renderSummaryResults(d) {
@@ -2058,29 +2071,40 @@ ${t}`;
 </html>`;
   }
 
-  async function shareReport() {
-    try {
-      if (!state.analysisData) { alert('DEBUG: No analysis data'); return; }
+  function shareReport() {
+    if (!state.shareCache && !state.analysisData) return;
+
+    // Use pre-built cache (built right after render) so share() fires instantly
+    let html, filename, title;
+    if (state.shareCache) {
+      html = state.shareCache.html;
+      filename = state.shareCache.filename;
+      title = state.shareCache.title;
+    } else {
+      // Fallback: build now (may lose gesture on slow devices)
       const d = state.analysisData;
-      const reportType = state.reportType || 'summary';
-      const titleSlug = (d.sermon_title || 'sermon').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/-+$/,'');
-      const shareTitle = d.sermon_title || 'Sermon Analysis';
-      const content = buildReportHTML(d, reportType);
-      const filename = `${titleSlug}-${new Date().toISOString().slice(0,10)}.html`;
+      const rt = state.reportType || 'summary';
+      const slug = (d.sermon_title || 'sermon').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/-+$/,'');
+      html = buildReportHTML(d, rt);
+      filename = `${slug}-${new Date().toISOString().slice(0,10)}.html`;
+      title = d.sermon_title || 'Sermon Analysis';
+    }
 
-      if (!navigator.share) { alert('DEBUG: navigator.share not available'); return; }
+    if (!navigator.share) {
+      showError('Share is not supported on this browser');
+      return;
+    }
 
-      const file = new File([content], filename, { type: 'application/octet-stream' });
-      const canShareFiles = navigator.canShare && navigator.canShare({ files: [file] });
-      alert('DEBUG: canShareFiles=' + canShareFiles + ', filename=' + filename);
-
-      if (canShareFiles) {
-        await navigator.share({ title: shareTitle, files: [file] });
-      } else {
-        await navigator.share({ title: shareTitle, text: buildResultsText(d) });
-      }
-    } catch (e) {
-      alert('DEBUG ERROR: ' + e.name + ': ' + e.message);
+    const file = new File([html], filename, { type: 'application/octet-stream' });
+    if (navigator.canShare && navigator.canShare({ files: [file] })) {
+      navigator.share({ title: title, files: [file] }).catch(e => {
+        if (e.name !== 'AbortError') showError('Share failed: ' + e.message);
+      });
+    } else {
+      const text = buildResultsText(state.analysisData);
+      navigator.share({ title: title, text: text }).catch(e => {
+        if (e.name !== 'AbortError') showError('Share failed: ' + e.message);
+      });
     }
   }
 
