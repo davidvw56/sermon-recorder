@@ -2059,30 +2059,28 @@ ${t}`;
   }
 
   async function shareReport() {
-    if (!state.analysisData) return;
-    const d = state.analysisData;
-    const reportType = state.reportType || 'summary';
-    const titleSlug = (d.sermon_title || 'sermon').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/-+$/,'');
-    const shareTitle = d.sermon_title || 'Sermon Analysis';
-    const content = buildReportHTML(d, reportType);
-    const filename = `${titleSlug}-${new Date().toISOString().slice(0,10)}.html`;
-
-    if (!navigator.share) {
-      showError('Share is not supported on this browser');
-      return;
-    }
-
-    // Always open the native share sheet with the HTML file attached
     try {
+      if (!state.analysisData) { alert('DEBUG: No analysis data'); return; }
+      const d = state.analysisData;
+      const reportType = state.reportType || 'summary';
+      const titleSlug = (d.sermon_title || 'sermon').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/-+$/,'');
+      const shareTitle = d.sermon_title || 'Sermon Analysis';
+      const content = buildReportHTML(d, reportType);
+      const filename = `${titleSlug}-${new Date().toISOString().slice(0,10)}.html`;
+
+      if (!navigator.share) { alert('DEBUG: navigator.share not available'); return; }
+
       const file = new File([content], filename, { type: 'application/octet-stream' });
-      if (navigator.canShare && navigator.canShare({ files: [file] })) {
+      const canShareFiles = navigator.canShare && navigator.canShare({ files: [file] });
+      alert('DEBUG: canShareFiles=' + canShareFiles + ', filename=' + filename);
+
+      if (canShareFiles) {
         await navigator.share({ title: shareTitle, files: [file] });
       } else {
-        // Browser doesn't support file sharing — share with text fallback
         await navigator.share({ title: shareTitle, text: buildResultsText(d) });
       }
     } catch (e) {
-      if (e.name !== 'AbortError') showError('Share failed: ' + e.message);
+      alert('DEBUG ERROR: ' + e.name + ': ' + e.message);
     }
   }
 
