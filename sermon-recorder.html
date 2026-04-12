@@ -2046,16 +2046,21 @@ ${t}`;
       mimeType = 'text/html';
     }
 
-    const file = new File([content], filename, { type: mimeType });
-
     // Try Web Share API first (works on mobile for OneDrive, Drive, etc.)
-    try {
-      if (navigator.canShare && navigator.canShare({ files: [file] })) {
-        await navigator.share({ title: d.sermon_title || 'Sermon Analysis', files: [file] });
-        return;
+    // Some browsers reject text/html files, so try multiple MIME types
+    const shareTitle = d.sermon_title || 'Sermon Analysis';
+    const mimeOptions = [mimeType, 'application/octet-stream'];
+    for (const mime of mimeOptions) {
+      try {
+        const file = new File([content], filename, { type: mime });
+        if (navigator.canShare && navigator.canShare({ files: [file] })) {
+          await navigator.share({ title: shareTitle, files: [file] });
+          return;
+        }
+      } catch (e) {
+        if (e.name === 'AbortError') return; // user cancelled
+        // Try next MIME type
       }
-    } catch (e) {
-      if (e.name === 'AbortError') return; // user cancelled
     }
 
     // Fallback: try folder save (desktop Chrome/Edge)
