@@ -867,7 +867,6 @@
   <div class="results" id="results">
     <div class="results-actions" style="display:flex;gap:6px;align-items:center;margin-bottom:12px;flex-wrap:wrap;">
       <button class="btn-sm" onclick="copyAll()">Copy All</button>
-      <button class="btn-sm" id="shareBtn">Share</button>
       <button class="btn-sm" onclick="exportHTML()">Export HTML</button>
     </div>
     <h2 id="resultsTitle" style="font-family:var(--font-display);font-size:20px;font-weight:700;margin-bottom:12px;">Analysis</h2>
@@ -2074,22 +2073,6 @@ ${t}`;
 </body>
 </html>`;
   }
-
-  // Share button: share plain text via native share sheet (works on all devices)
-  document.getElementById('shareBtn').addEventListener('click', function() {
-    if (!state.analysisData) return;
-    var text = buildResultsText(state.analysisData);
-    var title = state.shareTitle || state.analysisData.sermon_title || 'Sermon Analysis';
-    if (navigator.share) {
-      navigator.share({ title: title, text: text }).catch(function(e) {
-        if (e.name !== 'AbortError') showError('Share failed: ' + e.message);
-      });
-    } else {
-      navigator.clipboard.writeText(text).then(function() {
-        showSaveConfirmation('Copied to clipboard');
-      });
-    }
-  });
 
   // Export HTML: download the formatted report as an HTML file
   function exportHTML() {
