@@ -1837,31 +1837,194 @@ ${t}`;
   function downloadResults() {
     if (!state.analysisData) return;
     const d = state.analysisData;
-    const text = buildResultsText(d);
-    const titleSlug = (d.sermon_title || 'sermon').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/-+$/,'');
-    const filename = `${titleSlug}-${new Date().toISOString().slice(0,10)}.txt`;
-    if (state.saveDirHandle) {
-      saveToFolder(state.saveDirHandle, filename, text);
-    } else {
+    const reportType = state.reportType || 'summary';
+
+    if (reportType === 'summary') {
+      // Summary still downloads as plain text
+      const text = buildResultsText(d);
+      const titleSlug = (d.sermon_title || 'sermon').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/-+$/,'');
+      const filename = `${titleSlug}-${new Date().toISOString().slice(0,10)}.txt`;
       const a = document.createElement('a');
       a.href = URL.createObjectURL(new Blob([text], { type: 'text/plain' }));
+      a.download = filename;
+      a.click();
+    } else {
+      // Coaching & Candidate download as styled HTML
+      const html = buildReportHTML(d, reportType);
+      const titleSlug = (d.sermon_title || 'sermon').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/-+$/,'');
+      const filename = `${titleSlug}-${new Date().toISOString().slice(0,10)}.html`;
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(new Blob([html], { type: 'text/html' }));
       a.download = filename;
       a.click();
     }
   }
 
+  function buildReportHTML(d, reportType) {
+    const title = d.sermon_title || 'Sermon Analysis';
+    const speaker = d.speaker_name || '';
+    const sDate = d.sermon_date || '';
+    const reportLabel = reportType === 'coaching' ? 'Coaching Report' : 'Pastoral Search Report';
+
+    // Grab the rendered report HTML from the DOM, converting canvases to images
+    const reportEl = document.querySelector('.coaching-report, .candidate-report');
+    let reportContent = '';
+    if (reportEl) {
+      const clone = reportEl.cloneNode(true);
+      // Convert canvas elements to inline images
+      const origCanvases = reportEl.querySelectorAll('canvas');
+      const cloneCanvases = clone.querySelectorAll('canvas');
+      origCanvases.forEach((canvas, i) => {
+        try {
+          const img = document.createElement('img');
+          img.src = canvas.toDataURL('image/png');
+          img.style.maxWidth = '100%';
+          cloneCanvases[i].parentNode.replaceChild(img, cloneCanvases[i]);
+        } catch(e) { /* canvas tainted or empty */ }
+      });
+      reportContent = clone.outerHTML;
+    }
+
+    return `<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>${esc(title)} — ${esc(reportLabel)}</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Lora:wght@600;700&family=Source+Sans+3:wght@400;500;600;700&display=swap');
+  :root {
+    --navy: #1A3A5C; --navy-deep: #0F2640; --navy-light: #243F5C;
+    --teal: #2A7FA5; --teal-light: #EAF4FA; --teal-border: #B0D8EC;
+    --gold: #B8860B; --gold-light: #FDF6E3;
+    --green: #1B6E3A; --green-light: #EAF5EE;
+    --red: #B0271D; --red-light: #FDECEA;
+    --gray-mid: #9096A3; --gray-light: #D8DAE0;
+    --white: #FFFFFF; --offwhite: #F7F8FA; --charcoal: #2C2E33;
+    --font-display: 'Lora', 'Georgia', serif;
+    --font-body: 'Source Sans 3', 'Helvetica Neue', sans-serif;
+    --text: #FFFFFF;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: var(--font-body); background: var(--navy-deep); color: var(--white);
+    max-width: 700px; margin: 0 auto; padding: 32px 20px;
+  }
+  .report-header { text-align: center; margin-bottom: 24px; }
+  .report-header h1 { font-family: var(--font-display); font-size: 22px; font-weight: 700; margin-bottom: 4px; }
+  .report-header .report-label { font-size: 10px; text-transform: uppercase; letter-spacing: 1.5px; color: var(--teal); margin-bottom: 8px; }
+  .report-header .speaker { font-size: 18px; font-weight: 700; }
+  .report-header .date { font-size: 13px; color: var(--gray-mid); margin-top: 2px; }
+  .report-footer { text-align: center; margin-top: 32px; padding-top: 16px; border-top: 1px solid var(--navy-light); font-size: 10px; color: var(--gray-mid); }
+
+  /* Coaching */
+  .coaching-report { color: var(--white); }
+  .score-circle-wrap { text-align: center; margin: 20px 0; }
+  .score-circle { width: 120px; height: 120px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; flex-direction: column; border: 4px solid; }
+  .score-circle .score-num { font-size: 36px; font-weight: 800; font-family: var(--font-display); }
+  .score-circle .score-label { font-size: 10px; text-transform: uppercase; letter-spacing: 1px; opacity: 0.7; }
+  .score-green { border-color: var(--green); color: var(--green); }
+  .score-gold { border-color: var(--gold); color: var(--gold); }
+  .score-red { border-color: var(--red); color: var(--red); }
+  .tier-group { margin-bottom: 16px; }
+  .tier-header { font-size: 11px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--teal); margin-bottom: 8px; padding-bottom: 4px; border-bottom: 1px solid var(--navy-light); }
+  .dim-row { display: flex; align-items: center; gap: 10px; margin-bottom: 6px; }
+  .dim-name { width: 180px; font-size: 12px; font-weight: 600; flex-shrink: 0; }
+  .dim-dots { display: flex; gap: 4px; }
+  .dim-dot { width: 14px; height: 14px; border-radius: 50%; border: 2px solid var(--teal); background: transparent; }
+  .dim-dot.filled { background: var(--teal); }
+  .dim-summary { font-size: 11px; color: var(--gray-mid); margin: 0 0 10px 190px; }
+  .coaching-card { background: var(--navy); border-radius: 8px; padding: 14px; margin-bottom: 12px; border-left: 3px solid; }
+  .coaching-card.strength { border-color: var(--green); }
+  .coaching-card.improvement { border-color: var(--gold); }
+  .coaching-card.toolkit { border-color: var(--teal); }
+  .coaching-card h4 { font-size: 14px; font-weight: 700; margin-bottom: 6px; }
+  .coaching-card p { font-size: 12px; line-height: 1.6; color: var(--gray-mid); margin-bottom: 4px; }
+  .coaching-card .evidence-quote { font-style: italic; font-size: 12px; color: var(--teal); padding: 6px 10px; background: rgba(42,127,165,0.08); border-radius: 4px; margin-top: 6px; }
+  .coaching-card .exercise { font-size: 12px; color: var(--gold); margin-top: 6px; padding: 6px 10px; background: rgba(184,134,11,0.08); border-radius: 4px; }
+
+  /* Candidate */
+  .candidate-report { color: var(--white); }
+  .exec-summary { background: var(--navy); border-radius: 8px; padding: 16px; border-left: 3px solid var(--teal); margin-bottom: 16px; font-size: 13px; line-height: 1.8; }
+  .chart-pair { display: flex; gap: 16px; margin: 16px 0; flex-wrap: wrap; }
+  .chart-box { flex: 1; min-width: 280px; background: var(--navy); border-radius: 8px; padding: 16px; text-align: center; }
+  .chart-box h4 { font-size: 13px; font-weight: 700; margin-bottom: 10px; }
+  .chart-box canvas { max-width: 100%; }
+  .bar-section { margin-bottom: 16px; }
+  .bar-section h4 { font-size: 11px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 10px; padding-bottom: 4px; border-bottom: 1px solid var(--navy-light); }
+  .bar-row { margin-bottom: 10px; }
+  .bar-row-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 3px; }
+  .bar-label { font-size: 12px; font-weight: 600; }
+  .bar-score { font-size: 12px; font-weight: 700; }
+  .bar-track { height: 8px; background: var(--navy); border-radius: 4px; overflow: hidden; }
+  .bar-fill { height: 100%; border-radius: 4px; }
+  .bar-fill-blue { background: linear-gradient(90deg, var(--teal), #6bb3f0); }
+  .bar-fill-gold { background: linear-gradient(90deg, var(--gold), #e8c96a); }
+  .bar-desc { font-size: 11px; color: var(--gray-mid); margin-top: 3px; }
+  .conf-badge { display: inline-block; padding: 1px 6px; border-radius: 3px; font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; margin-left: 6px; }
+  .conf-high { background: rgba(27,110,58,0.2); color: var(--green); }
+  .conf-medium { background: rgba(184,134,11,0.2); color: var(--gold); }
+  .conf-low { background: rgba(176,39,29,0.2); color: var(--red); }
+  .fit-columns { display: flex; gap: 12px; margin: 12px 0; flex-wrap: wrap; }
+  .fit-col { flex: 1; min-width: 250px; background: var(--navy); border-radius: 8px; padding: 14px; }
+  .fit-col h4 { font-size: 13px; font-weight: 700; margin-bottom: 8px; }
+  .fit-col.conservative { border-left: 3px solid var(--red); }
+  .fit-col.progressive { border-left: 3px solid var(--gold); }
+  .fit-item { font-size: 12px; color: var(--gray-mid); padding: 6px 0; border-bottom: 1px solid var(--navy-light); }
+  .fit-item:last-child { border-bottom: none; }
+  .signal-item { font-size: 12px; padding: 8px 12px; margin-bottom: 6px; background: rgba(42,127,165,0.08); border-left: 3px solid var(--teal); border-radius: 0 4px 4px 0; }
+  .committee-q { font-size: 12px; padding: 8px 0; border-bottom: 1px solid var(--navy-light); line-height: 1.6; }
+  .committee-q:last-child { border-bottom: none; }
+  .committee-q strong { color: var(--teal); }
+
+  @media (max-width: 500px) {
+    .dim-row { flex-direction: column; align-items: flex-start; gap: 4px; margin-bottom: 4px; }
+    .dim-name { width: auto; }
+    .dim-summary { margin-left: 0 !important; margin-bottom: 16px; }
+  }
+  @media print {
+    body { background: white; color: #222; }
+    .coaching-report, .candidate-report { color: #222; }
+    .exec-summary, .coaching-card, .fit-col, .chart-box { background: #f5f5f5; }
+    .dim-summary, .bar-desc, .coaching-card p, .fit-item { color: #555; }
+  }
+</style>
+</head>
+<body>
+  <div class="report-header">
+    <div class="report-label">${esc(reportLabel)}</div>
+    <h1>${esc(title)}</h1>
+    ${speaker && speaker !== 'Unknown Speaker' ? `<div class="speaker">${esc(speaker)}</div>` : ''}
+    ${sDate && sDate !== 'Date Unknown' ? `<div class="date">${esc(sDate)}</div>` : ''}
+  </div>
+  ${reportContent}
+  <div class="report-footer">Generated by Sermon Analyzer &bull; ${new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}</div>
+</body>
+</html>`;
+  }
+
   async function shareResults() {
     if (!state.analysisData) return;
     const d = state.analysisData;
-    const text = buildResultsText(d);
+    const reportType = state.reportType || 'summary';
     const titleSlug = (d.sermon_title || 'sermon').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/-+$/,'');
-    const filename = `${titleSlug}-${new Date().toISOString().slice(0,10)}.txt`;
-    const file = new File([text], filename, { type: 'text/plain' });
+
+    let file, shareText;
+    if (reportType === 'summary') {
+      const text = buildResultsText(d);
+      file = new File([text], `${titleSlug}.txt`, { type: 'text/plain' });
+      shareText = text;
+    } else {
+      const html = buildReportHTML(d, reportType);
+      file = new File([html], `${titleSlug}.html`, { type: 'text/html' });
+      shareText = buildResultsText(d); // fallback plain text for share sheet
+    }
+
     try {
       if (navigator.canShare && navigator.canShare({ files: [file] })) {
         await navigator.share({ title: d.sermon_title || 'Sermon Analysis', files: [file] });
       } else {
-        await navigator.share({ title: d.sermon_title || 'Sermon Analysis', text: text });
+        await navigator.share({ title: d.sermon_title || 'Sermon Analysis', text: shareText });
       }
     } catch (e) {
       if (e.name !== 'AbortError') showError('Share failed: ' + e.message);
