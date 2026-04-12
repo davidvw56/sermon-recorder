@@ -867,7 +867,8 @@
   <div class="results" id="results">
     <div class="results-actions" style="display:flex;gap:6px;align-items:center;margin-bottom:12px;flex-wrap:wrap;">
       <button class="btn-sm" onclick="copyAll()">Copy All</button>
-      <button class="btn-sm" onclick="shareOrSave()" id="shareBtn">Share / Save</button>
+      <button class="btn-sm" onclick="shareReport()" id="shareBtn">Share</button>
+      <button class="btn-sm" onclick="saveReport()">Save</button>
     </div>
     <h2 id="resultsTitle" style="font-family:var(--font-display);font-size:20px;font-weight:700;margin-bottom:12px;">Analysis</h2>
 
@@ -1878,12 +1879,14 @@ ${t}`;
     }
   }
 
-  function showSaveConfirmation(filename) {
-    const btn = document.getElementById('shareBtn');
-    const original = btn.innerHTML;
-    btn.innerHTML = '✅ Saved!';
-    btn.style.borderColor = 'var(--green)';
-    setTimeout(() => { btn.innerHTML = original; btn.style.borderColor = ''; }, 2000);
+  function showSaveConfirmation(msg) {
+    const el = document.getElementById('resultsActions');
+    if (!el) return;
+    const toast = document.createElement('div');
+    toast.textContent = '✅ ' + (msg || 'Saved!');
+    toast.style.cssText = 'position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:var(--green);color:#fff;padding:8px 20px;border-radius:20px;font-size:14px;font-weight:600;z-index:9999;box-shadow:0 2px 8px rgba(0,0,0,.2)';
+    document.body.appendChild(toast);
+    setTimeout(() => toast.remove(), 2500);
   }
 
   function buildReportHTML(d, reportType) {
@@ -2056,15 +2059,54 @@ ${t}`;
 </html>`;
   }
 
-  async function shareOrSave() {
+  async function shareReport() {
     if (!state.analysisData) return;
     const d = state.analysisData;
     const reportType = state.reportType || 'summary';
     const titleSlug = (d.sermon_title || 'sermon').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/-+$/,'');
-
+    const shareTitle = d.sermon_title || 'Sermon Analysis';
     const content = buildReportHTML(d, reportType);
     const filename = `${titleSlug}-${new Date().toISOString().slice(0,10)}.html`;
-    const mimeType = 'text/html';
+
+    // Try sharing as file via Web Share API
+    // Use application/octet-stream so Android doesn't mislabel it as "text"
+    try {
+      const file = new File([content], filename, { type: 'application/octet-stream' });
+      if (navigator.canShare && navigator.canShare({ files: [file] })) {
+        await navigator.share({ title: shareTitle, files: [file] });
+        return;
+      }
+    } catch (e) {
+      if (e.name === 'AbortError') return;
+    }
+
+    // Fallback: share as plain text (no file attachment)
+    try {
+      const text = buildResultsText(d);
+      if (navigator.share) {
+        await navigator.share({ title: shareTitle, text: text });
+        return;
+      }
+    } catch (e) {
+      if (e.name === 'AbortError') return;
+    }
+
+    // Last fallback: copy to clipboard
+    try {
+      await navigator.clipboard.writeText(buildResultsText(d));
+      showSaveConfirmation('Copied to clipboard');
+    } catch (e) {
+      showError('Share not supported on this browser');
+    }
+  }
+
+  async function saveReport() {
+    if (!state.analysisData) return;
+    const d = state.analysisData;
+    const reportType = state.reportType || 'summary';
+    const titleSlug = (d.sermon_title || 'sermon').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/-+$/,'');
+    const content = buildReportHTML(d, reportType);
+    const filename = `${titleSlug}-${new Date().toISOString().slice(0,10)}.html`;
 
     // Desktop: try folder save (Chrome/Edge FileSystemAccessAPI)
     if (window.showDirectoryPicker) {
@@ -2077,7 +2119,6 @@ ${t}`;
     }
 
     // Mobile & fallback: browser download as .html file
-    // This saves to Downloads folder — user can then move to OneDrive/Drive
     const a = document.createElement('a');
     a.href = URL.createObjectURL(new Blob([content], { type: 'text/html' }));
     a.download = filename;
@@ -2085,34 +2126,6 @@ ${t}`;
     a.click();
     document.body.removeChild(a);
     showSaveConfirmation(filename);
-  }
-
-  async function shareResults() {
-    if (!state.analysisData) return;
-    const d = state.analysisData;
-    const reportType = state.reportType || 'summary';
-    const titleSlug = (d.sermon_title || 'sermon').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/-+$/,'');
-
-    let file, shareText;
-    if (reportType === 'summary') {
-      const text = buildResultsText(d);
-      file = new File([text], `${titleSlug}.txt`, { type: 'text/plain' });
-      shareText = text;
-    } else {
-      const html = buildReportHTML(d, reportType);
-      file = new File([html], `${titleSlug}.html`, { type: 'text/html' });
-      shareText = buildResultsText(d); // fallback plain text for share sheet
-    }
-
-    try {
-      if (navigator.canShare && navigator.canShare({ files: [file] })) {
-        await navigator.share({ title: d.sermon_title || 'Sermon Analysis', files: [file] });
-      } else {
-        await navigator.share({ title: d.sermon_title || 'Sermon Analysis', text: shareText });
-      }
-    } catch (e) {
-      if (e.name !== 'AbortError') showError('Share failed: ' + e.message);
-    }
   }
 
   async function pickSaveFolder() {
