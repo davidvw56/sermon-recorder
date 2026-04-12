@@ -2066,24 +2066,7 @@ ${t}`;
     const filename = `${titleSlug}-${new Date().toISOString().slice(0,10)}.html`;
     const mimeType = 'text/html';
 
-    // Try Web Share API first (works on mobile for OneDrive, Drive, etc.)
-    // Some browsers reject text/html files, so try multiple MIME types
-    const shareTitle = d.sermon_title || 'Sermon Analysis';
-    const mimeOptions = [mimeType, 'application/octet-stream'];
-    for (const mime of mimeOptions) {
-      try {
-        const file = new File([content], filename, { type: mime });
-        if (navigator.canShare && navigator.canShare({ files: [file] })) {
-          await navigator.share({ title: shareTitle, files: [file] });
-          return;
-        }
-      } catch (e) {
-        if (e.name === 'AbortError') return; // user cancelled
-        // Try next MIME type
-      }
-    }
-
-    // Fallback: try folder save (desktop Chrome/Edge)
+    // Desktop: try folder save (Chrome/Edge FileSystemAccessAPI)
     if (window.showDirectoryPicker) {
       if (!state.saveDirHandle) await pickSaveFolder();
       if (state.saveDirHandle) {
@@ -2093,11 +2076,15 @@ ${t}`;
       }
     }
 
-    // Last fallback: browser download
+    // Mobile & fallback: browser download as .html file
+    // This saves to Downloads folder — user can then move to OneDrive/Drive
     const a = document.createElement('a');
-    a.href = URL.createObjectURL(new Blob([content], { type: mimeType }));
+    a.href = URL.createObjectURL(new Blob([content], { type: 'text/html' }));
     a.download = filename;
+    document.body.appendChild(a);
     a.click();
+    document.body.removeChild(a);
+    showSaveConfirmation(filename);
   }
 
   async function shareResults() {
