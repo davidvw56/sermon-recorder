@@ -2075,28 +2075,27 @@ ${t}`;
 </html>`;
   }
 
-  // Save: save report to designated folder (desktop) or Downloads (mobile)
-  async function saveReport() {
+  // Save: share text file via share sheet (OneDrive, etc.) or folder picker on desktop
+  function saveReport() {
     if (!state.analysisData) return;
     var d = state.analysisData;
-    var rt = state.reportType || 'summary';
-    var html = state.shareHTML || buildReportHTML(d, rt);
+    var text = buildResultsText(d);
     var slug = (d.sermon_title || 'sermon').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/-+$/,'');
-    var filename = slug + '-' + new Date().toISOString().slice(0,10) + '.html';
+    var filename = slug + '-' + new Date().toISOString().slice(0,10) + '.txt';
+    var title = d.sermon_title || 'Sermon Analysis';
 
-    // Desktop: save to designated folder via FileSystemAccessAPI
-    if (window.showDirectoryPicker) {
-      if (!state.saveDirHandle) await pickSaveFolder();
-      if (state.saveDirHandle) {
-        await saveToFolder(state.saveDirHandle, filename, html);
-        showSaveConfirmation('Saved: ' + filename);
-        return;
-      }
+    // Use share sheet — OneDrive, Google Drive, etc. appear as save targets
+    var file = new File([text], filename, { type: 'text/plain' });
+    if (navigator.canShare && navigator.canShare({ files: [file] })) {
+      navigator.share({ title: title, files: [file] }).catch(function(e) {
+        if (e.name !== 'AbortError') showError('Save failed: ' + e.message);
+      });
+      return;
     }
 
-    // Mobile / fallback: download to Downloads folder
+    // Fallback: direct download
     var a = document.createElement('a');
-    a.href = URL.createObjectURL(new Blob([html], { type: 'text/html' }));
+    a.href = URL.createObjectURL(new Blob([text], { type: 'text/plain' }));
     a.download = filename;
     document.body.appendChild(a);
     a.click();
