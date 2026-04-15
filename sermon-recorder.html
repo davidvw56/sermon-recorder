@@ -2373,8 +2373,16 @@ ${t}`;
       console.log('Supadata failed:', supadataErr.message);
     }
 
-    // No captions available — tell the user
-    throw new Error('No captions found for this video. This often happens with livestream replays. Try a video with CC (closed captions), or paste the transcript manually below.');
+    // Supadata failed — fall back to Whisper (handles livestreams, no captions needed)
+    try {
+      if (statusBtn) statusBtn.textContent = 'No captions found — trying audio transcription...';
+      const transcript = await fetchWhisperTranscript(ytUrl, statusBtn);
+      if (transcript && transcript.length >= 50) return transcript;
+    } catch (whisperErr) {
+      console.log('Whisper fallback failed:', whisperErr.message);
+    }
+
+    throw new Error('Could not transcribe this video. Captions are unavailable and audio transcription failed. Try pasting the transcript manually.');
   }
 
   async function fetchSupadataTranscript(ytUrl, statusBtn) {
