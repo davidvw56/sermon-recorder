@@ -95,7 +95,7 @@ export default {
         const ytUrl = url.searchParams.get('url');
         if (!ytUrl) return json({ error: 'Missing url parameter' }, 400, cors);
 
-        const supUrl = `https://api.supadata.ai/v1/transcript?url=${encodeURIComponent(ytUrl)}&text=true&lang=en`;
+        const supUrl = `https://api.supadata.ai/v1/transcript?url=${encodeURIComponent(ytUrl)}&text=true&lang=en&mode=auto`;
         const resp = await fetch(supUrl, {
           headers: { 'x-api-key': env.SUPADATA_KEY },
         });

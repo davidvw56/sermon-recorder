@@ -2365,7 +2365,7 @@ ${t}`;
   }
 
   async function fetchYouTubeTranscript(ytUrl, statusBtn) {
-    // Try Supadata (free, instant — works for videos with captions/CC)
+    // Supadata with mode=auto: tries native captions first, falls back to AI transcription
     try {
       const transcript = await fetchSupadataTranscript(ytUrl, statusBtn);
       if (transcript && transcript.length >= 50) return transcript;
@@ -2373,16 +2373,7 @@ ${t}`;
       console.log('Supadata failed:', supadataErr.message);
     }
 
-    // Supadata failed — fall back to Whisper (handles livestreams, no captions needed)
-    try {
-      if (statusBtn) statusBtn.textContent = 'No captions found — trying audio transcription...';
-      const transcript = await fetchWhisperTranscript(ytUrl, statusBtn);
-      if (transcript && transcript.length >= 50) return transcript;
-    } catch (whisperErr) {
-      console.log('Whisper fallback failed:', whisperErr.message);
-    }
-
-    throw new Error('Could not transcribe this video. Captions are unavailable and audio transcription failed. Try pasting the transcript manually.');
+    throw new Error('Could not transcribe this video. Try pasting the transcript manually.');
   }
 
   async function fetchSupadataTranscript(ytUrl, statusBtn) {
