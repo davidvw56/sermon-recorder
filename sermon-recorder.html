@@ -2423,9 +2423,13 @@ ${t}`;
   async function fetchWhisperTranscript(ytUrl, statusBtn) {
     if (statusBtn) statusBtn.textContent = 'Extracting audio & transcribing (1-3 min)...';
 
-    const r = await fetch(`${WORKER_URL}/api/transcribe`, {
+    // Call Railway directly — Worker proxy times out on long transcriptions
+    const r = await fetch('https://sermon-recorder-production.up.railway.app/transcribe', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer sermon-whisper-2026'
+      },
       body: JSON.stringify({ url: ytUrl })
     });
 
