@@ -2390,16 +2390,17 @@ ${t}`;
 
     // Handle async processing (job-based response)
     if (r.status === 202 && data.jobId) {
-      const maxPolls = 45; // ~90 seconds
+      const maxPolls = 150; // ~5 minutes (AI transcription of long sermons takes time)
       for (let i = 0; i < maxPolls; i++) {
-        if (statusBtn) statusBtn.textContent = `Fetching captions... ${Math.round(((i+1)/maxPolls)*100)}%`;
+        const elapsed = Math.round((i * 2) / 60);
+        if (statusBtn) statusBtn.textContent = `Transcribing audio${elapsed > 0 ? ` (${elapsed}m)` : ''}... ${Math.round(((i+1)/maxPolls)*100)}%`;
         await new Promise(resolve => setTimeout(resolve, 2000));
         const pollR = await fetch(`${WORKER_URL}/api/transcript/${data.jobId}`);
         const pollData = await pollR.json();
         if (pollData.status === 'completed' && pollData.content) return pollData.content;
         if (pollData.status === 'failed') throw new Error(pollData.error || 'Transcript processing failed.');
       }
-      throw new Error('Supadata timed out');
+      throw new Error('Transcription timed out — this video may be too long. Try pasting the transcript manually.');
     }
 
     // Direct response
