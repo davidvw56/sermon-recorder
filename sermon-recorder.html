@@ -840,15 +840,6 @@
     <label>Paste a YouTube link</label>
     <input type="text" id="youtubeUrl" placeholder="https://www.youtube.com/watch?v=...">
     <button class="analyze-btn" id="ytBtn" onclick="analyzeFromYouTube()">Analyze Sermon</button>
-    <div id="ytInstructions" style="display:none; margin-top:12px; padding:12px; background:var(--navy); border:1px solid var(--navy-light); border-radius:4px; font-size:12px; line-height:1.6; color:var(--offwhite);">
-      <strong style="color:var(--teal)">How to grab the transcript:</strong><br>
-      1. Click the link below to open the video<br>
-      2. Below the video, click <strong>"...more"</strong> in the description<br>
-      3. Click <strong>"Show transcript"</strong><br>
-      4. Select all the transcript text and copy it<br>
-      5. Come back here and use <strong>"Paste Text"</strong><br>
-      <a id="ytLink" href="#" target="_blank" style="display:inline-block; margin-top:8px; color:var(--teal); text-decoration:underline;">Open video on YouTube</a>
-    </div>
   </div>
 
   <!-- History -->
@@ -2321,10 +2312,8 @@ ${t}`;
     if (!videoId) { showError('Invalid YouTube link. Use a standard youtube.com or youtu.be link.'); return; }
 
     const ytBtn = document.getElementById('ytBtn');
-    const ytInst = document.getElementById('ytInstructions');
     ytBtn.disabled = true;
     ytBtn.textContent = 'Fetching transcript...';
-    ytInst.style.display = 'none';
     hideError();
 
     try {
@@ -2337,16 +2326,7 @@ ${t}`;
       ytBtn.disabled = false;
       analyzeSermon();
     } catch (err) {
-      // Show manual fallback instructions on timeout or transcript failure
-      const isTimeout = err.message?.includes('timed out');
-      const msg = isTimeout
-        ? 'Transcript fetch timed out. Try the manual method below, or try a video with closed captions (CC).'
-        : (err.message || 'Could not fetch YouTube transcript.');
-      showError(msg);
-      if (isTimeout || err.message?.includes('No transcript')) {
-        document.getElementById('ytLink').href = `https://www.youtube.com/watch?v=${videoId}`;
-        ytInst.style.display = 'block';
-      }
+      showError(err.message || 'Could not fetch YouTube transcript.');
       ytBtn.textContent = 'Analyze Sermon';
       ytBtn.disabled = false;
     }
@@ -2390,7 +2370,7 @@ ${t}`;
 
     // Handle async processing (job-based response)
     if (r.status === 202 && data.jobId) {
-      const maxPolls = 150; // ~5 minutes (AI transcription of long sermons takes time)
+      const maxPolls = 300; // ~10 minutes (AI transcription of long sermons takes time)
       for (let i = 0; i < maxPolls; i++) {
         const elapsed = Math.round((i * 2) / 60);
         if (statusBtn) statusBtn.textContent = `Transcribing audio${elapsed > 0 ? ` (${elapsed}m)` : ''}... ${Math.round(((i+1)/maxPolls)*100)}%`;
