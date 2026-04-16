@@ -1504,7 +1504,7 @@ ${t}`;
 
     // Strengths
     if (d.strengths && d.strengths.length) {
-      html += '<div class="tier-header" style="margin-top:20px">What You Did Well</div>';
+      html += '<div class="tier-header" style="margin-top:20px">What You Did Well <button class="listen-btn" onclick="speakSection(this, \'coaching-strengths\')">Listen</button></div>';
       d.strengths.forEach(s => {
         html += `<div class="coaching-card strength"><h4>${esc(s.title)}</h4><p>${esc(s.explanation)}</p>`;
         if (s.quote) html += `<div class="evidence-quote">"${esc(s.quote)}"</div>`;
@@ -1514,7 +1514,7 @@ ${t}`;
 
     // Improvements
     if (d.improvements && d.improvements.length) {
-      html += '<div class="tier-header" style="margin-top:20px">Your 3 Highest-Impact Improvements</div>';
+      html += '<div class="tier-header" style="margin-top:20px">Your 3 Highest-Impact Improvements <button class="listen-btn" onclick="speakSection(this, \'coaching-improvements\')">Listen</button></div>';
       d.improvements.forEach(imp => {
         html += `<div class="coaching-card improvement"><h4>${esc(imp.title)}</h4>`;
         html += `<p><strong style="color:var(--white)">Now:</strong> ${esc(imp.current_state)}</p>`;
@@ -1526,7 +1526,7 @@ ${t}`;
 
     // Toolkit
     if (d.toolkit && d.toolkit.length) {
-      html += '<div class="tier-header" style="margin-top:20px">Equipping Toolkit</div>';
+      html += '<div class="tier-header" style="margin-top:20px">Equipping Toolkit <button class="listen-btn" onclick="speakSection(this, \'coaching-toolkit\')">Listen</button></div>';
       d.toolkit.forEach(t => {
         html += `<div class="coaching-card toolkit"><h4>${esc(t.title)}</h4><p>${esc(t.description)}</p>`;
         if (t.action) html += `<div class="exercise">${esc(t.action)}</div>`;
@@ -1611,7 +1611,7 @@ ${t}`;
 
     // Executive Summary
     if (d.executive_summary) {
-      html += `<div class="exec-summary">${esc(d.executive_summary)}</div>`;
+      html += `<div class="exec-summary"><button class="listen-btn" style="float:right" onclick="speakSection(this, 'candidate-summary')">Listen</button>${esc(d.executive_summary)}</div>`;
     }
 
     // Radar chart placeholders
@@ -1621,7 +1621,7 @@ ${t}`;
     </div>`;
 
     // Teaching Style Detail
-    html += '<div class="bar-section"><h4 style="color:var(--teal)">Teaching Style Profile</h4>';
+    html += '<div class="bar-section"><h4 style="color:var(--teal)">Teaching Style Profile <button class="listen-btn" onclick="speakSection(this, \'candidate-teaching\')">Listen</button></h4>';
     const teachingTiers = { 'Core Preaching': [], 'Communication Craft': [], 'Engagement & Style': [], 'Institutional': [] };
     teaching.forEach(t => { if (teachingTiers[t.tier]) teachingTiers[t.tier].push(t); else teachingTiers['Core Preaching'].push(t); });
     Object.entries(teachingTiers).forEach(([tier, items]) => {
@@ -1639,7 +1639,7 @@ ${t}`;
     html += '</div>';
 
     // Theological Fit Detail
-    html += '<div class="bar-section"><h4 style="color:var(--gold)">Theological Fit Profile</h4>';
+    html += '<div class="bar-section"><h4 style="color:var(--gold)">Theological Fit Profile <button class="listen-btn" onclick="speakSection(this, \'candidate-theology\')">Listen</button></h4>';
     theology.forEach(t => {
       const pct = (t.score / 5) * 100;
       const confClass = t.confidence === 'High' ? 'conf-high' : t.confidence === 'Medium' ? 'conf-medium' : 'conf-low';
@@ -1656,7 +1656,7 @@ ${t}`;
 
     // Strengths
     if (d.strengths && d.strengths.length) {
-      html += '<div class="bar-section"><h4 style="color:var(--green)">Strengths</h4>';
+      html += '<div class="bar-section"><h4 style="color:var(--green)">Strengths <button class="listen-btn" onclick="speakSection(this, \'candidate-strengths\')">Listen</button></h4>';
       d.strengths.forEach(s => {
         html += `<div class="coaching-card strength"><h4>${esc(s.title)}</h4>`;
         if (s.evidence) html += `<div class="evidence-quote">"${esc(s.evidence)}"</div>`;
@@ -1668,7 +1668,7 @@ ${t}`;
 
     // Growth Areas
     if (d.growth_areas && d.growth_areas.length) {
-      html += '<div class="bar-section"><h4 style="color:var(--gold)">Growth Areas</h4>';
+      html += '<div class="bar-section"><h4 style="color:var(--gold)">Growth Areas <button class="listen-btn" onclick="speakSection(this, \'candidate-growth\')">Listen</button></h4>';
       d.growth_areas.forEach(g => {
         html += `<div class="coaching-card improvement"><h4>${esc(g.title)}</h4>`;
         if (g.observation) html += `<p>${esc(g.observation)}</p>`;
@@ -1680,7 +1680,7 @@ ${t}`;
 
     // Fit Analysis
     if (d.fit_analysis) {
-      html += '<div class="bar-section"><h4>Fit Analysis</h4><div class="fit-columns">';
+      html += '<div class="bar-section"><h4>Fit Analysis <button class="listen-btn" onclick="speakSection(this, \'candidate-fit\')">Listen</button></h4><div class="fit-columns">';
       html += '<div class="fit-col conservative"><h4 style="color:var(--red)">⚠ Potential Concerns for Conservative Churches</h4>';
       (d.fit_analysis.conservative_concerns || []).forEach(c => html += `<div class="fit-item">${esc(c)}</div>`);
       html += '</div>';
@@ -1691,14 +1691,14 @@ ${t}`;
 
     // Key Signals
     if (d.key_signals && d.key_signals.length) {
-      html += '<div class="bar-section"><h4 style="color:var(--teal)">Key Signals</h4>';
+      html += '<div class="bar-section"><h4 style="color:var(--teal)">Key Signals <button class="listen-btn" onclick="speakSection(this, \'candidate-signals\')">Listen</button></h4>';
       d.key_signals.forEach(s => html += `<div class="signal-item">${esc(s)}</div>`);
       html += '</div>';
     }
 
     // Committee Questions
     if (d.committee_questions && d.committee_questions.length) {
-      html += '<div class="bar-section"><h4>Recommended Follow-Up Questions</h4>';
+      html += '<div class="bar-section"><h4>Recommended Follow-Up Questions <button class="listen-btn" onclick="speakSection(this, \'candidate-questions\')">Listen</button></h4>';
       d.committee_questions.forEach((q, i) => html += `<div class="committee-q"><strong>${i+1}.</strong> ${esc(q)}</div>`);
       html += '</div>';
     }
@@ -1839,6 +1839,22 @@ ${t}`;
       } break;
       case 'verses': text = (d.bible_verses||[]).map(v => `${v.reference}. ${v.relevance}`).join('. '); break;
       case 'application': text = (d.application||[]).map((a,i) => `${i+1}. ${a.question}. ${a.prompt}`).join('. '); break;
+      // Coaching sections
+      case 'coaching-strengths': text = (d.strengths||[]).map(s => `${s.title}. ${s.explanation}. ${s.quote ? 'Quote: ' + s.quote : ''}`).join('. '); break;
+      case 'coaching-improvements': text = (d.improvements||[]).map(imp => `${imp.title}. Currently: ${imp.current_state}. Target: ${imp.target_state}. ${imp.exercise || ''}`).join('. '); break;
+      case 'coaching-toolkit': text = (d.toolkit||[]).map(t => `${t.title}. ${t.description}. ${t.action || ''}`).join('. '); break;
+      // Candidate sections
+      case 'candidate-summary': text = d.executive_summary || ''; break;
+      case 'candidate-teaching': text = (d.teaching_style||[]).map(t => `${t.name}. Score ${t.score} out of 5. ${t.description}`).join('. '); break;
+      case 'candidate-theology': text = (d.theological_fit||[]).map(t => `${t.name}. Score ${t.score} out of 5. Confidence: ${t.confidence}. ${t.description}`).join('. '); break;
+      case 'candidate-strengths': text = (d.strengths||[]).map(s => `${s.title}. ${s.evidence || ''}. ${s.significance || ''}`).join('. '); break;
+      case 'candidate-growth': text = (d.growth_areas||[]).map(g => `${g.title}. ${g.observation || ''}. ${g.context || ''}`).join('. '); break;
+      case 'candidate-fit': {
+        const fa = d.fit_analysis || {};
+        text = 'Conservative concerns: ' + (fa.conservative_concerns||[]).join('. ') + '. Progressive concerns: ' + (fa.progressive_concerns||[]).join('. ');
+      } break;
+      case 'candidate-signals': text = (d.key_signals||[]).map((s,i) => `Signal ${i+1}. ${s}`).join('. '); break;
+      case 'candidate-questions': text = (d.committee_questions||[]).map((q,i) => `Question ${i+1}. ${q}`).join('. '); break;
     }
     if (!text) return;
 
