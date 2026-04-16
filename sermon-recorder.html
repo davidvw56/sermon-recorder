@@ -2369,11 +2369,11 @@ ${t}`;
     try {
       const transcript = await fetchSupadataTranscript(ytUrl, statusBtn);
       if (transcript && transcript.length >= 50) return transcript;
+      throw new Error('Transcript too short or empty (got ' + (transcript ? transcript.length : 0) + ' chars)');
     } catch (supadataErr) {
       console.log('Supadata failed:', supadataErr.message);
+      throw new Error('Transcription failed: ' + supadataErr.message);
     }
-
-    throw new Error('Could not transcribe this video. Try pasting the transcript manually.');
   }
 
   async function fetchSupadataTranscript(ytUrl, statusBtn) {
@@ -2397,7 +2397,11 @@ ${t}`;
         await new Promise(resolve => setTimeout(resolve, 2000));
         const pollR = await fetch(`${WORKER_URL}/api/transcript/${data.jobId}`);
         const pollData = await pollR.json();
-        if (pollData.status === 'completed' && pollData.content) return pollData.content;
+        if (pollData.status === 'completed' && pollData.content) {
+          if (typeof pollData.content === 'string') return pollData.content;
+          if (Array.isArray(pollData.content)) return pollData.content.map(s => s.text || '').join(' ');
+          return pollData.content;
+        }
         if (pollData.status === 'failed') throw new Error(pollData.error || 'Transcript processing failed.');
       }
       throw new Error('Transcription timed out — this video may be too long. Try pasting the transcript manually.');
