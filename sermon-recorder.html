@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Sermon Recorder</title>
+<title>SERMONnotes</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Lora:wght@600;700&family=Source+Sans+3:wght@400;500;600;700&display=swap');
 
@@ -50,7 +50,23 @@
     padding: 0 20px;
     gap: 12px;
     flex-shrink: 0;
+    position: relative;
   }
+
+  nav .brand-showem {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    font-family: var(--font-display);
+    font-size: 16px; font-weight: 700;
+    letter-spacing: 0;
+    pointer-events: none;
+    white-space: nowrap;
+  }
+
+  nav .brand-showem .sw-white { color: var(--white); }
+  nav .brand-showem .sw-gold { color: var(--gold); }
 
   nav .logo-mark {
     width: 24px; height: 24px;
@@ -62,6 +78,20 @@
     font-family: var(--font-display);
     font-size: 16px; font-weight: 700;
     color: var(--white);
+    letter-spacing: 0;
+  }
+
+  nav h1 .brand-caps {
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+
+  nav h1 .brand-lower {
+    text-transform: lowercase;
+    font-family: var(--font-body);
+    font-weight: 400;
+    color: #D0D6DC;
+    letter-spacing: 0;
   }
 
   .nav-links {
@@ -298,87 +328,28 @@
   .committee-q:last-child { border-bottom: none; }
   .committee-q strong { color: var(--teal); }
 
-  /* ── Recorder ── */
-  .recorder {
-    text-align: center;
-  }
-
-  .record-btn {
-    width: 80px; height: 80px;
-    border-radius: 50%;
-    border: 3px solid var(--red);
-    background: transparent;
-    cursor: pointer;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    transition: background 0.2s ease;
-  }
-
-  .record-btn:hover { background: rgba(176,39,29,0.1); }
-
-  .record-btn .inner {
-    width: 32px; height: 32px;
-    background: var(--red);
-    border-radius: 50%;
-    transition: all 0.2s ease;
-  }
-
-  .record-btn.recording .inner {
-    width: 22px; height: 22px;
-    border-radius: 3px;
-  }
-
-  .record-btn.recording {
-    animation: pulse 1.5s ease-in-out infinite;
-  }
-
-  @keyframes pulse {
-    0%, 100% { border-color: var(--red); }
-    50% { border-color: rgba(176,39,29,0.3); }
-  }
-
-  .timer {
-    font-family: var(--font-display);
-    font-size: 20px; font-weight: 700;
-    margin-top: 10px;
-    font-variant-numeric: tabular-nums;
-  }
-
-  .record-label {
-    font-size: 12px; color: var(--gray-mid);
-    margin-top: 4px;
-  }
-
-  .waveform {
-    margin-top: 10px; height: 36px;
-    display: flex; align-items: center;
-    justify-content: center; gap: 2px;
-  }
-
-  .waveform-bar {
-    width: 3px; height: 4px;
-    background: var(--teal);
-    border-radius: 2px;
-    transition: height 0.1s ease;
-  }
-
-  /* ── Input Mode Toggle ── */
+  /* ── Input Mode Tabs ── */
   .input-modes {
     display: flex; gap: 8px;
-    margin-top: 16px; justify-content: center;
+    margin: 16px 0; justify-content: center;
   }
 
   .mode-btn {
-    padding: 8px 16px;
+    padding: 10px 20px;
     border: 1px solid var(--navy-light);
     border-radius: 4px; background: var(--navy);
-    color: var(--gray-mid); font-size: 12px;
+    color: var(--gray-mid); font-size: 13px;
     font-weight: 600; font-family: var(--font-body);
     cursor: pointer;
+    transition: all 0.15s ease;
   }
 
   .mode-btn:hover { border-color: var(--teal); color: var(--white); }
+  .mode-btn.active {
+    border-color: var(--teal);
+    background: var(--teal);
+    color: var(--white);
+  }
 
   /* ── Text / URL Input ── */
   .alt-input {
@@ -749,11 +720,6 @@
   }
 
   /* ── Responsive ── */
-  @media (max-width: 480px) {
-    .record-btn { width: 68px; height: 68px; }
-    .record-btn .inner { width: 26px; height: 26px; }
-    .timer { font-size: 18px; }
-  }
 
   /* ── Animations ── */
   @keyframes fadeUp {
@@ -779,7 +745,8 @@
 
 <nav>
   <div class="logo-mark"></div>
-  <h1>Sermon Recorder</h1>
+  <h1 class="brand"><span class="brand-caps">SERMON</span><span class="brand-lower">notes</span></h1>
+  <div class="brand-showem"><span class="sw-white">Show</span><span class="sw-gold">Em</span><span class="sw-white">.ai</span></div>
   <div class="nav-links">
     <button onclick="toggleHistory()">History</button>
   </div>
@@ -791,23 +758,6 @@
 
   <!-- Error -->
   <div class="error-msg" id="errorMsg"></div>
-
-  <!-- Recorder -->
-  <div class="recorder" id="recorderSection">
-    <button class="record-btn" id="recordBtn" onclick="toggleRecording()">
-      <div class="inner"></div>
-    </button>
-    <div class="timer" id="timer">00:00</div>
-    <div class="record-label" id="recordLabel">Tap to record</div>
-    <div class="waveform" id="waveform"></div>
-    <div style="margin-top:16px">
-      <button class="analyze-btn" id="analyzeBtn" onclick="analyzeSermon()" style="display:none">Analyze Sermon</button>
-    </div>
-    <div class="input-modes">
-      <button class="mode-btn" onclick="showInput('text')">Paste Text</button>
-      <button class="mode-btn" onclick="showInput('youtube')">YouTube Link</button>
-    </div>
-  </div>
 
   <!-- Report Type Selector -->
   <div class="report-selector" id="reportSelector">
@@ -828,8 +778,14 @@
     </div>
   </div>
 
+  <!-- Input Source Tabs -->
+  <div class="input-modes">
+    <button class="mode-btn active" id="mode-text" onclick="showInput('text')">Paste Transcript</button>
+    <button class="mode-btn" id="mode-youtube" onclick="showInput('youtube')">YouTube Link</button>
+  </div>
+
   <!-- Paste Text Input -->
-  <div class="alt-input" id="textInput">
+  <div class="alt-input visible" id="textInput">
     <label>Paste sermon transcript or notes</label>
     <textarea id="pasteText" placeholder="Paste your sermon text here..."></textarea>
     <button class="analyze-btn" onclick="analyzeFromText()">Analyze Sermon</button>
@@ -912,17 +868,14 @@
   const WORKER_URL = 'https://sermon-summary-api.david-vanwinkle1.workers.dev';
 
   let state = {
-    recording: false, mediaRecorder: null, audioChunks: [], audioBlob: null,
-    timerInterval: null, startTime: null, recognition: null, transcript: '',
-    engine: 'browser', analyzerNode: null, animFrame: null, analysisData: null,
+    transcript: '',
+    analysisData: null,
     saveDirHandle: null,
     mode: 'community', // 'community' or 'personal'
     reportType: 'summary' // 'summary', 'coaching', or 'candidate'
   };
 
   (function init() {
-    // Hardcoded settings — community mode, browser transcription engine
-    state.engine = 'browser';
     state.mode = 'community';
     // Hide Listen buttons on iOS (all iOS browsers use Safari's limited speech engine)
     if (/iPad|iPhone|iPod/.test(navigator.userAgent)) {
@@ -957,248 +910,10 @@
     document.getElementById('btn-' + type).classList.add('active');
   }
 
-  async function toggleRecording() {
-    state.recording ? stopRecording() : await startRecording();
-  }
-
-  async function startRecording() {
-    try {
-      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-      const ctx = new AudioContext();
-      const src = ctx.createMediaStreamSource(stream);
-      state.analyzerNode = ctx.createAnalyser();
-      state.analyzerNode.fftSize = 128;
-      src.connect(state.analyzerNode);
-      animateWaveform();
-
-      state.mediaRecorder = new MediaRecorder(stream);
-      state.audioChunks = [];
-      state.transcript = '';
-      state.recognitionRestarts = 0;
-      state.mediaRecorder.ondataavailable = e => { if (e.data.size > 0) state.audioChunks.push(e.data); };
-      state.mediaRecorder.onstop = () => {
-        state.audioBlob = new Blob(state.audioChunks, { type: 'audio/webm' });
-        stream.getTracks().forEach(t => t.stop());
-        cancelAnimationFrame(state.animFrame);
-        resetWaveform();
-        const sizeMB = (state.audioBlob.size / (1024*1024)).toFixed(1);
-        console.log('Audio blob: ' + sizeMB + 'MB, ' + state.audioChunks.length + ' chunks');
-        if (state.engine === 'whisper') {
-          transcribeWithWhisper(state.audioBlob);
-        } else {
-          // Browser engine — check if transcript is empty, fallback to Whisper
-          const wc = (state.transcript || '').trim().split(/\s+/).filter(w => w).length;
-          if (wc < 10) {
-            const key = localStorage.getItem('openaiKey');
-            if (key) {
-              document.getElementById('recordLabel').textContent = 'Browser transcription failed — sending ' + sizeMB + 'MB to Whisper...';
-              transcribeWithWhisper(state.audioBlob);
-            } else {
-              showError('Browser transcription captured ' + wc + ' words. Add an OpenAI API key to enable Whisper fallback.');
-              promptForOpenAIKey();
-            }
-          }
-        }
-      };
-      state.mediaRecorder.start();
-
-      if (state.engine === 'browser') startBrowserTranscription();
-
-      state.recording = true;
-      state.startTime = Date.now();
-      document.getElementById('recordBtn').classList.add('recording');
-      document.getElementById('recordLabel').textContent = 'Recording... tap to stop';
-      document.getElementById('analyzeBtn').style.display = 'none';
-      startTimer();
-      hideError();
-    } catch (err) {
-      showError('Microphone access denied. Allow microphone access and try again.');
-    }
-  }
-
-  function stopRecording() {
-    state.recording = false;
-    state.mediaRecorder.stop();
-    // Stop recognition — onend will fire but won't restart since state.recording is false
-    if (state.recognition) {
-      try { state.recognition.stop(); } catch(e) {}
-      state.recognition = null;
-    }
-    clearInterval(state.timerInterval);
-    document.getElementById('recordBtn').classList.remove('recording');
-    const wc = (state.transcript || '').trim().split(/\s+/).filter(w => w).length;
-    document.getElementById('recordLabel').textContent = 'Recording complete — ' + wc + ' words captured';
-    document.getElementById('analyzeBtn').style.display = 'inline-block';
-    // Whisper fallback (if needed) is handled in the mediaRecorder.onstop callback
-    // after the complete audio blob is assembled
-  }
-
-  function startTimer() {
-    state.timerInterval = setInterval(() => {
-      const e = Date.now() - state.startTime;
-      const m = Math.floor(e / 60000), s = Math.floor((e % 60000) / 1000);
-      document.getElementById('timer').textContent = String(m).padStart(2,'0') + ':' + String(s).padStart(2,'0');
-    }, 200);
-  }
-
-  function animateWaveform() {
-    const bars = document.querySelectorAll('.waveform-bar');
-    const data = new Uint8Array(state.analyzerNode.frequencyBinCount);
-    function draw() {
-      state.analyzerNode.getByteFrequencyData(data);
-      const step = Math.floor(data.length / bars.length);
-      bars.forEach((bar, i) => {
-        bar.style.height = Math.max(4, (data[i * step] || 0) / 255 * 32) + 'px';
-      });
-      state.animFrame = requestAnimationFrame(draw);
-    }
-    draw();
-  }
-
-  function resetWaveform() {
-    document.querySelectorAll('.waveform-bar').forEach(b => b.style.height = '4px');
-  }
-
-  function startBrowserTranscription() {
-    const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
-    if (!SR) { showError('Browser speech recognition not supported. Try Chrome or switch to Whisper.'); return; }
-    const rec = new SR();
-    state.recognition = rec;
-    rec.continuous = true;
-    rec.interimResults = true;
-    rec.lang = 'en-US';
-
-    // Accumulated final transcript persists across recognition restarts
-    let finalText = state.transcript || '';
-
-    rec.onresult = e => {
-      let interim = '';
-      for (let i = e.resultIndex; i < e.results.length; i++) {
-        if (e.results[i].isFinal) finalText += e.results[i][0].transcript + ' ';
-        else interim += e.results[i][0].transcript;
-      }
-      state.transcript = finalText + interim;
-      // Show live word count so user knows transcription is working
-      const wc = state.transcript.trim().split(/\s+/).filter(w => w).length;
-      const label = document.getElementById('recordLabel');
-      if (label && state.recording) label.textContent = 'Recording... ' + wc + ' words captured';
-    };
-
-    rec.onerror = e => {
-      console.warn('SpeechRecognition error:', e.error);
-      // Show error type but don't stop recording — onend will try to restart
-      if (e.error === 'not-allowed') {
-        showError('Speech recognition permission issue — recording continues but transcript may not capture. Try closing other apps using the mic, or reload the page.');
-      } else if (e.error === 'network') {
-        showError('Speech recognition network error — check internet connection. Recording continues.');
-      } else if (e.error !== 'no-speech' && e.error !== 'aborted') {
-        showError('Speech recognition: ' + e.error + ' — will retry automatically.');
-      }
-    };
-
-    rec.onend = () => {
-      // Flush: make sure finalText is saved even if onresult didn't fire
-      if (finalText.trim()) state.transcript = finalText;
-
-      if (state.recording && state.engine === 'browser') {
-        // Auto-restart — browser kills recognition periodically
-        state.recognitionRestarts = (state.recognitionRestarts || 0) + 1;
-        console.log('SpeechRecognition restarting (restart #' + state.recognitionRestarts + '), transcript length: ' + (state.transcript || '').length);
-        setTimeout(() => {
-          if (!state.recording) return;
-          try {
-            rec.start();
-          } catch(x) {
-            console.warn('SpeechRecognition restart failed, creating new instance');
-            // If restart fails, create a fresh recognition instance
-            startBrowserTranscription();
-          }
-        }, 300);
-      }
-    };
-
-    try {
-      rec.start();
-    } catch(e) {
-      showError('Could not start speech recognition: ' + e.message);
-    }
-  }
-
-  function promptForOpenAIKey() {
-    const key = prompt('Enter your OpenAI API key for Whisper transcription:');
-    if (key && key.trim().startsWith('sk-')) {
-      localStorage.setItem('openaiKey', key.trim());
-      showSaveConfirmation('API key saved');
-      // If we have audio waiting, transcribe now
-      if (state.audioBlob || state.audioChunks.length > 0) {
-        if (!state.audioBlob) state.audioBlob = new Blob(state.audioChunks, { type: 'audio/webm' });
-        document.getElementById('recordLabel').textContent = 'Sending to Whisper...';
-        transcribeWithWhisper(state.audioBlob);
-      }
-    } else if (key !== null) {
-      showError('Invalid API key. It should start with "sk-".');
-    }
-  }
-
-  async function transcribeWithWhisper(blob) {
-    const key = localStorage.getItem('openaiKey');
-    if (!key) { promptForOpenAIKey(); return; }
-    document.getElementById('recordLabel').textContent = 'Transcribing with Whisper...';
-    document.getElementById('analyzeBtn').style.display = 'none';
-    try {
-      // Whisper has a 25MB limit — check file size
-      const sizeMB = blob.size / (1024 * 1024);
-      if (sizeMB > 24) {
-        document.getElementById('recordLabel').textContent = `Audio is ${sizeMB.toFixed(1)}MB — splitting for Whisper...`;
-        state.transcript = await transcribeWhisperChunked(blob, key);
-      } else {
-        const fd = new FormData();
-        fd.append('file', blob, 'sermon.webm');
-        fd.append('model', 'whisper-1');
-        fd.append('language', 'en');
-        const r = await fetch('https://api.openai.com/v1/audio/transcriptions', {
-          method: 'POST', headers: { 'Authorization': `Bearer ${key}` }, body: fd
-        });
-        if (!r.ok) throw new Error((await r.json()).error?.message || 'Whisper error');
-        state.transcript = (await r.json()).text;
-      }
-      const wc = state.transcript.trim().split(/\s+/).filter(w => w).length;
-      document.getElementById('recordLabel').textContent = 'Whisper transcription complete — ' + wc + ' words captured';
-      document.getElementById('analyzeBtn').style.display = 'inline-block';
-    } catch (err) {
-      showError('Whisper failed: ' + err.message);
-      document.getElementById('analyzeBtn').style.display = 'inline-block';
-    }
-  }
-
-  async function transcribeWhisperChunked(blob, key) {
-    // Split audio into ~20MB chunks and transcribe each
-    const chunkSize = 20 * 1024 * 1024; // 20MB
-    const chunks = [];
-    for (let i = 0; i < blob.size; i += chunkSize) {
-      chunks.push(blob.slice(i, Math.min(i + chunkSize, blob.size), blob.type));
-    }
-    let fullText = '';
-    for (let i = 0; i < chunks.length; i++) {
-      document.getElementById('recordLabel').textContent = `Transcribing part ${i+1}/${chunks.length}...`;
-      const fd = new FormData();
-      fd.append('file', chunks[i], `sermon-part${i+1}.webm`);
-      fd.append('model', 'whisper-1');
-      fd.append('language', 'en');
-      const r = await fetch('https://api.openai.com/v1/audio/transcriptions', {
-        method: 'POST', headers: { 'Authorization': `Bearer ${key}` }, body: fd
-      });
-      if (!r.ok) throw new Error((await r.json()).error?.message || 'Whisper error on part ' + (i+1));
-      fullText += (await r.json()).text + ' ';
-    }
-    return fullText.trim();
-  }
-
   async function analyzeSermon() {
     const t = state.transcript?.trim();
-    if (!t || t.length < 50) { showError('Record a sermon first — transcript is too short.'); return; }
+    if (!t || t.length < 50) { showError('Transcript is too short — paste more text or check the YouTube link.'); return; }
 
-    document.getElementById('analyzeBtn').disabled = true;
     document.getElementById('spinner').classList.add('visible');
     document.getElementById('results').classList.remove('visible');
     hideError();
@@ -1223,7 +938,6 @@
     } catch (err) {
       showError('Analysis failed: ' + err.message);
     } finally {
-      document.getElementById('analyzeBtn').disabled = false;
       document.getElementById('spinner').classList.remove('visible');
     }
   }
@@ -2303,12 +2017,18 @@ ${t}`;
   function showInput(mode) {
     const textEl = document.getElementById('textInput');
     const ytEl = document.getElementById('youtubeInput');
+    const textBtn = document.getElementById('mode-text');
+    const ytBtn = document.getElementById('mode-youtube');
     if (mode === 'text') {
-      textEl.classList.toggle('visible');
+      textEl.classList.add('visible');
       ytEl.classList.remove('visible');
+      textBtn.classList.add('active');
+      ytBtn.classList.remove('active');
     } else {
-      ytEl.classList.toggle('visible');
+      ytEl.classList.add('visible');
       textEl.classList.remove('visible');
+      ytBtn.classList.add('active');
+      textBtn.classList.remove('active');
     }
   }
 
@@ -2411,32 +2131,6 @@ ${t}`;
 
     throw new Error('No captions available');
   }
-
-  async function fetchWhisperTranscript(ytUrl, statusBtn) {
-    if (statusBtn) statusBtn.textContent = 'Extracting audio & transcribing (1-3 min)...';
-
-    // Call Railway directly — Worker proxy times out on long transcriptions
-    const r = await fetch('https://sermon-recorder-production.up.railway.app/transcribe', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer sermon-whisper-2026'
-      },
-      body: JSON.stringify({ url: ytUrl })
-    });
-
-    if (!r.ok) {
-      const err = await r.json().catch(() => ({}));
-      throw new Error(err.error || `Whisper transcription failed (${r.status})`);
-    }
-
-    const data = await r.json();
-    if (!data.transcript || data.transcript.length < 50) {
-      throw new Error('Audio transcription returned insufficient content.');
-    }
-    return data.transcript;
-  }
-
 
   // ============ History ============
   function toggleHistory() {
