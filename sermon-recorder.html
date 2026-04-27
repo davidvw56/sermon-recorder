@@ -453,6 +453,113 @@
     border-radius: 3px; margin-top: 4px; line-height: 1.45;
   }
 
+  /* ── Dimension-centric cards (each dimension is self-contained) ── */
+  .dim-card {
+    background: var(--navy); border-radius: 10px;
+    padding: 14px 16px; margin-bottom: 12px;
+    border-left: 3px solid var(--teal);
+  }
+  .dim-card-head {
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 10px; flex-wrap: wrap; margin-bottom: 8px;
+  }
+  .dim-card-name {
+    font-size: 14px; font-weight: 700; color: var(--white); flex: 1;
+  }
+  .dim-card-name .conf-badge { margin-left: 6px; }
+  .dim-card-dots { display: flex; gap: 4px; flex-shrink: 0; }
+  .dim-card-commentary {
+    font-size: 12.5px; color: var(--gray-mid); line-height: 1.6;
+    margin-bottom: 8px;
+  }
+  .dim-card-evidence {
+    font-style: italic; font-size: 12px; color: var(--teal);
+    padding: 6px 10px; background: rgba(42,127,165,0.08);
+    border-left: 2px solid var(--teal); border-radius: 0 4px 4px 0;
+    line-height: 1.5;
+  }
+  .dim-block {
+    margin-top: 10px; padding-top: 10px;
+    border-top: 1px solid var(--navy-light);
+  }
+  .dim-block-label {
+    font-size: 10px; font-weight: 700; letter-spacing: 1.2px;
+    text-transform: uppercase; margin-bottom: 6px;
+  }
+  .dim-block-label.signature { color: var(--teal); }
+  .dim-block-label.affirm { color: var(--green); }
+  .dim-block-label.area { color: var(--gold); }
+
+  /* Inline signature row inside a dim card */
+  .dim-sig {
+    display: flex; align-items: flex-start; gap: 8px; margin-bottom: 6px;
+  }
+  .dim-sig:last-child { margin-bottom: 0; }
+  .dim-sig-status {
+    flex-shrink: 0; width: 18px; height: 18px; line-height: 18px;
+    text-align: center; font-weight: 800; font-size: 11px;
+    border-radius: 50%; margin-top: 1px;
+  }
+  .dim-sig-status.observed { background: rgba(27,110,58,0.20); color: var(--green); }
+  .dim-sig-status.not-observed { background: rgba(144,150,163,0.18); color: var(--gray-mid); }
+  .dim-sig-body { flex: 1; min-width: 0; }
+  .dim-sig-name {
+    font-size: 12.5px; font-weight: 700; color: var(--white); margin-bottom: 2px;
+  }
+  .dim-sig-quote {
+    font-style: italic; font-size: 11.5px; color: var(--offwhite);
+    padding: 4px 8px; background: rgba(42,127,165,0.08);
+    border-left: 2px solid var(--teal); border-radius: 0 3px 3px 0;
+    margin-top: 4px; line-height: 1.5;
+  }
+  .dim-sig-note {
+    font-size: 11.5px; color: var(--gray-mid); margin-top: 4px; line-height: 1.5;
+  }
+
+  /* Grey note for dimensions with no paired signature */
+  .dim-no-sig {
+    font-size: 11.5px; color: var(--gray-mid); font-style: italic;
+    background: rgba(144,150,163,0.08); border-left: 2px solid var(--gray-mid);
+    padding: 6px 10px; border-radius: 0 4px 4px 0; line-height: 1.5;
+  }
+
+  /* Inline affirmation inside a dim card */
+  .dim-affirm {
+    background: rgba(27,110,58,0.06); border-left: 2px solid var(--green);
+    border-radius: 0 4px 4px 0; padding: 8px 10px; margin-bottom: 6px;
+  }
+  .dim-affirm:last-child { margin-bottom: 0; }
+  .dim-affirm-title {
+    font-size: 12.5px; font-weight: 700; color: var(--white); margin-bottom: 3px;
+  }
+  .dim-affirm-prose {
+    font-size: 11.5px; color: var(--gray-mid); line-height: 1.5; margin-bottom: 4px;
+  }
+  .dim-affirm-quote {
+    font-style: italic; font-size: 11px; color: var(--green);
+    padding: 4px 8px; background: rgba(27,110,58,0.10);
+    border-radius: 3px; margin-top: 4px; line-height: 1.45;
+  }
+
+  /* Inline area-to-grow inside a dim card */
+  .dim-area {
+    background: rgba(184,134,11,0.06); border-left: 2px solid var(--gold);
+    border-radius: 0 4px 4px 0; padding: 8px 10px; margin-bottom: 6px;
+  }
+  .dim-area:last-child { margin-bottom: 0; }
+  .dim-area-top {
+    display: flex; align-items: center; gap: 6px; flex-wrap: wrap; margin-bottom: 4px;
+  }
+  .dim-area-try {
+    font-size: 11.5px; color: var(--offwhite); line-height: 1.5; margin-bottom: 4px;
+  }
+  .dim-area-try strong { color: var(--teal); }
+  .dim-area-practice {
+    font-size: 11px; color: var(--gold);
+    padding: 4px 8px; background: rgba(184,134,11,0.10);
+    border-radius: 3px; margin-top: 4px; line-height: 1.45;
+  }
+
   /* ── Candidate Report Styles ── */
   .candidate-report { color: var(--white); }
   .exec-summary {
@@ -1260,6 +1367,7 @@ Return ONLY valid JSON, no markdown, no code blocks, with these keys:
 9. "sections": An array of exactly 4 objects, one per tier, in this order: Foundation, Craft, Connection, Style. Each has:
    - "tier": "Foundation" | "Craft" | "Connection" | "Style"
    - "affirmations": Array of exactly 3 objects, drawn from the dimensions and signatures within this tier. Each:
+       - "dimension": The dimension (exact name) within this tier that this affirmation is about. Most tiers have 2-3 dimensions; affirmations should generally distribute across them, but it's fine to put two affirmations on the same dimension if that's the honest read.
        - "title": 4-7 word headline of what's working
        - "quote": Direct quote from the sermon showing it
        - "prose": 1-2 sentences on why it landed
@@ -1419,7 +1527,11 @@ ${t}`;
     document.getElementById('applicationContent').innerHTML = (d.application || []).map((a, i) => `<div style="margin-bottom:14px;padding-bottom:14px;border-bottom:1px solid var(--navy-light)"><div style="font-weight:700;font-size:13px;color:var(--white);margin-bottom:4px"><span style="color:var(--teal)">${i+1}.</span> ${esc(a.question)}</div><div style="font-size:12px;line-height:1.5;color:var(--gray-mid);margin-left:16px;padding-left:12px;border-left:2px solid var(--navy-light)">${esc(a.prompt)}</div></div>`).join('');
   }
 
-  // ── Coaching Report Renderer ──
+  // ── Coaching Report Renderer (dimension-centric) ──
+  // Each of the 10 dimensions renders as a self-contained card with its
+  // score, commentary, evidence, paired signature(s), affirmations, and
+  // areas-to-grow all together. Signatures and section synthesis are
+  // distributed into the dimension they belong to instead of standing alone.
   function renderCoachingResults(d, container) {
     const score = d.overall_score || 0;
     const scoreClass = score >= 75 ? 'score-green' : score >= 50 ? 'score-gold' : 'score-red';
@@ -1429,13 +1541,30 @@ ${t}`;
     const focus = d.this_week_focus || [];
     const tiers = ['Foundation', 'Craft', 'Connection', 'Style'];
 
-    // Group signatures by tier (using paired_with → tier lookup)
-    const dimToTier = {};
-    dims.forEach(dim => { dimToTier[dim.name] = dim.tier; });
-    function sigTier(sig) {
-      const pair = (sig.paired_with || [])[0];
-      return dimToTier[pair] || 'Foundation';
-    }
+    // ── Indices: signatures, affirmations, and areas keyed by dimension name ──
+    const sigByDim = {};
+    sigs.forEach(sig => {
+      (sig.paired_with || []).forEach(dimName => {
+        if (!sigByDim[dimName]) sigByDim[dimName] = [];
+        sigByDim[dimName].push(sig);
+      });
+    });
+    const affirmByDim = {};
+    const areaByDim = {};
+    sections.forEach(sec => {
+      (sec.affirmations || []).forEach(a => {
+        const key = a.dimension || '';
+        if (!key) return;
+        if (!affirmByDim[key]) affirmByDim[key] = [];
+        affirmByDim[key].push(a);
+      });
+      (sec.areas_to_grow || []).forEach(area => {
+        const key = area.dimension || '';
+        if (!key) return;
+        if (!areaByDim[key]) areaByDim[key] = [];
+        areaByDim[key].push(area);
+      });
+    });
 
     let html = '<div class="coaching-report">';
 
@@ -1486,101 +1615,92 @@ ${t}`;
       html += `</div>`;
     }
 
-    // ── Dimensions by tier (with confidence badge) ──
-    html += `<div style="margin:20px 0">
-      <div class="tier-header" style="border-bottom:1px solid var(--navy-light);padding-bottom:6px;margin-bottom:12px;">
-        Dimensions <button class="listen-btn" onclick="speakSection(this, 'coaching-dimensions')">Listen</button>
-      </div>`;
+    // ── Dimensions, grouped by tier, each as a self-contained card ──
     tiers.forEach(tier => {
       const tierDims = dims.filter(dim => dim.tier === tier);
       if (!tierDims.length) return;
-      html += `<div class="tier-group"><div class="tier-header">${esc(tier)}</div>`;
+      const tierKey = 'coaching-tier-' + tier.toLowerCase();
+      html += `<div class="tier-group" style="margin-top:20px">
+        <div class="tier-header" style="border-bottom:1px solid var(--navy-light);padding-bottom:6px;margin-bottom:12px;">
+          ${esc(tier)} <button class="listen-btn" onclick="speakSection(this, '${tierKey}')">Listen</button>
+        </div>`;
+
       tierDims.forEach(dim => {
         const conf = dim.confidence || '';
         const confClass = conf === 'High' ? 'conf-high' : conf === 'Medium' ? 'conf-medium' : conf === 'Low' ? 'conf-low' : '';
-        html += `<div class="dim-row">
-          <div class="dim-name">${esc(dim.name)}${conf ? ` <span class="conf-badge ${confClass}">${esc(conf)}</span>` : ''}</div>
-          <div class="dim-dots">`;
+        const dimSigs = sigByDim[dim.name] || [];
+        const dimAffirms = affirmByDim[dim.name] || [];
+        const dimAreas = areaByDim[dim.name] || [];
+
+        html += `<div class="dim-card">
+          <div class="dim-card-head">
+            <div class="dim-card-name">${esc(dim.name)}${conf ? ` <span class="conf-badge ${confClass}">${esc(conf)}</span>` : ''}</div>
+            <div class="dim-card-dots">`;
         for (let i = 1; i <= 5; i++) html += `<div class="dim-dot${i <= dim.score ? ' filled' : ''}"></div>`;
-        html += `</div></div>`;
-        html += `<div class="dim-summary">${esc(dim.commentary || dim.summary || '')}</div>`;
-        if (dim.evidence) html += `<div class="dim-evidence">"${esc(dim.evidence)}"</div>`;
-      });
-      html += '</div>';
-    });
-    html += '</div>';
+        html += `</div>
+          </div>`;
 
-    // ── Signature observations ──
-    if (sigs.length) {
-      html += `<div class="sig-section">
-        <div class="tier-header" style="border-bottom:1px solid var(--navy-light);padding-bottom:6px;margin-bottom:12px;">
-          Signatures — Observed, Not Scored <button class="listen-btn" onclick="speakSection(this, 'coaching-signatures')">Listen</button>
-        </div>`;
-      tiers.forEach(tier => {
-        const tierSigs = sigs.filter(s => sigTier(s) === tier);
-        if (!tierSigs.length) return;
-        html += `<div class="sig-tier-block">
-          <div class="sig-tier-label">${esc(tier)}</div>`;
-        tierSigs.forEach(sig => {
-          const observed = sig.observed === true;
-          html += `<div class="sig-row">
-            <div class="sig-status ${observed ? 'observed' : 'not-observed'}">${observed ? '✓' : '—'}</div>
-            <div class="sig-body">
-              <div class="sig-name">${esc(sig.name || '')}</div>
-              <div class="sig-pair">Pairs with ${esc((sig.paired_with || []).join(' &amp; ') || '—')}</div>`;
-          if (observed && sig.quote) html += `<div class="sig-quote">"${esc(sig.quote)}"</div>`;
-          if (!observed && sig.note) html += `<div class="sig-note">${esc(sig.note)}</div>`;
-          html += `</div></div>`;
-        });
+        if (dim.commentary || dim.summary) {
+          html += `<div class="dim-card-commentary">${esc(dim.commentary || dim.summary || '')}</div>`;
+        }
+        if (dim.evidence) {
+          html += `<div class="dim-card-evidence">"${esc(dim.evidence)}"</div>`;
+        }
+
+        // ── Paired signature(s) — or grey "no signature" note ──
+        html += `<div class="dim-block">
+          <div class="dim-block-label signature">Paired Signature${dimSigs.length === 1 ? '' : 's'}</div>`;
+        if (dimSigs.length === 0) {
+          html += `<div class="dim-no-sig">No signature is paired with this dimension yet.</div>`;
+        } else {
+          dimSigs.forEach(sig => {
+            const observed = sig.observed === true;
+            html += `<div class="dim-sig">
+              <div class="dim-sig-status ${observed ? 'observed' : 'not-observed'}">${observed ? '✓' : '—'}</div>
+              <div class="dim-sig-body">
+                <div class="dim-sig-name">${esc(sig.name || '')}</div>`;
+            if (observed && sig.quote) html += `<div class="dim-sig-quote">"${esc(sig.quote)}"</div>`;
+            if (!observed && sig.note) html += `<div class="dim-sig-note">${esc(sig.note)}</div>`;
+            html += `</div></div>`;
+          });
+        }
         html += `</div>`;
-      });
-      html += `</div>`;
-    }
 
-    // ── Section synthesis (4 tiers × {affirmations, areas_to_grow}) ──
-    if (sections.length) {
-      html += `<div class="section-synthesis">
-        <div class="tier-header" style="border-bottom:1px solid var(--navy-light);padding-bottom:6px;margin-bottom:12px;">
-          By Tier — Affirmations &amp; Areas to Grow
-        </div>`;
-      tiers.forEach(tier => {
-        const sec = sections.find(s => s.tier === tier);
-        if (!sec) return;
-        const affirms = sec.affirmations || [];
-        const areas = sec.areas_to_grow || [];
-        const sectionKey = 'coaching-section-' + tier.toLowerCase();
-        html += `<div class="tier-section">
-          <div class="tier-section-header">${esc(tier)} <button class="listen-btn" onclick="speakSection(this, '${sectionKey}')">Listen</button></div>
-          <div class="tier-section-meta">${affirms.length} affirmations · ${areas.length} areas to grow</div>
-          <div class="tier-cols">
-            <div>
-              <div class="tier-col-label affirm">Affirmations</div>`;
-        affirms.forEach(a => {
-          html += `<div class="affirm-card">
-            <div class="a-title">${esc(a.title || '')}</div>
-            <div class="a-prose">${esc(a.prose || '')}</div>`;
-          if (a.quote) html += `<div class="a-quote">"${esc(a.quote)}"</div>`;
+        // ── What's working (affirmations for this dimension) ──
+        if (dimAffirms.length) {
+          html += `<div class="dim-block">
+            <div class="dim-block-label affirm">What's Working</div>`;
+          dimAffirms.forEach(a => {
+            html += `<div class="dim-affirm">
+              <div class="dim-affirm-title">${esc(a.title || '')}</div>`;
+            if (a.prose) html += `<div class="dim-affirm-prose">${esc(a.prose)}</div>`;
+            if (a.quote) html += `<div class="dim-affirm-quote">"${esc(a.quote)}"</div>`;
+            html += `</div>`;
+          });
           html += `</div>`;
-        });
-        html += `</div>
-            <div>
-              <div class="tier-col-label area">Areas to Grow</div>`;
-        areas.forEach(area => {
-          html += `<div class="area-card">
-            <div class="area-top">
-              <span class="area-dim">${esc(area.dimension || '')}</span>`;
-          if (area.transition) html += `<span class="transition-badge">${esc(area.transition)}</span>`;
-          html += `</div>
-            <div class="area-try"><strong>Try:</strong> ${esc(area.what_to_try || '')}</div>`;
-          if (area.practice) html += `<div class="area-practice">🎯 ${esc(area.practice)}</div>`;
+        }
+
+        // ── Try this (areas to grow for this dimension) ──
+        if (dimAreas.length) {
+          html += `<div class="dim-block">
+            <div class="dim-block-label area">Try This</div>`;
+          dimAreas.forEach(area => {
+            html += `<div class="dim-area">
+              <div class="dim-area-top">`;
+            if (area.transition) html += `<span class="transition-badge">${esc(area.transition)}</span>`;
+            html += `</div>
+              <div class="dim-area-try"><strong>Try:</strong> ${esc(area.what_to_try || '')}</div>`;
+            if (area.practice) html += `<div class="dim-area-practice">🎯 ${esc(area.practice)}</div>`;
+            html += `</div>`;
+          });
           html += `</div>`;
-        });
-        html += `</div>
-          </div>
-        </div>`;
+        }
+
+        html += `</div>`; // /.dim-card
       });
-      html += `</div>`;
-    }
+
+      html += `</div>`; // /.tier-group
+    });
 
     html += '</div>';
     container.querySelector('#applicationCard').insertAdjacentHTML('afterend', html);
@@ -1890,19 +2010,43 @@ ${t}`;
       // Coaching sections
       case 'coaching-synthesis': text = d.synthesis_paragraph || ''; break;
       case 'coaching-focus': text = (d.this_week_focus||[]).map((f,i) => `Priority ${i+1}. ${f.dimension}, transition ${f.transition || ''}. ${f.why_this_one || ''}. Try ${f.what_to_try || ''}. This week: ${f.practice || ''}`).join('. '); break;
-      case 'coaching-dimensions': text = (d.dimensions||[]).map(dim => `${dim.name}. Score ${dim.score} of 5${dim.confidence ? ', ' + dim.confidence + ' confidence' : ''}. ${dim.commentary || dim.summary || ''}`).join('. '); break;
-      case 'coaching-signatures': text = (d.signatures||[]).map(sig => `${sig.name}. ${sig.observed ? 'Observed. ' + (sig.quote || '') : 'Not observed. ' + (sig.note || '')}`).join('. '); break;
-      case 'coaching-section-foundation':
-      case 'coaching-section-craft':
-      case 'coaching-section-connection':
-      case 'coaching-section-style': {
-        const tier = section.replace('coaching-section-', '');
+      case 'coaching-tier-foundation':
+      case 'coaching-tier-craft':
+      case 'coaching-tier-connection':
+      case 'coaching-tier-style': {
+        // Read everything for this tier as a continuous flow:
+        // each dimension's score + commentary + paired signatures + affirmations + areas
+        const tier = section.replace('coaching-tier-', '');
         const tierName = tier.charAt(0).toUpperCase() + tier.slice(1);
-        const sec = (d.sections||[]).find(s => (s.tier||'').toLowerCase() === tier);
-        if (!sec) { text = ''; break; }
-        const a = (sec.affirmations||[]).map(x => `Affirmation: ${x.title}. ${x.prose || ''}. ${x.quote ? 'Quote: ' + x.quote : ''}`).join('. ');
-        const g = (sec.areas_to_grow||[]).map(x => `Area to grow: ${x.dimension}, transition ${x.transition || ''}. Try ${x.what_to_try || ''}. This week: ${x.practice || ''}`).join('. ');
-        text = `${tierName}. ${a}. ${g}`;
+        const tierDims = (d.dimensions||[]).filter(dim => (dim.tier||'').toLowerCase() === tier);
+        if (!tierDims.length) { text = ''; break; }
+
+        // Build lookups
+        const sigByDim = {};
+        (d.signatures||[]).forEach(sig => {
+          (sig.paired_with||[]).forEach(dn => { (sigByDim[dn] = sigByDim[dn] || []).push(sig); });
+        });
+        const affirmByDim = {}, areaByDim = {};
+        (d.sections||[]).forEach(sec => {
+          (sec.affirmations||[]).forEach(a => { if (a.dimension) (affirmByDim[a.dimension] = affirmByDim[a.dimension] || []).push(a); });
+          (sec.areas_to_grow||[]).forEach(a => { if (a.dimension) (areaByDim[a.dimension] = areaByDim[a.dimension] || []).push(a); });
+        });
+
+        const parts = [tierName + '.'];
+        tierDims.forEach(dim => {
+          parts.push(`${dim.name}. Score ${dim.score} of 5${dim.confidence ? ', ' + dim.confidence + ' confidence' : ''}.`);
+          if (dim.commentary || dim.summary) parts.push(dim.commentary || dim.summary);
+          (sigByDim[dim.name] || []).forEach(sig => {
+            parts.push(`${sig.name}. ${sig.observed ? 'Observed. ' + (sig.quote || '') : 'Not observed. ' + (sig.note || '')}`);
+          });
+          (affirmByDim[dim.name] || []).forEach(a => {
+            parts.push(`Working: ${a.title || ''}. ${a.prose || ''}`);
+          });
+          (areaByDim[dim.name] || []).forEach(a => {
+            parts.push(`Try: ${a.what_to_try || ''}. This week: ${a.practice || ''}`);
+          });
+        });
+        text = parts.join(' ');
       } break;
       // Candidate sections
       case 'candidate-summary': text = d.executive_summary || ''; break;
@@ -2000,7 +2144,7 @@ ${t}`;
     lines.push(`OVERALL SCORE: ${d.overall_score || 0}/100`, '');
 
     if ((d.this_week_focus || []).length) {
-      lines.push('THIS WEEK — 3 PRIORITIES');
+      lines.push('THIS WEEK — 3 PRIORITIES', '-'.repeat(40));
       d.this_week_focus.forEach((f, i) => {
         lines.push(`${i+1}. ${f.dimension || ''}${f.transition ? ' (' + f.transition + ')' : ''}`);
         if (f.why_this_one) lines.push(`   Why: ${f.why_this_one}`);
@@ -2010,48 +2154,58 @@ ${t}`;
       });
     }
 
+    // ── Dimension-centric: each dimension shows its score, evidence,
+    //    paired signatures, affirmations, and areas-to-grow inline. ──
+    const sigByDim = {};
+    (d.signatures || []).forEach(sig => {
+      (sig.paired_with || []).forEach(dn => { (sigByDim[dn] = sigByDim[dn] || []).push(sig); });
+    });
+    const affirmByDim = {}, areaByDim = {};
+    (d.sections || []).forEach(sec => {
+      (sec.affirmations || []).forEach(a => { if (a.dimension) (affirmByDim[a.dimension] = affirmByDim[a.dimension] || []).push(a); });
+      (sec.areas_to_grow || []).forEach(a => { if (a.dimension) (areaByDim[a.dimension] = areaByDim[a.dimension] || []).push(a); });
+    });
+
     const tiers = ['Foundation', 'Craft', 'Connection', 'Style'];
-    lines.push('DIMENSIONS');
     tiers.forEach(tier => {
       const dims = (d.dimensions || []).filter(dim => dim.tier === tier);
       if (!dims.length) return;
-      lines.push(tier.toUpperCase());
+      lines.push(tier.toUpperCase(), '-'.repeat(40));
+
       dims.forEach(dim => {
         const conf = dim.confidence ? ` [${dim.confidence}]` : '';
-        lines.push(`  ${dim.name}: ${dim.score}/5${conf}`);
-        if (dim.commentary || dim.summary) lines.push(`    ${dim.commentary || dim.summary}`);
-        if (dim.evidence) lines.push(`    "${dim.evidence}"`);
-      });
-      lines.push('');
-    });
+        lines.push(`${dim.name}: ${dim.score}/5${conf}`);
+        if (dim.commentary || dim.summary) lines.push(`  ${dim.commentary || dim.summary}`);
+        if (dim.evidence) lines.push(`  "${dim.evidence}"`);
 
-    if ((d.signatures || []).length) {
-      lines.push('SIGNATURES — OBSERVED, NOT SCORED');
-      d.signatures.forEach(sig => {
-        const mark = sig.observed ? '✓' : '—';
-        const pair = (sig.paired_with || []).join(' & ');
-        lines.push(`  ${mark} ${sig.name}${pair ? ' (' + pair + ')' : ''}`);
-        if (sig.observed && sig.quote) lines.push(`    "${sig.quote}"`);
-        if (!sig.observed && sig.note) lines.push(`    ${sig.note}`);
-      });
-      lines.push('');
-    }
+        // Paired signature(s) — or no-sig note
+        const dimSigs = sigByDim[dim.name] || [];
+        if (dimSigs.length === 0) {
+          lines.push(`  Paired signature: (none paired with this dimension yet)`);
+        } else {
+          dimSigs.forEach(sig => {
+            const mark = sig.observed ? '✓' : '—';
+            lines.push(`  ${mark} ${sig.name}`);
+            if (sig.observed && sig.quote) lines.push(`    "${sig.quote}"`);
+            if (!sig.observed && sig.note) lines.push(`    ${sig.note}`);
+          });
+        }
 
-    (d.sections || []).forEach(sec => {
-      lines.push(`${(sec.tier || '').toUpperCase()} — AFFIRMATIONS & AREAS TO GROW`);
-      lines.push('Affirmations:');
-      (sec.affirmations || []).forEach(a => {
-        lines.push(`  • ${a.title || ''}`);
-        if (a.prose) lines.push(`    ${a.prose}`);
-        if (a.quote) lines.push(`    "${a.quote}"`);
+        // What's working (affirmations for this dimension)
+        (affirmByDim[dim.name] || []).forEach(a => {
+          lines.push(`  ✓ Working: ${a.title || ''}`);
+          if (a.prose) lines.push(`    ${a.prose}`);
+          if (a.quote) lines.push(`    "${a.quote}"`);
+        });
+
+        // Try this (areas to grow for this dimension)
+        (areaByDim[dim.name] || []).forEach(area => {
+          lines.push(`  → Try this${area.transition ? ' [' + area.transition + ']' : ''}: ${area.what_to_try || ''}`);
+          if (area.practice) lines.push(`    🎯 This week: ${area.practice}`);
+        });
+
+        lines.push('');
       });
-      lines.push('Areas to grow:');
-      (sec.areas_to_grow || []).forEach(area => {
-        lines.push(`  • ${area.dimension || ''}${area.transition ? ' (' + area.transition + ')' : ''}`);
-        if (area.what_to_try) lines.push(`    Try: ${area.what_to_try}`);
-        if (area.practice) lines.push(`    This week: ${area.practice}`);
-      });
-      lines.push('');
     });
 
     return lines.join('\n');
@@ -2291,6 +2445,41 @@ ${t}`;
   .area-card .area-try strong { color: var(--teal); }
   .area-card .area-practice { font-size: 11px; color: var(--gold); padding: 4px 8px; background: rgba(184,134,11,0.10); border-radius: 3px; margin-top: 4px; line-height: 1.45; }
   @media (max-width: 600px) { .tier-cols { grid-template-columns: 1fr; } }
+
+  /* Dimension-centric cards (each dimension self-contained) */
+  .dim-card { background: var(--navy); border-radius: 10px; padding: 14px 16px; margin-bottom: 12px; border-left: 3px solid var(--teal); }
+  .dim-card-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; margin-bottom: 8px; }
+  .dim-card-name { font-size: 14px; font-weight: 700; color: var(--white); flex: 1; }
+  .dim-card-name .conf-badge { margin-left: 6px; }
+  .dim-card-dots { display: flex; gap: 4px; flex-shrink: 0; }
+  .dim-card-commentary { font-size: 12.5px; color: var(--gray-mid); line-height: 1.6; margin-bottom: 8px; }
+  .dim-card-evidence { font-style: italic; font-size: 12px; color: var(--teal); padding: 6px 10px; background: rgba(42,127,165,0.08); border-left: 2px solid var(--teal); border-radius: 0 4px 4px 0; line-height: 1.5; }
+  .dim-block { margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--navy-light); }
+  .dim-block-label { font-size: 10px; font-weight: 700; letter-spacing: 1.2px; text-transform: uppercase; margin-bottom: 6px; }
+  .dim-block-label.signature { color: var(--teal); }
+  .dim-block-label.affirm { color: var(--green); }
+  .dim-block-label.area { color: var(--gold); }
+  .dim-sig { display: flex; align-items: flex-start; gap: 8px; margin-bottom: 6px; }
+  .dim-sig:last-child { margin-bottom: 0; }
+  .dim-sig-status { flex-shrink: 0; width: 18px; height: 18px; line-height: 18px; text-align: center; font-weight: 800; font-size: 11px; border-radius: 50%; margin-top: 1px; }
+  .dim-sig-status.observed { background: rgba(27,110,58,0.20); color: var(--green); }
+  .dim-sig-status.not-observed { background: rgba(144,150,163,0.18); color: var(--gray-mid); }
+  .dim-sig-body { flex: 1; min-width: 0; }
+  .dim-sig-name { font-size: 12.5px; font-weight: 700; color: var(--white); margin-bottom: 2px; }
+  .dim-sig-quote { font-style: italic; font-size: 11.5px; color: var(--offwhite); padding: 4px 8px; background: rgba(42,127,165,0.08); border-left: 2px solid var(--teal); border-radius: 0 3px 3px 0; margin-top: 4px; line-height: 1.5; }
+  .dim-sig-note { font-size: 11.5px; color: var(--gray-mid); margin-top: 4px; line-height: 1.5; }
+  .dim-no-sig { font-size: 11.5px; color: var(--gray-mid); font-style: italic; background: rgba(144,150,163,0.08); border-left: 2px solid var(--gray-mid); padding: 6px 10px; border-radius: 0 4px 4px 0; line-height: 1.5; }
+  .dim-affirm { background: rgba(27,110,58,0.06); border-left: 2px solid var(--green); border-radius: 0 4px 4px 0; padding: 8px 10px; margin-bottom: 6px; }
+  .dim-affirm:last-child { margin-bottom: 0; }
+  .dim-affirm-title { font-size: 12.5px; font-weight: 700; color: var(--white); margin-bottom: 3px; }
+  .dim-affirm-prose { font-size: 11.5px; color: var(--gray-mid); line-height: 1.5; margin-bottom: 4px; }
+  .dim-affirm-quote { font-style: italic; font-size: 11px; color: var(--green); padding: 4px 8px; background: rgba(27,110,58,0.10); border-radius: 3px; margin-top: 4px; line-height: 1.45; }
+  .dim-area { background: rgba(184,134,11,0.06); border-left: 2px solid var(--gold); border-radius: 0 4px 4px 0; padding: 8px 10px; margin-bottom: 6px; }
+  .dim-area:last-child { margin-bottom: 0; }
+  .dim-area-top { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; margin-bottom: 4px; }
+  .dim-area-try { font-size: 11.5px; color: var(--offwhite); line-height: 1.5; margin-bottom: 4px; }
+  .dim-area-try strong { color: var(--teal); }
+  .dim-area-practice { font-size: 11px; color: var(--gold); padding: 4px 8px; background: rgba(184,134,11,0.10); border-radius: 3px; margin-top: 4px; line-height: 1.45; }
 
   /* Candidate */
   .candidate-report { color: var(--white); }
