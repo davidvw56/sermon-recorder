@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SERMONnotes</title>
+<title>SERMONcoach</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Lora:wght@600;700&family=Source+Sans+3:wght@400;500;600;700&display=swap');
 
@@ -265,6 +265,192 @@
   .coaching-card .exercise {
     font-size: 12px; color: var(--gold); margin-top: 6px;
     padding: 6px 10px; background: rgba(184,134,11,0.08); border-radius: 4px;
+  }
+
+  /* Synthesis paragraph (top of coaching report) */
+  .synthesis-card {
+    background: var(--navy); border-radius: 8px; padding: 16px 18px;
+    border-left: 3px solid var(--teal); margin: 16px 0;
+    font-size: 13.5px; line-height: 1.7; color: var(--offwhite);
+    font-family: var(--font-display); font-weight: 600;
+  }
+  .synthesis-card .overline {
+    font-family: var(--font-body); font-weight: 700;
+  }
+
+  /* This Week Focus — three top priorities for next Sunday */
+  .this-week-focus {
+    background: linear-gradient(180deg, rgba(184,134,11,0.10), rgba(184,134,11,0.04));
+    border: 1px solid rgba(184,134,11,0.35); border-radius: 10px;
+    padding: 16px 18px; margin: 20px 0;
+  }
+  .this-week-focus .focus-header {
+    font-size: 11px; font-weight: 700; letter-spacing: 1.5px;
+    text-transform: uppercase; color: var(--gold); margin-bottom: 10px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .focus-item {
+    background: var(--navy); border-radius: 6px; padding: 12px 14px;
+    margin-bottom: 10px; border-left: 3px solid var(--gold);
+  }
+  .focus-item:last-child { margin-bottom: 0; }
+  .focus-item .focus-num {
+    display: inline-block; width: 20px; height: 20px; line-height: 20px;
+    text-align: center; background: var(--gold); color: var(--navy-deep);
+    font-weight: 800; font-size: 11px; border-radius: 50%;
+    margin-right: 8px; vertical-align: middle;
+  }
+  .focus-item .focus-dim {
+    display: inline-block; font-size: 13px; font-weight: 700;
+    color: var(--white); vertical-align: middle;
+  }
+  .focus-item .transition-badge {
+    display: inline-block; font-size: 10px; font-weight: 700;
+    color: var(--gold); background: rgba(184,134,11,0.15);
+    padding: 2px 7px; border-radius: 10px; margin-left: 8px;
+    letter-spacing: 0.04em; vertical-align: middle;
+  }
+  .focus-item .focus-why {
+    font-size: 12px; color: var(--gray-mid); font-style: italic;
+    margin: 6px 0 0 28px; line-height: 1.5;
+  }
+  .focus-item .focus-try {
+    font-size: 12px; color: var(--offwhite); margin: 6px 0 0 28px;
+    line-height: 1.5;
+  }
+  .focus-item .focus-try strong { color: var(--teal); }
+  .focus-item .focus-practice {
+    font-size: 12px; color: var(--gold); margin: 6px 0 0 28px;
+    padding: 6px 10px; background: rgba(184,134,11,0.10);
+    border-radius: 4px; line-height: 1.5;
+  }
+
+  /* Confidence badge on dimensions (reuses .conf-badge variants from candidate) */
+  .dim-row .conf-badge {
+    display: inline-block; padding: 1px 6px; border-radius: 3px;
+    font-size: 9px; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.5px; margin-left: 6px;
+  }
+
+  /* Evidence quote inside dim-summary */
+  .dim-evidence {
+    font-style: italic; font-size: 11px; color: var(--teal);
+    padding: 6px 10px; background: rgba(42,127,165,0.08);
+    border-radius: 4px; margin: 4px 0 12px 190px;
+    line-height: 1.5;
+  }
+  @media (max-width: 500px) {
+    .dim-evidence { margin-left: 0; }
+  }
+
+  /* Signature observations */
+  .sig-section { margin: 20px 0; }
+  .sig-tier-block { margin-bottom: 14px; }
+  .sig-tier-label {
+    font-size: 10px; font-weight: 700; letter-spacing: 1.2px;
+    text-transform: uppercase; color: var(--gray-mid); margin-bottom: 6px;
+  }
+  .sig-row {
+    display: flex; align-items: flex-start; gap: 10px;
+    background: var(--navy); border-radius: 6px; padding: 10px 12px;
+    margin-bottom: 6px;
+  }
+  .sig-status {
+    flex-shrink: 0; width: 20px; height: 20px; line-height: 20px;
+    text-align: center; font-weight: 800; font-size: 12px;
+    border-radius: 50%; margin-top: 1px;
+  }
+  .sig-status.observed {
+    background: rgba(27,110,58,0.20); color: var(--green);
+  }
+  .sig-status.not-observed {
+    background: rgba(144,150,163,0.18); color: var(--gray-mid);
+  }
+  .sig-body { flex: 1; min-width: 0; }
+  .sig-name {
+    font-size: 12.5px; font-weight: 700; color: var(--white);
+    margin-bottom: 2px;
+  }
+  .sig-pair {
+    font-size: 10px; font-weight: 600; color: var(--teal);
+    letter-spacing: 0.04em; margin-bottom: 4px;
+  }
+  .sig-quote {
+    font-style: italic; font-size: 12px; color: var(--offwhite);
+    padding: 4px 8px; background: rgba(42,127,165,0.08);
+    border-left: 2px solid var(--teal); border-radius: 0 4px 4px 0;
+    margin-top: 4px; line-height: 1.5;
+  }
+  .sig-note {
+    font-size: 11.5px; color: var(--gray-mid); margin-top: 4px;
+    line-height: 1.5;
+  }
+
+  /* Section synthesis (per-tier affirmations + areas to grow) */
+  .section-synthesis { margin: 24px 0; }
+  .tier-section {
+    background: var(--navy); border-radius: 8px; padding: 14px;
+    margin-bottom: 14px; border-top: 3px solid var(--teal);
+  }
+  .tier-section .tier-section-header {
+    font-family: var(--font-display); font-size: 16px; font-weight: 700;
+    color: var(--white); margin-bottom: 4px;
+  }
+  .tier-section .tier-section-meta {
+    font-size: 10px; font-weight: 600; letter-spacing: 0.08em;
+    color: var(--gray-mid); text-transform: uppercase; margin-bottom: 12px;
+  }
+  .tier-cols {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 12px;
+  }
+  @media (max-width: 600px) {
+    .tier-cols { grid-template-columns: 1fr; }
+  }
+  .tier-col-label {
+    font-size: 10px; font-weight: 700; letter-spacing: 1.2px;
+    text-transform: uppercase; margin-bottom: 8px;
+  }
+  .tier-col-label.affirm { color: var(--green); }
+  .tier-col-label.area { color: var(--gold); }
+  .affirm-card {
+    background: rgba(27,110,58,0.06);
+    border-left: 2px solid var(--green); border-radius: 0 4px 4px 0;
+    padding: 8px 10px; margin-bottom: 8px;
+  }
+  .affirm-card .a-title {
+    font-size: 12.5px; font-weight: 700; color: var(--white);
+    margin-bottom: 3px;
+  }
+  .affirm-card .a-prose {
+    font-size: 11.5px; color: var(--gray-mid); line-height: 1.5;
+    margin-bottom: 4px;
+  }
+  .affirm-card .a-quote {
+    font-style: italic; font-size: 11px; color: var(--green);
+    padding: 4px 8px; background: rgba(27,110,58,0.10);
+    border-radius: 3px; margin-top: 4px; line-height: 1.45;
+  }
+  .area-card {
+    background: rgba(184,134,11,0.06);
+    border-left: 2px solid var(--gold); border-radius: 0 4px 4px 0;
+    padding: 8px 10px; margin-bottom: 8px;
+  }
+  .area-card .area-top {
+    display: flex; align-items: center; gap: 6px;
+    flex-wrap: wrap; margin-bottom: 4px;
+  }
+  .area-card .area-dim {
+    font-size: 12.5px; font-weight: 700; color: var(--white);
+  }
+  .area-card .area-try {
+    font-size: 11.5px; color: var(--offwhite); line-height: 1.5;
+    margin-bottom: 4px;
+  }
+  .area-card .area-try strong { color: var(--teal); }
+  .area-card .area-practice {
+    font-size: 11px; color: var(--gold);
+    padding: 4px 8px; background: rgba(184,134,11,0.10);
+    border-radius: 3px; margin-top: 4px; line-height: 1.45;
   }
 
   /* ── Candidate Report Styles ── */
@@ -749,7 +935,7 @@
 
 <nav>
   <div class="logo-mark"></div>
-  <h1 class="brand"><span class="brand-caps">SERMON</span><span class="brand-lower">notes</span></h1>
+  <h1 class="brand"><span class="brand-caps">SERMON</span><span class="brand-lower">coach</span></h1>
   <div class="brand-showem"><span class="sw-white">Show</span><span class="sw-gold">Em</span><span class="sw-white">.ai</span></div>
   <div class="nav-links">
     <button onclick="toggleHistory()">History</button>
@@ -992,44 +1178,64 @@ ${t}`;
   }
 
   function getCoachingPrompt(t) {
-    return `You are an expert sermon coach and homiletics professor. Analyze this sermon transcript and produce a detailed coaching evaluation. Return a JSON object with these keys:
+    return `You are reading a sermon transcript as a thoughtful preaching coach in the voice of a seasoned pastor — honest about what is weak, generous about what is trying to be strong, slow to dismiss a move that may be faithful in a tradition not your own, and unwilling to hide behind vague affirmation. Read the sermon within its own tradition first. When a phrase could land two ways, read it in the more charitable direction. When the transcript does not give enough to score a dimension responsibly, lower confidence rather than raise certainty. Numbers do real work — be precise, and pair every score with evidence and plain prose.
+
+Return ONLY valid JSON, no markdown, no code blocks, with these keys:
 
 1. "sermon_title": A concise 5-8 word title capturing the sermon's theme.
 
-2. "speaker_name": The full name of the speaker/preacher. Infer from the transcript (introductions, references, self-mentions). If uncertain, use "Unknown Speaker".
+2. "speaker_name": The full name of the speaker/preacher. Infer from the transcript. If uncertain, use "Unknown Speaker".
 
-3. "sermon_date": The date the sermon was delivered, if mentioned or inferable from the transcript (format: "Month Day, Year" e.g. "April 6, 2025"). If not determinable, use "Date Unknown".
+3. "sermon_date": Date the sermon was delivered (format: "Month Day, Year"). If not determinable, use "Date Unknown".
 
-4. "overall_score": A single number 0-100 representing the weighted overall score. Use this weighting:
-   - Foundation tier (45% total): Biblical Depth 15%, Application Specificity 15%, Gospel Clarity 15%
-   - Craft tier (30% total): Structural Clarity 10%, Illustration Effectiveness 10%, Opening & Closing Power 10%
-   - Connection tier (15% total): Vulnerability & Authenticity 7.5%, Audience Engagement 7.5%
-   - Style tier (10% total): Contemporary Relevance 5%, Intellectual Depth 5%
+4. "overall_score": A single number 0-100 representing the weighted overall score. Compute as: sum over each dimension of (score × 20 × weight), where weights are:
+   - Foundation tier (45%): Biblical Depth & Integrity 15%, Application Specificity 15%, Gospel Clarity 15%
+   - Craft tier (30%): Structural Clarity 10%, Illustration Effectiveness 10%, Opening & Closing Power 10%
+   - Connection tier (15%): Vulnerability & Authenticity 7.5%, Audience Engagement 7.5%
+   - Style tier (10%): Contemporary Relevance 5%, Intellectual Depth 5%
 
-5. "dimensions": An array of exactly 10 objects, each with:
-   - "name": Dimension name (use exactly these names: "Biblical Depth & Integrity", "Application Specificity", "Gospel Clarity", "Structural Clarity", "Illustration Effectiveness", "Opening & Closing Power", "Vulnerability & Authenticity", "Audience Engagement", "Contemporary Relevance", "Intellectual Depth")
-   - "tier": One of "Foundation", "Craft", "Connection", "Style"
-   - "score": Integer 1-5 (1=needs significant work, 3=competent, 5=exceptional)
-   - "summary": 2 sentences explaining the score with specific observations from the sermon
-   - "evidence": A direct quote from the transcript that supports the score
+5. "synthesis_paragraph": A 4-6 sentence plain-prose paragraph that opens the report. Before the numbers, what did you hear? What was the sermon trying to do, what did it do well, where did the weight sit, what should the preacher hold in mind as they look at the scores below? Pastoral, specific, anchored in the actual sermon. Not a list of compliments. Not a summary of points.
 
-6. "strengths": An array of 2-3 objects, each with:
-   - "title": What they did well (e.g. "Masterful Use of Personal Story")
-   - "explanation": 2-3 sentences explaining why this was effective
-   - "quote": A direct quote demonstrating the strength
+6. "dimensions": An array of exactly 10 objects, in this order — Biblical Depth & Integrity, Application Specificity, Gospel Clarity, Structural Clarity, Illustration Effectiveness, Opening & Closing Power, Vulnerability & Authenticity, Audience Engagement, Contemporary Relevance, Intellectual Depth — each with:
+   - "name": Use the exact dimension name above
+   - "tier": "Foundation" | "Craft" | "Connection" | "Style"
+   - "score": Integer 1-5. 1=significant gaps. 2=attempted but inconsistent. 3=competent. 4=notably effective. 5=exceptional, worth studying.
+   - "confidence": "High" | "Medium" | "Low" — based on how well the transcript evidences this dimension. When even Low is a stretch, write the score as the most honest read but flag Low.
+   - "evidence": A direct quote from the transcript supporting the score. If a quote is truly unavailable, use "" and lower confidence.
+   - "commentary": 2-3 sentences of plain prose. Name what you heard, why it scores where it does. Avoid hedging into uselessness.
 
-7. "improvements": An array of exactly 3 objects (the 3 highest-impact improvements), each with:
-   - "title": What to improve
-   - "current_state": 1-2 sentences describing what they're currently doing
-   - "target_state": 1-2 sentences describing what excellence looks like
-   - "exercise": A specific, actionable practice exercise they can do this week
+7. "signatures": An array of exactly 8 objects, in this order — Christological Turn, Intertextual Anchoring, Word Study as Rhetorical Pivot, Cultural Longing in the Opening, Aphoristic Compression, Structural Return at Close, Mid-Stream Objection-Handling, Identity Framing in the Call — each with:
+   - "name": Exact signature name
+   - "paired_with": Array of dimension names this signature pairs with. Mapping: Christological Turn → ["Gospel Clarity"]; Intertextual Anchoring → ["Biblical Depth & Integrity"]; Word Study as Rhetorical Pivot → ["Biblical Depth & Integrity"]; Cultural Longing in the Opening → ["Opening & Closing Power"]; Aphoristic Compression → ["Illustration Effectiveness"]; Structural Return at Close → ["Opening & Closing Power"]; Mid-Stream Objection-Handling → ["Audience Engagement"]; Identity Framing in the Call → ["Vulnerability & Authenticity", "Audience Engagement"]
+   - "observed": true if the sermon clearly made this craft move; false if it didn't. Either/or — no degrees. Read charitably; absence is not failure, just information.
+   - "quote": If observed: a direct quote from the transcript where the move lands. If not observed: null.
+   - "note": If not observed: a short one-line description (max 15 words) of what the sermon did instead, with no penalty implied. If observed: null.
 
-8. "toolkit": An array of 2-3 objects, each with:
-   - "title": Resource or technique name
-   - "description": What it is and why it helps
-   - "action": One specific thing to try in their next sermon
+8. "this_week_focus": An array of exactly 3 objects — the three highest-impact priorities for the preacher this week, drawn from the areas_to_grow below. Pick the three most worth doing, not the easiest to name. Each:
+   - "dimension": The dimension being moved (exact name)
+   - "transition": The rung being climbed: "2→3", "3→4", or "4→5"
+   - "what_to_try": 1-2 sentences. Where a paired signature exists for this dimension, name it concretely (e.g., "Try the Christological turn — name what this passage is showing us about Christ before you reach the application"). Where no signature pairs, name a specific craft move.
+   - "practice": One small specific thing to do this week — concrete, doable in normal sermon prep. Not a vague aspiration.
+   - "why_this_one": One sentence on why this is the highest-impact pick right now, given where the sermon currently sits.
 
-Return ONLY valid JSON, no markdown, no code blocks. Be honest but encouraging — this is a coaching tool, not a critique.
+9. "sections": An array of exactly 4 objects, one per tier, in this order: Foundation, Craft, Connection, Style. Each has:
+   - "tier": "Foundation" | "Craft" | "Connection" | "Style"
+   - "affirmations": Array of exactly 3 objects, drawn from the dimensions and signatures within this tier. Each:
+       - "title": 4-7 word headline of what's working
+       - "quote": Direct quote from the sermon showing it
+       - "prose": 1-2 sentences on why it landed
+   - "areas_to_grow": Array of exactly 3 objects, named as transitions between rungs (one rung at a time — Phase 2 work moves 2→3 and 3→4; Phase 3 moves 4→5). Each:
+       - "dimension": The dimension (exact name) within this tier
+       - "transition": "2→3" | "3→4" | "4→5"
+       - "what_to_try": 1-2 sentences. Name the paired signature where one exists, or a specific craft move.
+       - "practice": One small specific thing to do in this week's sermon prep.
+
+Notes on producing the output:
+- Affirmations should be genuine (not flattery) and grounded in quoted lines.
+- Areas to grow should be specific to what's actually in this sermon, not generic preaching advice.
+- For the Style tier areas: there are no paired signatures yet (the field book names this gap honestly). Name craft moves directly without referencing a signature.
+- For dimensions scoring 5: the area to grow may still be a refinement (5→ deeper 5) or may name an adjacent dimension within the tier. Use judgment; don't invent weakness.
+- Keep all prose in the voice of a thoughtful pastor: warm, unpretentious, precise. Avoid hype, life-hack framing, easy certainty, and combative posture.
 
 SERMON TRANSCRIPT:
 ${t}`;
@@ -1179,77 +1385,162 @@ ${t}`;
     const score = d.overall_score || 0;
     const scoreClass = score >= 75 ? 'score-green' : score >= 50 ? 'score-gold' : 'score-red';
     const dims = d.dimensions || [];
+    const sigs = d.signatures || [];
+    const sections = d.sections || [];
+    const focus = d.this_week_focus || [];
     const tiers = ['Foundation', 'Craft', 'Connection', 'Style'];
+
+    // Group signatures by tier (using paired_with → tier lookup)
+    const dimToTier = {};
+    dims.forEach(dim => { dimToTier[dim.name] = dim.tier; });
+    function sigTier(sig) {
+      const pair = (sig.paired_with || [])[0];
+      return dimToTier[pair] || 'Foundation';
+    }
 
     let html = '<div class="coaching-report">';
 
-    // Speaker & Date header
+    // ── Speaker & Date header ──
     const speaker = d.speaker_name && d.speaker_name !== 'Unknown Speaker' ? d.speaker_name : '';
     const sDate = d.sermon_date && d.sermon_date !== 'Date Unknown' ? d.sermon_date : '';
     if (speaker || sDate) {
       html += `<div style="text-align:center;margin-bottom:16px;color:var(--gray-mid)">`;
-      if (speaker) html += `<div style="font-size:18px;font-weight:700;color:var(--text)">${esc(speaker)}</div>`;
+      if (speaker) html += `<div style="font-size:18px;font-weight:700;color:var(--white)">${esc(speaker)}</div>`;
       if (sDate) html += `<div style="font-size:13px;margin-top:2px">${esc(sDate)}</div>`;
       html += `</div>`;
     }
 
-    // Overall Score
+    // ── Synthesis paragraph (top of report) ──
+    if (d.synthesis_paragraph) {
+      html += `<div class="synthesis-card">
+        <div class="overline" style="color:var(--teal);font-size:10px;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:8px;">A Read of the Whole <button class="listen-btn" onclick="speakSection(this, 'coaching-synthesis')">Listen</button></div>
+        ${esc(d.synthesis_paragraph)}
+      </div>`;
+    }
+
+    // ── Overall Score + Radar ──
     html += `<div class="score-circle-wrap">
       <div class="score-circle ${scoreClass}">
         <div class="score-num">${score}</div>
         <div class="score-label">Overall</div>
       </div>
     </div>`;
-
-    // SVG Radar Chart
     html += buildRadarSVG(dims);
 
-    // Scorecard by Tier
-    html += '<div style="margin:20px 0">';
+    // ── This Week Focus ──
+    if (focus.length) {
+      html += `<div class="this-week-focus">
+        <div class="focus-header">
+          <span>This Week — 3 Priorities</span>
+          <button class="listen-btn" onclick="speakSection(this, 'coaching-focus')">Listen</button>
+        </div>`;
+      focus.forEach((f, i) => {
+        html += `<div class="focus-item">
+          <span class="focus-num">${i+1}</span>
+          <span class="focus-dim">${esc(f.dimension || '')}</span>`;
+        if (f.transition) html += `<span class="transition-badge">${esc(f.transition)}</span>`;
+        if (f.why_this_one) html += `<div class="focus-why">${esc(f.why_this_one)}</div>`;
+        if (f.what_to_try) html += `<div class="focus-try"><strong>Try:</strong> ${esc(f.what_to_try)}</div>`;
+        if (f.practice) html += `<div class="focus-practice">🎯 ${esc(f.practice)}</div>`;
+        html += `</div>`;
+      });
+      html += `</div>`;
+    }
+
+    // ── Dimensions by tier (with confidence badge) ──
+    html += `<div style="margin:20px 0">
+      <div class="tier-header" style="border-bottom:1px solid var(--navy-light);padding-bottom:6px;margin-bottom:12px;">
+        Dimensions <button class="listen-btn" onclick="speakSection(this, 'coaching-dimensions')">Listen</button>
+      </div>`;
     tiers.forEach(tier => {
-      const tierDims = dims.filter(d => d.tier === tier);
+      const tierDims = dims.filter(dim => dim.tier === tier);
       if (!tierDims.length) return;
       html += `<div class="tier-group"><div class="tier-header">${esc(tier)}</div>`;
       tierDims.forEach(dim => {
-        html += `<div class="dim-row"><div class="dim-name">${esc(dim.name)}</div><div class="dim-dots">`;
+        const conf = dim.confidence || '';
+        const confClass = conf === 'High' ? 'conf-high' : conf === 'Medium' ? 'conf-medium' : conf === 'Low' ? 'conf-low' : '';
+        html += `<div class="dim-row">
+          <div class="dim-name">${esc(dim.name)}${conf ? ` <span class="conf-badge ${confClass}">${esc(conf)}</span>` : ''}</div>
+          <div class="dim-dots">`;
         for (let i = 1; i <= 5; i++) html += `<div class="dim-dot${i <= dim.score ? ' filled' : ''}"></div>`;
         html += `</div></div>`;
-        html += `<div class="dim-summary">${esc(dim.summary)}</div>`;
+        html += `<div class="dim-summary">${esc(dim.commentary || dim.summary || '')}</div>`;
+        if (dim.evidence) html += `<div class="dim-evidence">"${esc(dim.evidence)}"</div>`;
       });
       html += '</div>';
     });
     html += '</div>';
 
-    // Strengths
-    if (d.strengths && d.strengths.length) {
-      html += '<div class="tier-header" style="margin-top:20px">What You Did Well <button class="listen-btn" onclick="speakSection(this, \'coaching-strengths\')">Listen</button></div>';
-      d.strengths.forEach(s => {
-        html += `<div class="coaching-card strength"><h4>${esc(s.title)}</h4><p>${esc(s.explanation)}</p>`;
-        if (s.quote) html += `<div class="evidence-quote">"${esc(s.quote)}"</div>`;
-        html += '</div>';
+    // ── Signature observations ──
+    if (sigs.length) {
+      html += `<div class="sig-section">
+        <div class="tier-header" style="border-bottom:1px solid var(--navy-light);padding-bottom:6px;margin-bottom:12px;">
+          Signatures — Observed, Not Scored <button class="listen-btn" onclick="speakSection(this, 'coaching-signatures')">Listen</button>
+        </div>`;
+      tiers.forEach(tier => {
+        const tierSigs = sigs.filter(s => sigTier(s) === tier);
+        if (!tierSigs.length) return;
+        html += `<div class="sig-tier-block">
+          <div class="sig-tier-label">${esc(tier)}</div>`;
+        tierSigs.forEach(sig => {
+          const observed = sig.observed === true;
+          html += `<div class="sig-row">
+            <div class="sig-status ${observed ? 'observed' : 'not-observed'}">${observed ? '✓' : '—'}</div>
+            <div class="sig-body">
+              <div class="sig-name">${esc(sig.name || '')}</div>
+              <div class="sig-pair">Pairs with ${esc((sig.paired_with || []).join(' &amp; ') || '—')}</div>`;
+          if (observed && sig.quote) html += `<div class="sig-quote">"${esc(sig.quote)}"</div>`;
+          if (!observed && sig.note) html += `<div class="sig-note">${esc(sig.note)}</div>`;
+          html += `</div></div>`;
+        });
+        html += `</div>`;
       });
+      html += `</div>`;
     }
 
-    // Improvements
-    if (d.improvements && d.improvements.length) {
-      html += '<div class="tier-header" style="margin-top:20px">Your 3 Highest-Impact Improvements <button class="listen-btn" onclick="speakSection(this, \'coaching-improvements\')">Listen</button></div>';
-      d.improvements.forEach(imp => {
-        html += `<div class="coaching-card improvement"><h4>${esc(imp.title)}</h4>`;
-        html += `<p><strong style="color:var(--white)">Now:</strong> ${esc(imp.current_state)}</p>`;
-        html += `<p><strong style="color:var(--white)">Target:</strong> ${esc(imp.target_state)}</p>`;
-        if (imp.exercise) html += `<div class="exercise">🎯 ${esc(imp.exercise)}</div>`;
-        html += '</div>';
+    // ── Section synthesis (4 tiers × {affirmations, areas_to_grow}) ──
+    if (sections.length) {
+      html += `<div class="section-synthesis">
+        <div class="tier-header" style="border-bottom:1px solid var(--navy-light);padding-bottom:6px;margin-bottom:12px;">
+          By Tier — Affirmations &amp; Areas to Grow
+        </div>`;
+      tiers.forEach(tier => {
+        const sec = sections.find(s => s.tier === tier);
+        if (!sec) return;
+        const affirms = sec.affirmations || [];
+        const areas = sec.areas_to_grow || [];
+        const sectionKey = 'coaching-section-' + tier.toLowerCase();
+        html += `<div class="tier-section">
+          <div class="tier-section-header">${esc(tier)} <button class="listen-btn" onclick="speakSection(this, '${sectionKey}')">Listen</button></div>
+          <div class="tier-section-meta">${affirms.length} affirmations · ${areas.length} areas to grow</div>
+          <div class="tier-cols">
+            <div>
+              <div class="tier-col-label affirm">Affirmations</div>`;
+        affirms.forEach(a => {
+          html += `<div class="affirm-card">
+            <div class="a-title">${esc(a.title || '')}</div>
+            <div class="a-prose">${esc(a.prose || '')}</div>`;
+          if (a.quote) html += `<div class="a-quote">"${esc(a.quote)}"</div>`;
+          html += `</div>`;
+        });
+        html += `</div>
+            <div>
+              <div class="tier-col-label area">Areas to Grow</div>`;
+        areas.forEach(area => {
+          html += `<div class="area-card">
+            <div class="area-top">
+              <span class="area-dim">${esc(area.dimension || '')}</span>`;
+          if (area.transition) html += `<span class="transition-badge">${esc(area.transition)}</span>`;
+          html += `</div>
+            <div class="area-try"><strong>Try:</strong> ${esc(area.what_to_try || '')}</div>`;
+          if (area.practice) html += `<div class="area-practice">🎯 ${esc(area.practice)}</div>`;
+          html += `</div>`;
+        });
+        html += `</div>
+          </div>
+        </div>`;
       });
-    }
-
-    // Toolkit
-    if (d.toolkit && d.toolkit.length) {
-      html += '<div class="tier-header" style="margin-top:20px">Equipping Toolkit <button class="listen-btn" onclick="speakSection(this, \'coaching-toolkit\')">Listen</button></div>';
-      d.toolkit.forEach(t => {
-        html += `<div class="coaching-card toolkit"><h4>${esc(t.title)}</h4><p>${esc(t.description)}</p>`;
-        if (t.action) html += `<div class="exercise">${esc(t.action)}</div>`;
-        html += '</div>';
-      });
+      html += `</div>`;
     }
 
     html += '</div>';
@@ -1558,9 +1849,22 @@ ${t}`;
       case 'verses': text = (d.bible_verses||[]).map(v => `${v.reference}. ${v.relevance}`).join('. '); break;
       case 'application': text = (d.application||[]).map((a,i) => `${i+1}. ${a.question}. ${a.prompt}`).join('. '); break;
       // Coaching sections
-      case 'coaching-strengths': text = (d.strengths||[]).map(s => `${s.title}. ${s.explanation}. ${s.quote ? 'Quote: ' + s.quote : ''}`).join('. '); break;
-      case 'coaching-improvements': text = (d.improvements||[]).map(imp => `${imp.title}. Currently: ${imp.current_state}. Target: ${imp.target_state}. ${imp.exercise || ''}`).join('. '); break;
-      case 'coaching-toolkit': text = (d.toolkit||[]).map(t => `${t.title}. ${t.description}. ${t.action || ''}`).join('. '); break;
+      case 'coaching-synthesis': text = d.synthesis_paragraph || ''; break;
+      case 'coaching-focus': text = (d.this_week_focus||[]).map((f,i) => `Priority ${i+1}. ${f.dimension}, transition ${f.transition || ''}. ${f.why_this_one || ''}. Try ${f.what_to_try || ''}. This week: ${f.practice || ''}`).join('. '); break;
+      case 'coaching-dimensions': text = (d.dimensions||[]).map(dim => `${dim.name}. Score ${dim.score} of 5${dim.confidence ? ', ' + dim.confidence + ' confidence' : ''}. ${dim.commentary || dim.summary || ''}`).join('. '); break;
+      case 'coaching-signatures': text = (d.signatures||[]).map(sig => `${sig.name}. ${sig.observed ? 'Observed. ' + (sig.quote || '') : 'Not observed. ' + (sig.note || '')}`).join('. '); break;
+      case 'coaching-section-foundation':
+      case 'coaching-section-craft':
+      case 'coaching-section-connection':
+      case 'coaching-section-style': {
+        const tier = section.replace('coaching-section-', '');
+        const tierName = tier.charAt(0).toUpperCase() + tier.slice(1);
+        const sec = (d.sections||[]).find(s => (s.tier||'').toLowerCase() === tier);
+        if (!sec) { text = ''; break; }
+        const a = (sec.affirmations||[]).map(x => `Affirmation: ${x.title}. ${x.prose || ''}. ${x.quote ? 'Quote: ' + x.quote : ''}`).join('. ');
+        const g = (sec.areas_to_grow||[]).map(x => `Area to grow: ${x.dimension}, transition ${x.transition || ''}. Try ${x.what_to_try || ''}. This week: ${x.practice || ''}`).join('. ');
+        text = `${tierName}. ${a}. ${g}`;
+      } break;
       // Candidate sections
       case 'candidate-summary': text = d.executive_summary || ''; break;
       case 'candidate-teaching': text = (d.teaching_style||[]).map(t => `${t.name}. Score ${t.score} out of 5. ${t.description}`).join('. '); break;
@@ -1648,22 +1952,69 @@ ${t}`;
     const lines = [d.sermon_title || 'Sermon'];
     if (d.speaker_name) lines.push(`Speaker: ${d.speaker_name}`);
     if (d.sermon_date) lines.push(`Date: ${d.sermon_date}`);
-    lines.push('', 'COACHING REPORT', '='.repeat(40), '',
-      `OVERALL SCORE: ${d.overall_score || 0}/100`, '');
+    lines.push('', 'SERMONCOACH REPORT', '='.repeat(40), '');
+
+    if (d.synthesis_paragraph) {
+      lines.push('A READ OF THE WHOLE', d.synthesis_paragraph, '');
+    }
+
+    lines.push(`OVERALL SCORE: ${d.overall_score || 0}/100`, '');
+
+    if ((d.this_week_focus || []).length) {
+      lines.push('THIS WEEK — 3 PRIORITIES');
+      d.this_week_focus.forEach((f, i) => {
+        lines.push(`${i+1}. ${f.dimension || ''}${f.transition ? ' (' + f.transition + ')' : ''}`);
+        if (f.why_this_one) lines.push(`   Why: ${f.why_this_one}`);
+        if (f.what_to_try)  lines.push(`   Try: ${f.what_to_try}`);
+        if (f.practice)     lines.push(`   This week: ${f.practice}`);
+        lines.push('');
+      });
+    }
+
     const tiers = ['Foundation', 'Craft', 'Connection', 'Style'];
+    lines.push('DIMENSIONS');
     tiers.forEach(tier => {
       const dims = (d.dimensions || []).filter(dim => dim.tier === tier);
       if (!dims.length) return;
       lines.push(tier.toUpperCase());
-      dims.forEach(dim => lines.push(`  ${dim.name}: ${dim.score}/5 — ${dim.summary}`));
+      dims.forEach(dim => {
+        const conf = dim.confidence ? ` [${dim.confidence}]` : '';
+        lines.push(`  ${dim.name}: ${dim.score}/5${conf}`);
+        if (dim.commentary || dim.summary) lines.push(`    ${dim.commentary || dim.summary}`);
+        if (dim.evidence) lines.push(`    "${dim.evidence}"`);
+      });
       lines.push('');
     });
-    lines.push('STRENGTHS');
-    (d.strengths || []).forEach(s => lines.push(`• ${s.title}: ${s.explanation}`, s.quote ? `  "${s.quote}"` : '', ''));
-    lines.push('TOP 3 IMPROVEMENTS');
-    (d.improvements || []).forEach(imp => lines.push(`• ${imp.title}`, `  Now: ${imp.current_state}`, `  Target: ${imp.target_state}`, `  Exercise: ${imp.exercise}`, ''));
-    lines.push('TOOLKIT');
-    (d.toolkit || []).forEach(t => lines.push(`• ${t.title}: ${t.description}`, `  Action: ${t.action}`, ''));
+
+    if ((d.signatures || []).length) {
+      lines.push('SIGNATURES — OBSERVED, NOT SCORED');
+      d.signatures.forEach(sig => {
+        const mark = sig.observed ? '✓' : '—';
+        const pair = (sig.paired_with || []).join(' & ');
+        lines.push(`  ${mark} ${sig.name}${pair ? ' (' + pair + ')' : ''}`);
+        if (sig.observed && sig.quote) lines.push(`    "${sig.quote}"`);
+        if (!sig.observed && sig.note) lines.push(`    ${sig.note}`);
+      });
+      lines.push('');
+    }
+
+    (d.sections || []).forEach(sec => {
+      lines.push(`${(sec.tier || '').toUpperCase()} — AFFIRMATIONS & AREAS TO GROW`);
+      lines.push('Affirmations:');
+      (sec.affirmations || []).forEach(a => {
+        lines.push(`  • ${a.title || ''}`);
+        if (a.prose) lines.push(`    ${a.prose}`);
+        if (a.quote) lines.push(`    "${a.quote}"`);
+      });
+      lines.push('Areas to grow:');
+      (sec.areas_to_grow || []).forEach(area => {
+        lines.push(`  • ${area.dimension || ''}${area.transition ? ' (' + area.transition + ')' : ''}`);
+        if (area.what_to_try) lines.push(`    Try: ${area.what_to_try}`);
+        if (area.practice) lines.push(`    This week: ${area.practice}`);
+      });
+      lines.push('');
+    });
+
     return lines.join('\n');
   }
 
@@ -1846,6 +2197,62 @@ ${t}`;
   .coaching-card .evidence-quote { font-style: italic; font-size: 12px; color: var(--teal); padding: 6px 10px; background: rgba(42,127,165,0.08); border-radius: 4px; margin-top: 6px; }
   .coaching-card .exercise { font-size: 12px; color: var(--gold); margin-top: 6px; padding: 6px 10px; background: rgba(184,134,11,0.08); border-radius: 4px; }
 
+  /* Synthesis paragraph */
+  .synthesis-card { background: var(--navy); border-radius: 8px; padding: 16px 18px; border-left: 3px solid var(--teal); margin: 16px 0; font-size: 13.5px; line-height: 1.7; color: var(--offwhite); font-family: var(--font-display); font-weight: 600; }
+  .synthesis-card .overline { font-family: var(--font-body); font-weight: 700; }
+
+  /* This Week Focus */
+  .this-week-focus { background: linear-gradient(180deg, rgba(184,134,11,0.10), rgba(184,134,11,0.04)); border: 1px solid rgba(184,134,11,0.35); border-radius: 10px; padding: 16px 18px; margin: 20px 0; }
+  .this-week-focus .focus-header { font-size: 11px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--gold); margin-bottom: 10px; display: flex; align-items: center; justify-content: space-between; }
+  .focus-item { background: var(--navy); border-radius: 6px; padding: 12px 14px; margin-bottom: 10px; border-left: 3px solid var(--gold); }
+  .focus-item:last-child { margin-bottom: 0; }
+  .focus-item .focus-num { display: inline-block; width: 20px; height: 20px; line-height: 20px; text-align: center; background: var(--gold); color: var(--navy-deep); font-weight: 800; font-size: 11px; border-radius: 50%; margin-right: 8px; vertical-align: middle; }
+  .focus-item .focus-dim { display: inline-block; font-size: 13px; font-weight: 700; color: var(--white); vertical-align: middle; }
+  .focus-item .transition-badge { display: inline-block; font-size: 10px; font-weight: 700; color: var(--gold); background: rgba(184,134,11,0.15); padding: 2px 7px; border-radius: 10px; margin-left: 8px; letter-spacing: 0.04em; vertical-align: middle; }
+  .focus-item .focus-why { font-size: 12px; color: var(--gray-mid); font-style: italic; margin: 6px 0 0 28px; line-height: 1.5; }
+  .focus-item .focus-try { font-size: 12px; color: var(--offwhite); margin: 6px 0 0 28px; line-height: 1.5; }
+  .focus-item .focus-try strong { color: var(--teal); }
+  .focus-item .focus-practice { font-size: 12px; color: var(--gold); margin: 6px 0 0 28px; padding: 6px 10px; background: rgba(184,134,11,0.10); border-radius: 4px; line-height: 1.5; }
+
+  /* Confidence + evidence on dimensions */
+  .dim-row .conf-badge { display: inline-block; padding: 1px 6px; border-radius: 3px; font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; margin-left: 6px; }
+  .dim-evidence { font-style: italic; font-size: 11px; color: var(--teal); padding: 6px 10px; background: rgba(42,127,165,0.08); border-radius: 4px; margin: 4px 0 12px 190px; line-height: 1.5; }
+
+  /* Signatures */
+  .sig-section { margin: 20px 0; }
+  .sig-tier-block { margin-bottom: 14px; }
+  .sig-tier-label { font-size: 10px; font-weight: 700; letter-spacing: 1.2px; text-transform: uppercase; color: var(--gray-mid); margin-bottom: 6px; }
+  .sig-row { display: flex; align-items: flex-start; gap: 10px; background: var(--navy); border-radius: 6px; padding: 10px 12px; margin-bottom: 6px; }
+  .sig-status { flex-shrink: 0; width: 20px; height: 20px; line-height: 20px; text-align: center; font-weight: 800; font-size: 12px; border-radius: 50%; margin-top: 1px; }
+  .sig-status.observed { background: rgba(27,110,58,0.20); color: var(--green); }
+  .sig-status.not-observed { background: rgba(144,150,163,0.18); color: var(--gray-mid); }
+  .sig-body { flex: 1; min-width: 0; }
+  .sig-name { font-size: 12.5px; font-weight: 700; color: var(--white); margin-bottom: 2px; }
+  .sig-pair { font-size: 10px; font-weight: 600; color: var(--teal); letter-spacing: 0.04em; margin-bottom: 4px; }
+  .sig-quote { font-style: italic; font-size: 12px; color: var(--offwhite); padding: 4px 8px; background: rgba(42,127,165,0.08); border-left: 2px solid var(--teal); border-radius: 0 4px 4px 0; margin-top: 4px; line-height: 1.5; }
+  .sig-note { font-size: 11.5px; color: var(--gray-mid); margin-top: 4px; line-height: 1.5; }
+
+  /* Section synthesis */
+  .section-synthesis { margin: 24px 0; }
+  .tier-section { background: var(--navy); border-radius: 8px; padding: 14px; margin-bottom: 14px; border-top: 3px solid var(--teal); }
+  .tier-section .tier-section-header { font-family: var(--font-display); font-size: 16px; font-weight: 700; color: var(--white); margin-bottom: 4px; }
+  .tier-section .tier-section-meta { font-size: 10px; font-weight: 600; letter-spacing: 0.08em; color: var(--gray-mid); text-transform: uppercase; margin-bottom: 12px; }
+  .tier-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .tier-col-label { font-size: 10px; font-weight: 700; letter-spacing: 1.2px; text-transform: uppercase; margin-bottom: 8px; }
+  .tier-col-label.affirm { color: var(--green); }
+  .tier-col-label.area { color: var(--gold); }
+  .affirm-card { background: rgba(27,110,58,0.06); border-left: 2px solid var(--green); border-radius: 0 4px 4px 0; padding: 8px 10px; margin-bottom: 8px; }
+  .affirm-card .a-title { font-size: 12.5px; font-weight: 700; color: var(--white); margin-bottom: 3px; }
+  .affirm-card .a-prose { font-size: 11.5px; color: var(--gray-mid); line-height: 1.5; margin-bottom: 4px; }
+  .affirm-card .a-quote { font-style: italic; font-size: 11px; color: var(--green); padding: 4px 8px; background: rgba(27,110,58,0.10); border-radius: 3px; margin-top: 4px; line-height: 1.45; }
+  .area-card { background: rgba(184,134,11,0.06); border-left: 2px solid var(--gold); border-radius: 0 4px 4px 0; padding: 8px 10px; margin-bottom: 8px; }
+  .area-card .area-top { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; margin-bottom: 4px; }
+  .area-card .area-dim { font-size: 12.5px; font-weight: 700; color: var(--white); }
+  .area-card .area-try { font-size: 11.5px; color: var(--offwhite); line-height: 1.5; margin-bottom: 4px; }
+  .area-card .area-try strong { color: var(--teal); }
+  .area-card .area-practice { font-size: 11px; color: var(--gold); padding: 4px 8px; background: rgba(184,134,11,0.10); border-radius: 3px; margin-top: 4px; line-height: 1.45; }
+  @media (max-width: 600px) { .tier-cols { grid-template-columns: 1fr; } }
+
   /* Candidate */
   .candidate-report { color: var(--white); }
   .exec-summary { background: var(--navy); border-radius: 8px; padding: 16px; border-left: 3px solid var(--teal); margin-bottom: 16px; font-size: 13px; line-height: 1.8; }
@@ -1915,7 +2322,7 @@ ${t}`;
     ${sDate && sDate !== 'Date Unknown' ? `<div class="date">${esc(sDate)}</div>` : ''}
   </div>
   ${reportContent}
-  <div class="report-footer">Generated by Sermon Analyzer &bull; ${new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}</div>
+  <div class="report-footer">Generated by SERMONcoach &bull; ShowEm.ai &bull; ${new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}</div>
 </body>
 </html>`;
   }
