@@ -1217,7 +1217,9 @@
 
     const reportType = state.reportType || 'summary';
     const prompt = getPromptForType(reportType, t);
-    const maxTokens = reportType === 'candidate' ? 16000 : 8000;
+    // Coaching's new schema (10 dims + 8 sigs + 3 focus + 4 tier sections + synthesis)
+    // can exceed 7k tokens of output; give it the worker's cap.
+    const maxTokens = (reportType === 'candidate' || reportType === 'coaching') ? 16000 : 8000;
 
     try {
       const apiPayload = { model: 'claude-sonnet-4-6', max_tokens: maxTokens, messages: [{ role: 'user', content: prompt }] };
@@ -1236,6 +1238,7 @@
       // SSE keeps the connection alive past Cloudflare's 100s edge timeout.
       const ct = r.headers.get('Content-Type') || '';
       let text;
+      let stopReason = null;
       if (ct.includes('text/event-stream')) {
         const reader = r.body.getReader();
         const decoder = new TextDecoder();
@@ -1258,17 +1261,36 @@
             try { obj = JSON.parse(data); } catch { continue; }
             if (obj.type === 'content_block_delta' && obj.delta?.type === 'text_delta') {
               text += obj.delta.text;
+            } else if (obj.type === 'message_delta' && obj.delta?.stop_reason) {
+              stopReason = obj.delta.stop_reason;
             } else if (obj.type === 'error') {
               throw new Error(obj.error?.message || 'Streaming error');
             }
           }
         }
       } else {
-        text = (await r.json()).content[0].text;
+        const respJson = await r.json();
+        text = respJson.content[0].text;
+        stopReason = respJson.stop_reason || null;
+      }
+
+      // Truncation guard — surface a clear error before the JSON parse attempt
+      if (stopReason === 'max_tokens') {
+        throw new Error('Response was cut off mid-output (hit the token limit). Try a shorter sermon transcript, or contact support if this keeps happening.');
       }
 
       let analysis;
-      try { analysis = JSON.parse(text); } catch { const m = text.match(/\{[\s\S]*\}/); if (m) analysis = JSON.parse(m[0]); else throw new Error('Could not parse results'); }
+      try {
+        analysis = JSON.parse(text);
+      } catch (parseErr) {
+        const m = text.match(/\{[\s\S]*\}/);
+        if (m) {
+          try { analysis = JSON.parse(m[0]); }
+          catch { throw new Error('Claude returned malformed JSON (' + parseErr.message + '). The full response was received but could not be parsed.'); }
+        } else {
+          throw new Error('Could not parse results: ' + parseErr.message);
+        }
+      }
       state.analysisData = analysis;
       renderResults(analysis);
     } catch (err) {
