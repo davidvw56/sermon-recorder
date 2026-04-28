@@ -362,8 +362,15 @@
   }
   .working-title {
     font-weight: 700;
-    font-size: 13.5px;
+    font-size: 14px;
     color: var(--white);
+    margin-bottom: 6px;
+  }
+  .working-observation {
+    font-weight: 400;
+    font-size: 13px;
+    color: var(--offwhite);
+    line-height: 1.55;
     margin-bottom: 6px;
   }
   .working-quote {
@@ -384,14 +391,24 @@
     margin-bottom: 10px;
     border-left: 4px solid var(--gold);
   }
+  .work-card-head {
+    display: flex; align-items: center;
+    gap: 8px; margin-bottom: 10px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--navy-light);
+  }
   .work-num {
     display: inline-block;
-    width: 20px; height: 20px; line-height: 20px;
+    width: 22px; height: 22px; line-height: 22px;
     text-align: center;
     background: var(--gold); color: var(--navy-deep);
     font-weight: 700; font-size: 11px;
     border-radius: 50%;
-    margin-right: 8px; vertical-align: middle;
+    flex-shrink: 0;
+  }
+  .work-title {
+    font-weight: 700; font-size: 14px;
+    color: var(--white); flex: 1;
   }
   .work-part { margin-bottom: 8px; }
   .work-part:last-child { margin-bottom: 0; }
@@ -1258,11 +1275,13 @@ Return ONLY valid JSON, no markdown, no code blocks, with these keys:
    - "commentary": 1-2 short sentences naming what you heard. Specific and concise. Examples of the right register: "Word study is brief but accurate." or "Sermon applies well across life stages — the 47.5-year-old reference is a nice touch." Avoid vague hedging.
    - "evidence": A direct quote from the transcript supporting the score. If truly unavailable, use "" and lower confidence.
 
-7. "whats_working": An array of 4 to 5 objects naming the strongest moves the preacher made in this sermon. These are sermon-wide affirmations, not per-tier — pick the 4-5 most worth naming, drawn from across the dimensions. Genuine, not flattery; grounded in a quoted line. Each:
-   - "title": A short, specific headline (5-9 words). Examples of the right register: "Teacher typology lands with precision." "Closing image carries the listener home." Use a period at the end.
-   - "quote": A direct quote from the sermon that demonstrates it.
+7. "whats_working": An array of 4 to 5 objects naming the strongest moves the preacher made in this sermon. Sermon-wide affirmations drawn from across the dimensions. Genuine, not flattery; grounded in a quoted line. Each item has the same three-part anatomy as Things to Work On (title → observation → evidence) so a preacher can scan both sections with the same eye. Each:
+   - "title": A short, repeatable label that anchors this affirmation to the rubric vocabulary. STRONGLY PREFER one of: (a) an exact dimension name (e.g., "Gospel Clarity", "Application Specificity"); (b) an exact signature name (e.g., "Christological Turn", "Aphoristic Compression"); or (c) a recurring craft-move label like "Closing Invitation", "Pastoral Vulnerability", "Word Study", "Personal Story". These titles are the anchor a preacher will carry from week to week — so reuse the same vocabulary across whats_working and things_to_work_on. Avoid one-off descriptive titles ("the sermon's middle section", "the part about marriage"). 1-3 words preferred; max 6.
+   - "observation": 1-2 sentences naming what the move did in this sermon, why it landed. Specific and anchored. NOT a paraphrase of the title or quote. Example: "Christological turn is exegetically earned — the move from text to Christ comes out of the passage's own logic rather than being bolted on at the end."
+   - "quote": Direct quote from the sermon that demonstrates it.
 
-8. "things_to_work_on": An array of exactly 3 objects — the three highest-impact priorities for the preacher's next sermon-prep cycle. Each item is one priority, broken into three labeled parts:
+8. "things_to_work_on": An array of exactly 3 objects — the three highest-impact priorities for the preacher's next sermon-prep cycle. Same titling vocabulary as whats_working — so when a preacher works on "Closing Invitation" this week and it lands well next week, both reports show that same label. Each:
+   - "title": Same constraint as whats_working — a dimension name, signature name, or recurring craft-move label. The title is the anchor across sessions. 1-3 words preferred; max 6. NEVER use geographic descriptions like "the sermon's middle section."
    - "observation": 1-2 sentences naming what the sermon is currently doing on this point. Specific, anchored in the sermon. Not a generalization.
    - "recommendation": 1-2 sentences on what to try instead. Where a paired signature applies, name it explicitly. Concrete, not aspirational.
    - "practicum": One specific small thing to do this week in sermon prep. Doable in normal study time. Not a vague intention.
@@ -1503,6 +1522,7 @@ ${t}`;
     }
 
     // ── BAND 2: What's Working (green sidebar) — 4-5 sermon-wide affirmations ──
+    // Anatomy: title (rubric-anchored) → observation → quote
     if (working.length) {
       html += `<div class="cr-band-label working">
         <span>What's Working</span>
@@ -1511,12 +1531,14 @@ ${t}`;
       working.forEach(w => {
         html += `<div class="working-card">
           <div class="working-title">${esc(w.title || '')}</div>`;
+        if (w.observation) html += `<div class="working-observation">${esc(w.observation)}</div>`;
         if (w.quote) html += `<div class="working-quote">"${esc(w.quote)}"</div>`;
         html += `</div>`;
       });
     }
 
-    // ── BAND 3: Things to Work On (gold sidebar) — 3 with observation/recommendation/practicum ──
+    // ── BAND 3: Things to Work On (gold sidebar) — 3 priorities ──
+    // Anatomy: title (rubric-anchored) → observation → recommendation → practicum
     if (todo.length) {
       html += `<div class="cr-band-label work-todo">
         <span>Things to Work On</span>
@@ -1524,8 +1546,12 @@ ${t}`;
       </div>`;
       todo.forEach((item, i) => {
         html += `<div class="work-card">
+          <div class="work-card-head">
+            <span class="work-num">${i+1}</span>
+            <span class="work-title">${esc(item.title || '')}</span>
+          </div>
           <div class="work-part">
-            <div class="work-part-label"><span class="work-num">${i+1}</span>Observation</div>
+            <div class="work-part-label">Observation</div>
             <div class="work-part-text">${esc(item.observation || '')}</div>
           </div>
           <div class="work-part">
@@ -1865,8 +1891,8 @@ ${t}`;
       // Coaching sections
       case 'coaching-synthesis': text = d.synthesis_paragraph || ''; break;
       case 'coaching-dimensions': text = (d.dimensions||[]).map(dim => `${dim.name}. Score ${dim.score} of 5${dim.confidence ? ', ' + dim.confidence + ' confidence' : ''}. ${dim.commentary || dim.summary || ''}${dim.evidence ? ' Quote: ' + dim.evidence : ''}`).join('. '); break;
-      case 'coaching-working': text = (d.whats_working||[]).map((w,i) => `${i+1}. ${w.title || ''}${w.quote ? ' Quote: ' + w.quote : ''}`).join('. '); break;
-      case 'coaching-work-todo': text = (d.things_to_work_on||[]).map((item,i) => `Priority ${i+1}. Observation: ${item.observation || ''}. Recommendation: ${item.recommendation || ''}. Practicum: ${item.practicum || ''}`).join('. '); break;
+      case 'coaching-working': text = (d.whats_working||[]).map((w,i) => `${i+1}. ${w.title || ''}.${w.observation ? ' ' + w.observation : ''}${w.quote ? ' Quote: ' + w.quote : ''}`).join(' '); break;
+      case 'coaching-work-todo': text = (d.things_to_work_on||[]).map((item,i) => `Priority ${i+1}. ${item.title || ''}. Observation: ${item.observation || ''}. Recommendation: ${item.recommendation || ''}. Practicum: ${item.practicum || ''}`).join(' '); break;
       case 'coaching-signatures': text = (d.signatures||[]).map(sig => `${sig.observation || sig.name || ''}${sig.observed && sig.evidence ? ' Quote: ' + sig.evidence : ''}`).join(' '); break;
       // Candidate sections
       case 'candidate-summary': text = d.executive_summary || ''; break;
@@ -1984,19 +2010,20 @@ ${t}`;
       lines.push("WHAT'S WORKING", '-'.repeat(40));
       d.whats_working.forEach(w => {
         lines.push(`• ${w.title || ''}`);
-        if (w.quote) lines.push(`  "${w.quote}"`);
+        if (w.observation) lines.push(`  ${w.observation}`);
+        if (w.quote)       lines.push(`  "${w.quote}"`);
+        lines.push('');
       });
-      lines.push('');
     }
 
     // ── BAND 3: Things to Work On ──
     if ((d.things_to_work_on || []).length) {
       lines.push('THINGS TO WORK ON', '-'.repeat(40));
       d.things_to_work_on.forEach((item, i) => {
-        lines.push(`${i+1}.`);
-        if (item.observation)    lines.push(`  Observation:    ${item.observation}`);
-        if (item.recommendation) lines.push(`  Recommendation: ${item.recommendation}`);
-        if (item.practicum)      lines.push(`  Practicum:      ${item.practicum}`);
+        lines.push(`${i+1}. ${item.title || ''}`);
+        if (item.observation)    lines.push(`   Observation:    ${item.observation}`);
+        if (item.recommendation) lines.push(`   Recommendation: ${item.recommendation}`);
+        if (item.practicum)      lines.push(`   Practicum:      ${item.practicum}`);
         lines.push('');
       });
     }
@@ -2205,11 +2232,14 @@ ${t}`;
   .conf-low    { background: rgba(176,39,29,0.20);  color: var(--red);   }
   /* What's Working band — green */
   .working-card { background: var(--navy); border-radius: 8px; padding: 12px 14px; margin-bottom: 8px; border-left: 4px solid var(--green); }
-  .working-title { font-weight: 700; font-size: 13.5px; color: var(--white); margin-bottom: 6px; }
+  .working-title { font-weight: 700; font-size: 14px; color: var(--white); margin-bottom: 6px; }
+  .working-observation { font-weight: 400; font-size: 13px; color: var(--offwhite); line-height: 1.55; margin-bottom: 6px; }
   .working-quote { font-style: italic; font-weight: 400; font-size: 12.5px; color: var(--offwhite); padding: 6px 10px; background: rgba(27,110,58,0.10); border-left: 2px solid var(--green); border-radius: 0 4px 4px 0; line-height: 1.55; }
   /* Things to Work On band — gold/orange */
   .work-card { background: var(--navy); border-radius: 8px; padding: 12px 14px; margin-bottom: 10px; border-left: 4px solid var(--gold); }
-  .work-num { display: inline-block; width: 20px; height: 20px; line-height: 20px; text-align: center; background: var(--gold); color: var(--navy-deep); font-weight: 700; font-size: 11px; border-radius: 50%; margin-right: 8px; vertical-align: middle; }
+  .work-card-head { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; padding-bottom: 8px; border-bottom: 1px solid var(--navy-light); }
+  .work-num { display: inline-block; width: 22px; height: 22px; line-height: 22px; text-align: center; background: var(--gold); color: var(--navy-deep); font-weight: 700; font-size: 11px; border-radius: 50%; flex-shrink: 0; }
+  .work-title { font-weight: 700; font-size: 14px; color: var(--white); flex: 1; }
   .work-part { margin-bottom: 8px; }
   .work-part:last-child { margin-bottom: 0; }
   .work-part-label { font-weight: 700; font-size: 10px; letter-spacing: 1.2px; text-transform: uppercase; color: var(--gold); margin-bottom: 3px; }
