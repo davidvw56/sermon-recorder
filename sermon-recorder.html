@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>SERMONcoach</title>
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Lora:wght@600;700&family=Source+Sans+3:wght@400;500;600;700&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;0,700;1,400&family=Source+Sans+3:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap');
 
   :root {
     --navy: #1A3A5C;
@@ -213,351 +213,237 @@
   .report-btn.active small { color: var(--teal); opacity: 0.8; }
   .report-btn:hover { border-color: var(--teal); }
 
-  /* ── Coaching Report Styles ── */
-  .coaching-report { color: var(--white); }
-  .score-circle-wrap { text-align: center; margin: 20px 0; }
+  /* ──────────────────────────────────────────────────────────
+     Coaching Report — restrained typography
+     Only weights used: 400 (regular) and 700 (bold).
+     Italic = regular weight italic. No 500/600/800.
+     Visual hierarchy carried by colored vertical sidebars:
+       • Dimensions  — blue/teal
+       • What's Working — green
+       • Things to Work On — gold (orange)
+       • Signatures — neutral navy-light
+     ────────────────────────────────────────────────────────── */
+
+  .coaching-report {
+    color: var(--white);
+    font-family: var(--font-body);
+    font-weight: 400;
+  }
+  .coaching-report strong, .coaching-report b { font-weight: 700; }
+  .coaching-report em, .coaching-report i { font-style: italic; font-weight: 400; }
+
+  /* Speaker / Date header */
+  .cr-speaker { text-align: center; margin-bottom: 14px; color: var(--gray-mid); }
+  .cr-speaker .cr-name { font-size: 18px; font-weight: 700; color: var(--white); }
+  .cr-speaker .cr-date { font-size: 13px; font-weight: 400; margin-top: 2px; }
+
+  /* Synthesis paragraph (regular weight, not bold) */
+  .synthesis-card {
+    background: var(--navy);
+    border-radius: 8px;
+    padding: 16px 18px;
+    border-left: 4px solid var(--teal);
+    margin: 14px 0 18px;
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 1.7;
+    color: var(--offwhite);
+  }
+  .synthesis-card .overline {
+    display: flex; align-items: center; justify-content: space-between;
+    font-family: var(--font-body);
+    font-weight: 700;
+    font-size: 10px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--teal);
+    margin-bottom: 10px;
+  }
+
+  /* Score circle + radar (kept; minor weight tidy) */
+  .score-circle-wrap { text-align: center; margin: 18px 0; }
   .score-circle {
     width: 120px; height: 120px; border-radius: 50%;
     display: inline-flex; align-items: center; justify-content: center;
     flex-direction: column; border: 4px solid;
   }
-  .score-circle .score-num { font-size: 36px; font-weight: 800; font-family: var(--font-display); }
-  .score-circle .score-label { font-size: 10px; text-transform: uppercase; letter-spacing: 1px; opacity: 0.7; }
+  .score-circle .score-num { font-size: 36px; font-weight: 700; font-family: var(--font-display); }
+  .score-circle .score-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; opacity: 0.7; }
   .score-green { border-color: var(--green); color: var(--green); }
-  .score-gold { border-color: var(--gold); color: var(--gold); }
-  .score-red { border-color: var(--red); color: var(--red); }
+  .score-gold  { border-color: var(--gold);  color: var(--gold);  }
+  .score-red   { border-color: var(--red);   color: var(--red);   }
 
-  .tier-group { margin-bottom: 16px; }
-  .tier-header {
-    font-size: 11px; font-weight: 700; letter-spacing: 1.5px;
-    text-transform: uppercase; color: var(--teal); margin-bottom: 8px;
-    padding-bottom: 4px; border-bottom: 1px solid var(--navy-light);
-  }
-  .dim-row { display: flex; align-items: center; gap: 10px; margin-bottom: 6px; }
-  .dim-name { width: 180px; font-size: 12px; font-weight: 600; flex-shrink: 0; }
-  @media (max-width: 500px) {
-    .dim-row { flex-direction: column; align-items: flex-start; gap: 4px; margin-bottom: 4px; }
-    .dim-name { width: auto; }
-    .dim-summary { margin-left: 0 !important; margin-bottom: 16px; }
-  }
-  .dim-dots { display: flex; gap: 4px; }
-  .dim-dot {
-    width: 14px; height: 14px; border-radius: 50%;
-    border: 2px solid var(--teal); background: transparent;
-  }
-  .dim-dot.filled { background: var(--teal); }
-  .dim-summary { font-size: 11px; color: var(--gray-mid); margin: 0 0 10px 190px; }
-
-  .coaching-card {
-    background: var(--navy); border-radius: 8px; padding: 14px;
-    margin-bottom: 12px; border-left: 3px solid;
-  }
-  .coaching-card.strength { border-color: var(--green); }
-  .coaching-card.improvement { border-color: var(--gold); }
-  .coaching-card.toolkit { border-color: var(--teal); }
-  .coaching-card h4 { font-size: 14px; font-weight: 700; margin-bottom: 6px; }
-  .coaching-card p { font-size: 12px; line-height: 1.6; color: var(--gray-mid); margin-bottom: 4px; }
-  .coaching-card .evidence-quote {
-    font-style: italic; font-size: 12px; color: var(--teal);
-    padding: 6px 10px; background: rgba(42,127,165,0.08);
-    border-radius: 4px; margin-top: 6px;
-  }
-  .coaching-card .exercise {
-    font-size: 12px; color: var(--gold); margin-top: 6px;
-    padding: 6px 10px; background: rgba(184,134,11,0.08); border-radius: 4px;
-  }
-
-  /* Synthesis paragraph (top of coaching report) */
-  .synthesis-card {
-    background: var(--navy); border-radius: 8px; padding: 16px 18px;
-    border-left: 3px solid var(--teal); margin: 16px 0;
-    font-size: 13.5px; line-height: 1.7; color: var(--offwhite);
-    font-family: var(--font-display); font-weight: 600;
-  }
-  .synthesis-card .overline {
-    font-family: var(--font-body); font-weight: 700;
-  }
-
-  /* This Week Focus — three top priorities for next Sunday */
-  .this-week-focus {
-    background: linear-gradient(180deg, rgba(184,134,11,0.10), rgba(184,134,11,0.04));
-    border: 1px solid rgba(184,134,11,0.35); border-radius: 10px;
-    padding: 16px 18px; margin: 20px 0;
-  }
-  .this-week-focus .focus-header {
-    font-size: 11px; font-weight: 700; letter-spacing: 1.5px;
-    text-transform: uppercase; color: var(--gold); margin-bottom: 10px;
+  /* Section band labels (the heading above each band) */
+  .cr-band-label {
+    font-family: var(--font-body);
+    font-weight: 700;
+    font-size: 11px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    margin: 22px 0 10px;
     display: flex; align-items: center; justify-content: space-between;
+    padding-bottom: 4px;
+    border-bottom: 1px solid var(--navy-light);
   }
-  .focus-item {
-    background: var(--navy); border-radius: 6px; padding: 12px 14px;
-    margin-bottom: 10px; border-left: 3px solid var(--gold);
-  }
-  .focus-item:last-child { margin-bottom: 0; }
-  .focus-item .focus-num {
-    display: inline-block; width: 20px; height: 20px; line-height: 20px;
-    text-align: center; background: var(--gold); color: var(--navy-deep);
-    font-weight: 800; font-size: 11px; border-radius: 50%;
-    margin-right: 8px; vertical-align: middle;
-  }
-  .focus-item .focus-dim {
-    display: inline-block; font-size: 13px; font-weight: 700;
-    color: var(--white); vertical-align: middle;
-  }
-  .focus-item .transition-badge {
-    display: inline-block; font-size: 10px; font-weight: 700;
-    color: var(--gold); background: rgba(184,134,11,0.15);
-    padding: 2px 7px; border-radius: 10px; margin-left: 8px;
-    letter-spacing: 0.04em; vertical-align: middle;
-  }
-  .focus-item .focus-why {
-    font-size: 12px; color: var(--gray-mid); font-style: italic;
-    margin: 6px 0 0 28px; line-height: 1.5;
-  }
-  .focus-item .focus-try {
-    font-size: 12px; color: var(--offwhite); margin: 6px 0 0 28px;
-    line-height: 1.5;
-  }
-  .focus-item .focus-try strong { color: var(--teal); }
-  .focus-item .focus-practice {
-    font-size: 12px; color: var(--gold); margin: 6px 0 0 28px;
-    padding: 6px 10px; background: rgba(184,134,11,0.10);
-    border-radius: 4px; line-height: 1.5;
+  .cr-band-label.dimensions { color: var(--teal); }
+  .cr-band-label.working    { color: var(--green); }
+  .cr-band-label.work-todo  { color: var(--gold); }
+  .cr-band-label.signatures { color: var(--gray-mid); }
+  .cr-band-tier-label {
+    font-family: var(--font-body);
+    font-weight: 700;
+    font-size: 10px;
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+    color: var(--gray-mid);
+    margin: 14px 0 6px;
   }
 
-  /* Confidence badge on dimensions (reuses .conf-badge variants from candidate) */
-  .dim-row .conf-badge {
-    display: inline-block; padding: 1px 6px; border-radius: 3px;
-    font-size: 9px; font-weight: 700; text-transform: uppercase;
-    letter-spacing: 0.5px; margin-left: 6px;
-  }
-
-  /* Evidence quote inside dim-summary */
-  .dim-evidence {
-    font-style: italic; font-size: 11px; color: var(--teal);
-    padding: 6px 10px; background: rgba(42,127,165,0.08);
-    border-radius: 4px; margin: 4px 0 12px 190px;
-    line-height: 1.5;
-  }
-  @media (max-width: 500px) {
-    .dim-evidence { margin-left: 0; }
-  }
-
-  /* Signature observations */
-  .sig-section { margin: 20px 0; }
-  .sig-tier-block { margin-bottom: 14px; }
-  .sig-tier-label {
-    font-size: 10px; font-weight: 700; letter-spacing: 1.2px;
-    text-transform: uppercase; color: var(--gray-mid); margin-bottom: 6px;
-  }
-  .sig-row {
-    display: flex; align-items: flex-start; gap: 10px;
-    background: var(--navy); border-radius: 6px; padding: 10px 12px;
-    margin-bottom: 6px;
-  }
-  .sig-status {
-    flex-shrink: 0; width: 20px; height: 20px; line-height: 20px;
-    text-align: center; font-weight: 800; font-size: 12px;
-    border-radius: 50%; margin-top: 1px;
-  }
-  .sig-status.observed {
-    background: rgba(27,110,58,0.20); color: var(--green);
-  }
-  .sig-status.not-observed {
-    background: rgba(144,150,163,0.18); color: var(--gray-mid);
-  }
-  .sig-body { flex: 1; min-width: 0; }
-  .sig-name {
-    font-size: 12.5px; font-weight: 700; color: var(--white);
-    margin-bottom: 2px;
-  }
-  .sig-pair {
-    font-size: 10px; font-weight: 600; color: var(--teal);
-    letter-spacing: 0.04em; margin-bottom: 4px;
-  }
-  .sig-quote {
-    font-style: italic; font-size: 12px; color: var(--offwhite);
-    padding: 4px 8px; background: rgba(42,127,165,0.08);
-    border-left: 2px solid var(--teal); border-radius: 0 4px 4px 0;
-    margin-top: 4px; line-height: 1.5;
-  }
-  .sig-note {
-    font-size: 11.5px; color: var(--gray-mid); margin-top: 4px;
-    line-height: 1.5;
-  }
-
-  /* Section synthesis (per-tier affirmations + areas to grow) */
-  .section-synthesis { margin: 24px 0; }
-  .tier-section {
-    background: var(--navy); border-radius: 8px; padding: 14px;
-    margin-bottom: 14px; border-top: 3px solid var(--teal);
-  }
-  .tier-section .tier-section-header {
-    font-family: var(--font-display); font-size: 16px; font-weight: 700;
-    color: var(--white); margin-bottom: 4px;
-  }
-  .tier-section .tier-section-meta {
-    font-size: 10px; font-weight: 600; letter-spacing: 0.08em;
-    color: var(--gray-mid); text-transform: uppercase; margin-bottom: 12px;
-  }
-  .tier-cols {
-    display: grid; grid-template-columns: 1fr 1fr; gap: 12px;
-  }
-  @media (max-width: 600px) {
-    .tier-cols { grid-template-columns: 1fr; }
-  }
-  .tier-col-label {
-    font-size: 10px; font-weight: 700; letter-spacing: 1.2px;
-    text-transform: uppercase; margin-bottom: 8px;
-  }
-  .tier-col-label.affirm { color: var(--green); }
-  .tier-col-label.area { color: var(--gold); }
-  .affirm-card {
-    background: rgba(27,110,58,0.06);
-    border-left: 2px solid var(--green); border-radius: 0 4px 4px 0;
-    padding: 8px 10px; margin-bottom: 8px;
-  }
-  .affirm-card .a-title {
-    font-size: 12.5px; font-weight: 700; color: var(--white);
-    margin-bottom: 3px;
-  }
-  .affirm-card .a-prose {
-    font-size: 11.5px; color: var(--gray-mid); line-height: 1.5;
-    margin-bottom: 4px;
-  }
-  .affirm-card .a-quote {
-    font-style: italic; font-size: 11px; color: var(--green);
-    padding: 4px 8px; background: rgba(27,110,58,0.10);
-    border-radius: 3px; margin-top: 4px; line-height: 1.45;
-  }
-  .area-card {
-    background: rgba(184,134,11,0.06);
-    border-left: 2px solid var(--gold); border-radius: 0 4px 4px 0;
-    padding: 8px 10px; margin-bottom: 8px;
-  }
-  .area-card .area-top {
-    display: flex; align-items: center; gap: 6px;
-    flex-wrap: wrap; margin-bottom: 4px;
-  }
-  .area-card .area-dim {
-    font-size: 12.5px; font-weight: 700; color: var(--white);
-  }
-  .area-card .area-try {
-    font-size: 11.5px; color: var(--offwhite); line-height: 1.5;
-    margin-bottom: 4px;
-  }
-  .area-card .area-try strong { color: var(--teal); }
-  .area-card .area-practice {
-    font-size: 11px; color: var(--gold);
-    padding: 4px 8px; background: rgba(184,134,11,0.10);
-    border-radius: 3px; margin-top: 4px; line-height: 1.45;
-  }
-
-  /* ── Dimension-centric cards (each dimension is self-contained) ── */
+  /* ── Dimensions band — blue sidebar ── */
   .dim-card {
-    background: var(--navy); border-radius: 10px;
-    padding: 14px 16px; margin-bottom: 12px;
-    border-left: 3px solid var(--teal);
+    background: var(--navy);
+    border-radius: 8px;
+    padding: 12px 14px;
+    margin-bottom: 8px;
+    border-left: 4px solid var(--teal);
   }
   .dim-card-head {
     display: flex; align-items: center; justify-content: space-between;
-    gap: 10px; flex-wrap: wrap; margin-bottom: 8px;
+    gap: 10px; flex-wrap: wrap; margin-bottom: 6px;
   }
   .dim-card-name {
     font-size: 14px; font-weight: 700; color: var(--white); flex: 1;
   }
-  .dim-card-name .conf-badge { margin-left: 6px; }
   .dim-card-dots { display: flex; gap: 4px; flex-shrink: 0; }
+  .dim-dot {
+    width: 12px; height: 12px; border-radius: 50%;
+    border: 2px solid var(--teal); background: transparent;
+  }
+  .dim-dot.filled { background: var(--teal); }
   .dim-card-commentary {
-    font-size: 12.5px; color: var(--gray-mid); line-height: 1.6;
+    font-size: 13px; font-weight: 400;
+    color: var(--offwhite); line-height: 1.55;
     margin-bottom: 8px;
   }
   .dim-card-evidence {
-    font-style: italic; font-size: 12px; color: var(--teal);
-    padding: 6px 10px; background: rgba(42,127,165,0.08);
-    border-left: 2px solid var(--teal); border-radius: 0 4px 4px 0;
-    line-height: 1.5;
-  }
-  .dim-block {
-    margin-top: 10px; padding-top: 10px;
-    border-top: 1px solid var(--navy-light);
-  }
-  .dim-block-label {
-    font-size: 10px; font-weight: 700; letter-spacing: 1.2px;
-    text-transform: uppercase; margin-bottom: 6px;
-  }
-  .dim-block-label.signature { color: var(--teal); }
-  .dim-block-label.affirm { color: var(--green); }
-  .dim-block-label.area { color: var(--gold); }
-
-  /* Inline signature row inside a dim card */
-  .dim-sig {
-    display: flex; align-items: flex-start; gap: 8px; margin-bottom: 6px;
-  }
-  .dim-sig:last-child { margin-bottom: 0; }
-  .dim-sig-status {
-    flex-shrink: 0; width: 18px; height: 18px; line-height: 18px;
-    text-align: center; font-weight: 800; font-size: 11px;
-    border-radius: 50%; margin-top: 1px;
-  }
-  .dim-sig-status.observed { background: rgba(27,110,58,0.20); color: var(--green); }
-  .dim-sig-status.not-observed { background: rgba(144,150,163,0.18); color: var(--gray-mid); }
-  .dim-sig-body { flex: 1; min-width: 0; }
-  .dim-sig-name {
-    font-size: 12.5px; font-weight: 700; color: var(--white); margin-bottom: 2px;
-  }
-  .dim-sig-quote {
-    font-style: italic; font-size: 11.5px; color: var(--offwhite);
-    padding: 4px 8px; background: rgba(42,127,165,0.08);
-    border-left: 2px solid var(--teal); border-radius: 0 3px 3px 0;
-    margin-top: 4px; line-height: 1.5;
-  }
-  .dim-sig-note {
-    font-size: 11.5px; color: var(--gray-mid); margin-top: 4px; line-height: 1.5;
+    font-style: italic; font-weight: 400;
+    font-size: 12.5px; color: var(--offwhite);
+    padding: 6px 10px;
+    background: rgba(42,127,165,0.10);
+    border-left: 2px solid var(--teal);
+    border-radius: 0 4px 4px 0;
+    line-height: 1.55;
   }
 
-  /* Grey note for dimensions with no paired signature */
-  .dim-no-sig {
-    font-size: 11.5px; color: var(--gray-mid); font-style: italic;
-    background: rgba(144,150,163,0.08); border-left: 2px solid var(--gray-mid);
-    padding: 6px 10px; border-radius: 0 4px 4px 0; line-height: 1.5;
+  /* Confidence badge */
+  .conf-badge {
+    display: inline-block;
+    padding: 2px 6px;
+    border-radius: 3px;
+    font-size: 9px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-left: 6px;
+    vertical-align: middle;
+  }
+  .conf-high   { background: rgba(27,110,58,0.20);  color: var(--green); }
+  .conf-medium { background: rgba(184,134,11,0.20); color: var(--gold);  }
+  .conf-low    { background: rgba(176,39,29,0.20);  color: var(--red);   }
+
+  /* ── What's Working band — green sidebar ── */
+  .working-card {
+    background: var(--navy);
+    border-radius: 8px;
+    padding: 12px 14px;
+    margin-bottom: 8px;
+    border-left: 4px solid var(--green);
+  }
+  .working-title {
+    font-weight: 700;
+    font-size: 13.5px;
+    color: var(--white);
+    margin-bottom: 6px;
+  }
+  .working-quote {
+    font-style: italic; font-weight: 400;
+    font-size: 12.5px; color: var(--offwhite);
+    padding: 6px 10px;
+    background: rgba(27,110,58,0.10);
+    border-left: 2px solid var(--green);
+    border-radius: 0 4px 4px 0;
+    line-height: 1.55;
   }
 
-  /* Inline affirmation inside a dim card */
-  .dim-affirm {
-    background: rgba(27,110,58,0.06); border-left: 2px solid var(--green);
-    border-radius: 0 4px 4px 0; padding: 8px 10px; margin-bottom: 6px;
+  /* ── Things to Work On band — orange/gold sidebar ── */
+  .work-card {
+    background: var(--navy);
+    border-radius: 8px;
+    padding: 12px 14px;
+    margin-bottom: 10px;
+    border-left: 4px solid var(--gold);
   }
-  .dim-affirm:last-child { margin-bottom: 0; }
-  .dim-affirm-title {
-    font-size: 12.5px; font-weight: 700; color: var(--white); margin-bottom: 3px;
+  .work-num {
+    display: inline-block;
+    width: 20px; height: 20px; line-height: 20px;
+    text-align: center;
+    background: var(--gold); color: var(--navy-deep);
+    font-weight: 700; font-size: 11px;
+    border-radius: 50%;
+    margin-right: 8px; vertical-align: middle;
   }
-  .dim-affirm-prose {
-    font-size: 11.5px; color: var(--gray-mid); line-height: 1.5; margin-bottom: 4px;
+  .work-part { margin-bottom: 8px; }
+  .work-part:last-child { margin-bottom: 0; }
+  .work-part-label {
+    font-weight: 700; font-size: 10px;
+    letter-spacing: 1.2px; text-transform: uppercase;
+    color: var(--gold); margin-bottom: 3px;
   }
-  .dim-affirm-quote {
-    font-style: italic; font-size: 11px; color: var(--green);
-    padding: 4px 8px; background: rgba(27,110,58,0.10);
-    border-radius: 3px; margin-top: 4px; line-height: 1.45;
+  .work-part-text {
+    font-weight: 400; font-size: 13px;
+    color: var(--offwhite); line-height: 1.55;
+  }
+  .work-part.practicum .work-part-text {
+    padding: 6px 10px;
+    background: rgba(184,134,11,0.10);
+    border-left: 2px solid var(--gold);
+    border-radius: 0 4px 4px 0;
   }
 
-  /* Inline area-to-grow inside a dim card */
-  .dim-area {
-    background: rgba(184,134,11,0.06); border-left: 2px solid var(--gold);
-    border-radius: 0 4px 4px 0; padding: 8px 10px; margin-bottom: 6px;
+  /* ── Signatures band — neutral sidebar ── */
+  .sig-card {
+    background: var(--navy);
+    border-radius: 8px;
+    padding: 12px 14px;
+    margin-bottom: 8px;
+    border-left: 4px solid var(--navy-light);
   }
-  .dim-area:last-child { margin-bottom: 0; }
-  .dim-area-top {
-    display: flex; align-items: center; gap: 6px; flex-wrap: wrap; margin-bottom: 4px;
+  .sig-card.observed { border-left-color: var(--gray-mid); }
+  .sig-card.not-observed { opacity: 0.85; }
+  .sig-observation {
+    font-weight: 400; font-size: 13px;
+    color: var(--offwhite); line-height: 1.6;
+    margin-bottom: 6px;
   }
-  .dim-area-try {
-    font-size: 11.5px; color: var(--offwhite); line-height: 1.5; margin-bottom: 4px;
+  .sig-observation strong, .sig-observation b { font-weight: 700; }
+  .sig-status-tag {
+    display: inline-block;
+    font-weight: 700; font-size: 10px;
+    letter-spacing: 0.5px; text-transform: uppercase;
+    padding: 2px 7px; border-radius: 10px;
+    margin-left: 6px; vertical-align: middle;
   }
-  .dim-area-try strong { color: var(--teal); }
-  .dim-area-practice {
-    font-size: 11px; color: var(--gold);
-    padding: 4px 8px; background: rgba(184,134,11,0.10);
-    border-radius: 3px; margin-top: 4px; line-height: 1.45;
+  .sig-status-tag.observed     { background: rgba(27,110,58,0.20); color: var(--green); }
+  .sig-status-tag.not-observed { background: rgba(144,150,163,0.18); color: var(--gray-mid); }
+  .sig-evidence {
+    font-style: italic; font-weight: 400;
+    font-size: 12.5px; color: var(--offwhite);
+    padding: 6px 10px;
+    background: rgba(144,150,163,0.08);
+    border-left: 2px solid var(--gray-mid);
+    border-radius: 0 4px 4px 0;
+    line-height: 1.55;
   }
 
   /* ── Candidate Report Styles ── */
@@ -1368,42 +1254,33 @@ Return ONLY valid JSON, no markdown, no code blocks, with these keys:
    - "name": Use the exact dimension name above
    - "tier": "Foundation" | "Craft" | "Connection" | "Style"
    - "score": Integer 1-5. 1=significant gaps. 2=attempted but inconsistent. 3=competent. 4=notably effective. 5=exceptional, worth studying.
-   - "confidence": "High" | "Medium" | "Low" — based on how well the transcript evidences this dimension. When even Low is a stretch, write the score as the most honest read but flag Low.
-   - "evidence": A direct quote from the transcript supporting the score. If a quote is truly unavailable, use "" and lower confidence.
-   - "commentary": 2-3 sentences of plain prose. Name what you heard, why it scores where it does. Avoid hedging into uselessness.
+   - "confidence": "High" | "Medium" | "Low" — based on how well the transcript evidences this dimension.
+   - "commentary": 1-2 short sentences naming what you heard. Specific and concise. Examples of the right register: "Word study is brief but accurate." or "Sermon applies well across life stages — the 47.5-year-old reference is a nice touch." Avoid vague hedging.
+   - "evidence": A direct quote from the transcript supporting the score. If truly unavailable, use "" and lower confidence.
 
-7. "signatures": An array of exactly 8 objects, in this order — Christological Turn, Intertextual Anchoring, Word Study as Rhetorical Pivot, Cultural Longing in the Opening, Aphoristic Compression, Structural Return at Close, Mid-Stream Objection-Handling, Identity Framing in the Call — each with:
+7. "whats_working": An array of 4 to 5 objects naming the strongest moves the preacher made in this sermon. These are sermon-wide affirmations, not per-tier — pick the 4-5 most worth naming, drawn from across the dimensions. Genuine, not flattery; grounded in a quoted line. Each:
+   - "title": A short, specific headline (5-9 words). Examples of the right register: "Teacher typology lands with precision." "Closing image carries the listener home." Use a period at the end.
+   - "quote": A direct quote from the sermon that demonstrates it.
+
+8. "things_to_work_on": An array of exactly 3 objects — the three highest-impact priorities for the preacher's next sermon-prep cycle. Each item is one priority, broken into three labeled parts:
+   - "observation": 1-2 sentences naming what the sermon is currently doing on this point. Specific, anchored in the sermon. Not a generalization.
+   - "recommendation": 1-2 sentences on what to try instead. Where a paired signature applies, name it explicitly. Concrete, not aspirational.
+   - "practicum": One specific small thing to do this week in sermon prep. Doable in normal study time. Not a vague intention.
+
+9. "signatures": An array of exactly 8 objects, in this order — Christological Turn, Intertextual Anchoring, Word Study as Rhetorical Pivot, Cultural Longing in the Opening, Aphoristic Compression, Structural Return at Close, Mid-Stream Objection-Handling, Identity Framing in the Call — each with:
    - "name": Exact signature name
    - "paired_with": Array of dimension names this signature pairs with. Mapping: Christological Turn → ["Gospel Clarity"]; Intertextual Anchoring → ["Biblical Depth & Integrity"]; Word Study as Rhetorical Pivot → ["Biblical Depth & Integrity"]; Cultural Longing in the Opening → ["Opening & Closing Power"]; Aphoristic Compression → ["Illustration Effectiveness"]; Structural Return at Close → ["Opening & Closing Power"]; Mid-Stream Objection-Handling → ["Audience Engagement"]; Identity Framing in the Call → ["Vulnerability & Authenticity", "Audience Engagement"]
    - "observed": true if the sermon clearly made this craft move; false if it didn't. Either/or — no degrees. Read charitably; absence is not failure, just information.
-   - "quote": If observed: a direct quote from the transcript where the move lands. If not observed: null.
-   - "note": If not observed: a short one-line description (max 15 words) of what the sermon did instead, with no penalty implied. If observed: null.
-
-8. "this_week_focus": An array of exactly 3 objects — the three highest-impact priorities for the preacher this week, drawn from the areas_to_grow below. Pick the three most worth doing, not the easiest to name. Each:
-   - "dimension": The dimension being moved (exact name)
-   - "transition": The rung being climbed: "2→3", "3→4", or "4→5"
-   - "what_to_try": 1-2 sentences. Where a paired signature exists for this dimension, name it concretely (e.g., "Try the Christological turn — name what this passage is showing us about Christ before you reach the application"). Where no signature pairs, name a specific craft move.
-   - "practice": One small specific thing to do this week — concrete, doable in normal sermon prep. Not a vague aspiration.
-   - "why_this_one": One sentence on why this is the highest-impact pick right now, given where the sermon currently sits.
-
-9. "sections": An array of exactly 4 objects, one per tier, in this order: Foundation, Craft, Connection, Style. Each has:
-   - "tier": "Foundation" | "Craft" | "Connection" | "Style"
-   - "affirmations": Array of exactly 3 objects, drawn from the dimensions and signatures within this tier. Each:
-       - "dimension": The dimension (exact name) within this tier that this affirmation is about. Most tiers have 2-3 dimensions; affirmations should generally distribute across them, but it's fine to put two affirmations on the same dimension if that's the honest read.
-       - "title": 4-7 word headline of what's working
-       - "quote": Direct quote from the sermon showing it
-       - "prose": 1-2 sentences on why it landed
-   - "areas_to_grow": Array of exactly 3 objects, named as transitions between rungs (one rung at a time — Phase 2 work moves 2→3 and 3→4; Phase 3 moves 4→5). Each:
-       - "dimension": The dimension (exact name) within this tier
-       - "transition": "2→3" | "3→4" | "4→5"
-       - "what_to_try": 1-2 sentences. Name the paired signature where one exists, or a specific craft move.
-       - "practice": One small specific thing to do in this week's sermon prep.
+   - "observation": 2-3 sentences. CRITICAL FORMATTING: weave a brief plain-language definition of the signature into the FIRST sentence so a reader who has never heard the term still understands what the move is. Then in the next sentence, state what was observed (or not observed) in this sermon. Examples of the right format —
+       Aphoristic Compression observed: "Aphoristic compression — the discipline of shaping a single, portable sentence the listener can carry into the week — landed clearly here. The preacher condensed his thread about formation into one repeatable line that a parishioner could quote on Tuesday."
+       Aphoristic Compression NOT observed: "Aphoristic compression — the discipline of shaping a single, portable sentence the listener can carry into the week — was not present in this sermon. The substance is clear, but no single line emerged for a listener to repeat."
+       Christological Turn observed: "The Christological turn — the moment a sermon moves from the text in front of us to the One the text points toward — was made clearly. The closing pivots from the parable's logic to Christ as the One who fulfilled it."
+   - "evidence": If observed, a direct quote from the sermon where the move lands. If not observed, use "".
 
 Notes on producing the output:
-- Affirmations should be genuine (not flattery) and grounded in quoted lines.
-- Areas to grow should be specific to what's actually in this sermon, not generic preaching advice.
-- For the Style tier areas: there are no paired signatures yet (the field book names this gap honestly). Name craft moves directly without referencing a signature.
-- For dimensions scoring 5: the area to grow may still be a refinement (5→ deeper 5) or may name an adjacent dimension within the tier. Use judgment; don't invent weakness.
+- Affirmations and recommendations should be specific to THIS sermon, not generic preaching advice.
+- Read charitably; absence of a signature is information, not failure — never penalize a dimension score for an absent signature.
+- For dimensions without paired signatures (Application Specificity, Structural Clarity, Contemporary Relevance, Intellectual Depth), score them on their own terms.
 - Keep all prose in the voice of a thoughtful pastor: warm, unpretentious, precise. Avoid hype, life-hack framing, easy certainty, and combative posture.
 
 SERMON TRANSCRIPT:
@@ -1549,44 +1426,21 @@ ${t}`;
     document.getElementById('applicationContent').innerHTML = (d.application || []).map((a, i) => `<div style="margin-bottom:14px;padding-bottom:14px;border-bottom:1px solid var(--navy-light)"><div style="font-weight:700;font-size:13px;color:var(--white);margin-bottom:4px"><span style="color:var(--teal)">${i+1}.</span> ${esc(a.question)}</div><div style="font-size:12px;line-height:1.5;color:var(--gray-mid);margin-left:16px;padding-left:12px;border-left:2px solid var(--navy-light)">${esc(a.prompt)}</div></div>`).join('');
   }
 
-  // ── Coaching Report Renderer (dimension-centric) ──
-  // Each of the 10 dimensions renders as a self-contained card with its
-  // score, commentary, evidence, paired signature(s), affirmations, and
-  // areas-to-grow all together. Signatures and section synthesis are
-  // distributed into the dimension they belong to instead of standing alone.
+  // ── Coaching Report Renderer (four-band layout) ──
+  // Top: speaker/date · synthesis paragraph (regular weight) · score circle + radar.
+  // Then four bands, each a sermon-wide section with its own colored sidebar:
+  //   1) Dimensions (blue)        — 10 cards: name + dots + confidence + commentary + evidence
+  //   2) What's Working (green)   — 4-5 cards: title + quote
+  //   3) Things to Work On (gold) — 3 cards: observation / recommendation / practicum
+  //   4) Signatures (neutral)     — 8 cards: weave-in observation + evidence quote
   function renderCoachingResults(d, container) {
     const score = d.overall_score || 0;
     const scoreClass = score >= 75 ? 'score-green' : score >= 50 ? 'score-gold' : 'score-red';
     const dims = d.dimensions || [];
+    const working = d.whats_working || [];
+    const todo = d.things_to_work_on || [];
     const sigs = d.signatures || [];
-    const sections = d.sections || [];
-    const focus = d.this_week_focus || [];
     const tiers = ['Foundation', 'Craft', 'Connection', 'Style'];
-
-    // ── Indices: signatures, affirmations, and areas keyed by dimension name ──
-    const sigByDim = {};
-    sigs.forEach(sig => {
-      (sig.paired_with || []).forEach(dimName => {
-        if (!sigByDim[dimName]) sigByDim[dimName] = [];
-        sigByDim[dimName].push(sig);
-      });
-    });
-    const affirmByDim = {};
-    const areaByDim = {};
-    sections.forEach(sec => {
-      (sec.affirmations || []).forEach(a => {
-        const key = a.dimension || '';
-        if (!key) return;
-        if (!affirmByDim[key]) affirmByDim[key] = [];
-        affirmByDim[key].push(a);
-      });
-      (sec.areas_to_grow || []).forEach(area => {
-        const key = area.dimension || '';
-        if (!key) return;
-        if (!areaByDim[key]) areaByDim[key] = [];
-        areaByDim[key].push(area);
-      });
-    });
 
     let html = '<div class="coaching-report">';
 
@@ -1594,16 +1448,16 @@ ${t}`;
     const speaker = d.speaker_name && d.speaker_name !== 'Unknown Speaker' ? d.speaker_name : '';
     const sDate = d.sermon_date && d.sermon_date !== 'Date Unknown' ? d.sermon_date : '';
     if (speaker || sDate) {
-      html += `<div style="text-align:center;margin-bottom:16px;color:var(--gray-mid)">`;
-      if (speaker) html += `<div style="font-size:18px;font-weight:700;color:var(--white)">${esc(speaker)}</div>`;
-      if (sDate) html += `<div style="font-size:13px;margin-top:2px">${esc(sDate)}</div>`;
+      html += `<div class="cr-speaker">`;
+      if (speaker) html += `<div class="cr-name">${esc(speaker)}</div>`;
+      if (sDate) html += `<div class="cr-date">${esc(sDate)}</div>`;
       html += `</div>`;
     }
 
-    // ── Synthesis paragraph (top of report) ──
+    // ── Synthesis paragraph (regular weight, not bold) ──
     if (d.synthesis_paragraph) {
       html += `<div class="synthesis-card">
-        <div class="overline" style="color:var(--teal);font-size:10px;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:8px;">A Read of the Whole <button class="listen-btn" onclick="speakSection(this, 'coaching-synthesis')">Listen</button></div>
+        <div class="overline">A Read of the Whole <button class="listen-btn" onclick="speakSection(this, 'coaching-synthesis')">Listen</button></div>
         ${esc(d.synthesis_paragraph)}
       </div>`;
     }
@@ -1617,112 +1471,91 @@ ${t}`;
     </div>`;
     html += buildRadarSVG(dims);
 
-    // ── This Week Focus ──
-    if (focus.length) {
-      html += `<div class="this-week-focus">
-        <div class="focus-header">
-          <span>This Week — 3 Priorities</span>
-          <button class="listen-btn" onclick="speakSection(this, 'coaching-focus')">Listen</button>
-        </div>`;
-      focus.forEach((f, i) => {
-        html += `<div class="focus-item">
-          <span class="focus-num">${i+1}</span>
-          <span class="focus-dim">${esc(f.dimension || '')}</span>`;
-        if (f.transition) html += `<span class="transition-badge">${esc(f.transition)}</span>`;
-        if (f.why_this_one) html += `<div class="focus-why">${esc(f.why_this_one)}</div>`;
-        if (f.what_to_try) html += `<div class="focus-try"><strong>Try:</strong> ${esc(f.what_to_try)}</div>`;
-        if (f.practice) html += `<div class="focus-practice">🎯 ${esc(f.practice)}</div>`;
-        html += `</div>`;
+    // ── BAND 1: Dimensions (blue sidebar), grouped by tier ──
+    if (dims.length) {
+      html += `<div class="cr-band-label dimensions">
+        <span>Dimensions</span>
+        <button class="listen-btn" onclick="speakSection(this, 'coaching-dimensions')">Listen</button>
+      </div>`;
+      tiers.forEach(tier => {
+        const tierDims = dims.filter(dim => dim.tier === tier);
+        if (!tierDims.length) return;
+        html += `<div class="cr-band-tier-label">${esc(tier)}</div>`;
+        tierDims.forEach(dim => {
+          const conf = dim.confidence || '';
+          const confClass = conf === 'High' ? 'conf-high' : conf === 'Medium' ? 'conf-medium' : conf === 'Low' ? 'conf-low' : '';
+          html += `<div class="dim-card">
+            <div class="dim-card-head">
+              <div class="dim-card-name">${esc(dim.name)}${conf ? ` <span class="conf-badge ${confClass}">${esc(conf)}</span>` : ''}</div>
+              <div class="dim-card-dots">`;
+          for (let i = 1; i <= 5; i++) html += `<div class="dim-dot${i <= dim.score ? ' filled' : ''}"></div>`;
+          html += `</div>
+            </div>`;
+          if (dim.commentary || dim.summary) {
+            html += `<div class="dim-card-commentary">${esc(dim.commentary || dim.summary || '')}</div>`;
+          }
+          if (dim.evidence) {
+            html += `<div class="dim-card-evidence">"${esc(dim.evidence)}"</div>`;
+          }
+          html += `</div>`;
+        });
       });
-      html += `</div>`;
     }
 
-    // ── Dimensions, grouped by tier, each as a self-contained card ──
-    tiers.forEach(tier => {
-      const tierDims = dims.filter(dim => dim.tier === tier);
-      if (!tierDims.length) return;
-      const tierKey = 'coaching-tier-' + tier.toLowerCase();
-      html += `<div class="tier-group" style="margin-top:20px">
-        <div class="tier-header" style="border-bottom:1px solid var(--navy-light);padding-bottom:6px;margin-bottom:12px;">
-          ${esc(tier)} <button class="listen-btn" onclick="speakSection(this, '${tierKey}')">Listen</button>
+    // ── BAND 2: What's Working (green sidebar) — 4-5 sermon-wide affirmations ──
+    if (working.length) {
+      html += `<div class="cr-band-label working">
+        <span>What's Working</span>
+        <button class="listen-btn" onclick="speakSection(this, 'coaching-working')">Listen</button>
+      </div>`;
+      working.forEach(w => {
+        html += `<div class="working-card">
+          <div class="working-title">${esc(w.title || '')}</div>`;
+        if (w.quote) html += `<div class="working-quote">"${esc(w.quote)}"</div>`;
+        html += `</div>`;
+      });
+    }
+
+    // ── BAND 3: Things to Work On (gold sidebar) — 3 with observation/recommendation/practicum ──
+    if (todo.length) {
+      html += `<div class="cr-band-label work-todo">
+        <span>Things to Work On</span>
+        <button class="listen-btn" onclick="speakSection(this, 'coaching-work-todo')">Listen</button>
+      </div>`;
+      todo.forEach((item, i) => {
+        html += `<div class="work-card">
+          <div class="work-part">
+            <div class="work-part-label"><span class="work-num">${i+1}</span>Observation</div>
+            <div class="work-part-text">${esc(item.observation || '')}</div>
+          </div>
+          <div class="work-part">
+            <div class="work-part-label">Recommendation</div>
+            <div class="work-part-text">${esc(item.recommendation || '')}</div>
+          </div>
+          <div class="work-part practicum">
+            <div class="work-part-label">Practicum</div>
+            <div class="work-part-text">${esc(item.practicum || '')}</div>
+          </div>
         </div>`;
+      });
+    }
 
-      tierDims.forEach(dim => {
-        const conf = dim.confidence || '';
-        const confClass = conf === 'High' ? 'conf-high' : conf === 'Medium' ? 'conf-medium' : conf === 'Low' ? 'conf-low' : '';
-        const dimSigs = sigByDim[dim.name] || [];
-        const dimAffirms = affirmByDim[dim.name] || [];
-        const dimAreas = areaByDim[dim.name] || [];
-
-        html += `<div class="dim-card">
-          <div class="dim-card-head">
-            <div class="dim-card-name">${esc(dim.name)}${conf ? ` <span class="conf-badge ${confClass}">${esc(conf)}</span>` : ''}</div>
-            <div class="dim-card-dots">`;
-        for (let i = 1; i <= 5; i++) html += `<div class="dim-dot${i <= dim.score ? ' filled' : ''}"></div>`;
-        html += `</div>
-          </div>`;
-
-        if (dim.commentary || dim.summary) {
-          html += `<div class="dim-card-commentary">${esc(dim.commentary || dim.summary || '')}</div>`;
-        }
-        if (dim.evidence) {
-          html += `<div class="dim-card-evidence">"${esc(dim.evidence)}"</div>`;
-        }
-
-        // ── Paired signature(s) — or grey "no signature" note ──
-        html += `<div class="dim-block">
-          <div class="dim-block-label signature">Paired Signature${dimSigs.length === 1 ? '' : 's'}</div>`;
-        if (dimSigs.length === 0) {
-          html += `<div class="dim-no-sig">No signature is paired with this dimension yet.</div>`;
-        } else {
-          dimSigs.forEach(sig => {
-            const observed = sig.observed === true;
-            html += `<div class="dim-sig">
-              <div class="dim-sig-status ${observed ? 'observed' : 'not-observed'}">${observed ? '✓' : '—'}</div>
-              <div class="dim-sig-body">
-                <div class="dim-sig-name">${esc(sig.name || '')}</div>`;
-            if (observed && sig.quote) html += `<div class="dim-sig-quote">"${esc(sig.quote)}"</div>`;
-            if (!observed && sig.note) html += `<div class="dim-sig-note">${esc(sig.note)}</div>`;
-            html += `</div></div>`;
-          });
+    // ── BAND 4: Signatures (neutral sidebar) — observation weaves in meaning, then evidence ──
+    if (sigs.length) {
+      html += `<div class="cr-band-label signatures">
+        <span>Signatures</span>
+        <button class="listen-btn" onclick="speakSection(this, 'coaching-signatures')">Listen</button>
+      </div>`;
+      sigs.forEach(sig => {
+        const observed = sig.observed === true;
+        html += `<div class="sig-card ${observed ? 'observed' : 'not-observed'}">
+          <div class="sig-observation">${esc(sig.observation || '')}<span class="sig-status-tag ${observed ? 'observed' : 'not-observed'}">${observed ? 'Observed' : 'Not observed'}</span></div>`;
+        if (observed && sig.evidence) {
+          html += `<div class="sig-evidence">"${esc(sig.evidence)}"</div>`;
         }
         html += `</div>`;
-
-        // ── What's working (affirmations for this dimension) ──
-        if (dimAffirms.length) {
-          html += `<div class="dim-block">
-            <div class="dim-block-label affirm">What's Working</div>`;
-          dimAffirms.forEach(a => {
-            html += `<div class="dim-affirm">
-              <div class="dim-affirm-title">${esc(a.title || '')}</div>`;
-            if (a.prose) html += `<div class="dim-affirm-prose">${esc(a.prose)}</div>`;
-            if (a.quote) html += `<div class="dim-affirm-quote">"${esc(a.quote)}"</div>`;
-            html += `</div>`;
-          });
-          html += `</div>`;
-        }
-
-        // ── Try this (areas to grow for this dimension) ──
-        if (dimAreas.length) {
-          html += `<div class="dim-block">
-            <div class="dim-block-label area">Try This</div>`;
-          dimAreas.forEach(area => {
-            html += `<div class="dim-area">
-              <div class="dim-area-top">`;
-            if (area.transition) html += `<span class="transition-badge">${esc(area.transition)}</span>`;
-            html += `</div>
-              <div class="dim-area-try"><strong>Try:</strong> ${esc(area.what_to_try || '')}</div>`;
-            if (area.practice) html += `<div class="dim-area-practice">🎯 ${esc(area.practice)}</div>`;
-            html += `</div>`;
-          });
-          html += `</div>`;
-        }
-
-        html += `</div>`; // /.dim-card
       });
-
-      html += `</div>`; // /.tier-group
-    });
+    }
 
     html += '</div>';
     container.querySelector('#applicationCard').insertAdjacentHTML('afterend', html);
@@ -2031,45 +1864,10 @@ ${t}`;
       case 'application': text = (d.application||[]).map((a,i) => `${i+1}. ${a.question}. ${a.prompt}`).join('. '); break;
       // Coaching sections
       case 'coaching-synthesis': text = d.synthesis_paragraph || ''; break;
-      case 'coaching-focus': text = (d.this_week_focus||[]).map((f,i) => `Priority ${i+1}. ${f.dimension}, transition ${f.transition || ''}. ${f.why_this_one || ''}. Try ${f.what_to_try || ''}. This week: ${f.practice || ''}`).join('. '); break;
-      case 'coaching-tier-foundation':
-      case 'coaching-tier-craft':
-      case 'coaching-tier-connection':
-      case 'coaching-tier-style': {
-        // Read everything for this tier as a continuous flow:
-        // each dimension's score + commentary + paired signatures + affirmations + areas
-        const tier = section.replace('coaching-tier-', '');
-        const tierName = tier.charAt(0).toUpperCase() + tier.slice(1);
-        const tierDims = (d.dimensions||[]).filter(dim => (dim.tier||'').toLowerCase() === tier);
-        if (!tierDims.length) { text = ''; break; }
-
-        // Build lookups
-        const sigByDim = {};
-        (d.signatures||[]).forEach(sig => {
-          (sig.paired_with||[]).forEach(dn => { (sigByDim[dn] = sigByDim[dn] || []).push(sig); });
-        });
-        const affirmByDim = {}, areaByDim = {};
-        (d.sections||[]).forEach(sec => {
-          (sec.affirmations||[]).forEach(a => { if (a.dimension) (affirmByDim[a.dimension] = affirmByDim[a.dimension] || []).push(a); });
-          (sec.areas_to_grow||[]).forEach(a => { if (a.dimension) (areaByDim[a.dimension] = areaByDim[a.dimension] || []).push(a); });
-        });
-
-        const parts = [tierName + '.'];
-        tierDims.forEach(dim => {
-          parts.push(`${dim.name}. Score ${dim.score} of 5${dim.confidence ? ', ' + dim.confidence + ' confidence' : ''}.`);
-          if (dim.commentary || dim.summary) parts.push(dim.commentary || dim.summary);
-          (sigByDim[dim.name] || []).forEach(sig => {
-            parts.push(`${sig.name}. ${sig.observed ? 'Observed. ' + (sig.quote || '') : 'Not observed. ' + (sig.note || '')}`);
-          });
-          (affirmByDim[dim.name] || []).forEach(a => {
-            parts.push(`Working: ${a.title || ''}. ${a.prose || ''}`);
-          });
-          (areaByDim[dim.name] || []).forEach(a => {
-            parts.push(`Try: ${a.what_to_try || ''}. This week: ${a.practice || ''}`);
-          });
-        });
-        text = parts.join(' ');
-      } break;
+      case 'coaching-dimensions': text = (d.dimensions||[]).map(dim => `${dim.name}. Score ${dim.score} of 5${dim.confidence ? ', ' + dim.confidence + ' confidence' : ''}. ${dim.commentary || dim.summary || ''}${dim.evidence ? ' Quote: ' + dim.evidence : ''}`).join('. '); break;
+      case 'coaching-working': text = (d.whats_working||[]).map((w,i) => `${i+1}. ${w.title || ''}${w.quote ? ' Quote: ' + w.quote : ''}`).join('. '); break;
+      case 'coaching-work-todo': text = (d.things_to_work_on||[]).map((item,i) => `Priority ${i+1}. Observation: ${item.observation || ''}. Recommendation: ${item.recommendation || ''}. Practicum: ${item.practicum || ''}`).join('. '); break;
+      case 'coaching-signatures': text = (d.signatures||[]).map(sig => `${sig.observation || sig.name || ''}${sig.observed && sig.evidence ? ' Quote: ' + sig.evidence : ''}`).join(' '); break;
       // Candidate sections
       case 'candidate-summary': text = d.executive_summary || ''; break;
       case 'candidate-teaching': text = (d.teaching_style||[]).map(t => `${t.name}. Score ${t.score} out of 5. ${t.description}`).join('. '); break;
@@ -2165,70 +1963,54 @@ ${t}`;
 
     lines.push(`OVERALL SCORE: ${d.overall_score || 0}/100`, '');
 
-    if ((d.this_week_focus || []).length) {
-      lines.push('THIS WEEK — 3 PRIORITIES', '-'.repeat(40));
-      d.this_week_focus.forEach((f, i) => {
-        lines.push(`${i+1}. ${f.dimension || ''}${f.transition ? ' (' + f.transition + ')' : ''}`);
-        if (f.why_this_one) lines.push(`   Why: ${f.why_this_one}`);
-        if (f.what_to_try)  lines.push(`   Try: ${f.what_to_try}`);
-        if (f.practice)     lines.push(`   This week: ${f.practice}`);
-        lines.push('');
-      });
-    }
-
-    // ── Dimension-centric: each dimension shows its score, evidence,
-    //    paired signatures, affirmations, and areas-to-grow inline. ──
-    const sigByDim = {};
-    (d.signatures || []).forEach(sig => {
-      (sig.paired_with || []).forEach(dn => { (sigByDim[dn] = sigByDim[dn] || []).push(sig); });
-    });
-    const affirmByDim = {}, areaByDim = {};
-    (d.sections || []).forEach(sec => {
-      (sec.affirmations || []).forEach(a => { if (a.dimension) (affirmByDim[a.dimension] = affirmByDim[a.dimension] || []).push(a); });
-      (sec.areas_to_grow || []).forEach(a => { if (a.dimension) (areaByDim[a.dimension] = areaByDim[a.dimension] || []).push(a); });
-    });
-
+    // ── BAND 1: Dimensions (grouped by tier) ──
+    lines.push('DIMENSIONS', '-'.repeat(40));
     const tiers = ['Foundation', 'Craft', 'Connection', 'Style'];
     tiers.forEach(tier => {
       const dims = (d.dimensions || []).filter(dim => dim.tier === tier);
       if (!dims.length) return;
-      lines.push(tier.toUpperCase(), '-'.repeat(40));
-
+      lines.push(tier);
       dims.forEach(dim => {
         const conf = dim.confidence ? ` [${dim.confidence}]` : '';
-        lines.push(`${dim.name}: ${dim.score}/5${conf}`);
-        if (dim.commentary || dim.summary) lines.push(`  ${dim.commentary || dim.summary}`);
-        if (dim.evidence) lines.push(`  "${dim.evidence}"`);
+        lines.push(`  ${dim.name}: ${dim.score}/5${conf}`);
+        if (dim.commentary || dim.summary) lines.push(`    ${dim.commentary || dim.summary}`);
+        if (dim.evidence) lines.push(`    "${dim.evidence}"`);
+      });
+      lines.push('');
+    });
 
-        // Paired signature(s) — or no-sig note
-        const dimSigs = sigByDim[dim.name] || [];
-        if (dimSigs.length === 0) {
-          lines.push(`  Paired signature: (none paired with this dimension yet)`);
-        } else {
-          dimSigs.forEach(sig => {
-            const mark = sig.observed ? '✓' : '—';
-            lines.push(`  ${mark} ${sig.name}`);
-            if (sig.observed && sig.quote) lines.push(`    "${sig.quote}"`);
-            if (!sig.observed && sig.note) lines.push(`    ${sig.note}`);
-          });
-        }
+    // ── BAND 2: What's Working ──
+    if ((d.whats_working || []).length) {
+      lines.push("WHAT'S WORKING", '-'.repeat(40));
+      d.whats_working.forEach(w => {
+        lines.push(`• ${w.title || ''}`);
+        if (w.quote) lines.push(`  "${w.quote}"`);
+      });
+      lines.push('');
+    }
 
-        // What's working (affirmations for this dimension)
-        (affirmByDim[dim.name] || []).forEach(a => {
-          lines.push(`  ✓ Working: ${a.title || ''}`);
-          if (a.prose) lines.push(`    ${a.prose}`);
-          if (a.quote) lines.push(`    "${a.quote}"`);
-        });
-
-        // Try this (areas to grow for this dimension)
-        (areaByDim[dim.name] || []).forEach(area => {
-          lines.push(`  → Try this${area.transition ? ' [' + area.transition + ']' : ''}: ${area.what_to_try || ''}`);
-          if (area.practice) lines.push(`    🎯 This week: ${area.practice}`);
-        });
-
+    // ── BAND 3: Things to Work On ──
+    if ((d.things_to_work_on || []).length) {
+      lines.push('THINGS TO WORK ON', '-'.repeat(40));
+      d.things_to_work_on.forEach((item, i) => {
+        lines.push(`${i+1}.`);
+        if (item.observation)    lines.push(`  Observation:    ${item.observation}`);
+        if (item.recommendation) lines.push(`  Recommendation: ${item.recommendation}`);
+        if (item.practicum)      lines.push(`  Practicum:      ${item.practicum}`);
         lines.push('');
       });
-    });
+    }
+
+    // ── BAND 4: Signatures ──
+    if ((d.signatures || []).length) {
+      lines.push('SIGNATURES', '-'.repeat(40));
+      d.signatures.forEach(sig => {
+        const mark = sig.observed ? '[OBSERVED]' : '[NOT OBSERVED]';
+        lines.push(`${mark} ${sig.observation || sig.name || ''}`);
+        if (sig.observed && sig.evidence) lines.push(`  "${sig.evidence}"`);
+        lines.push('');
+      });
+    }
 
     return lines.join('\n');
   }
@@ -2361,7 +2143,7 @@ ${t}`;
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>${esc(title)} — ${esc(reportLabel)}</title>
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Lora:wght@600;700&family=Source+Sans+3:wght@400;500;600;700&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;0,700;1,400&family=Source+Sans+3:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap');
   :root {
     --navy: #1A3A5C; --navy-deep: #0F2640; --navy-light: #243F5C;
     --teal: #2A7FA5; --teal-light: #EAF4FA; --teal-border: #B0D8EC;
@@ -2386,122 +2168,63 @@ ${t}`;
   .report-header .date { font-size: 13px; color: var(--gray-mid); margin-top: 2px; }
   .report-footer { text-align: center; margin-top: 32px; padding-top: 16px; border-top: 1px solid var(--navy-light); font-size: 10px; color: var(--gray-mid); }
 
-  /* Coaching */
-  .coaching-report { color: var(--white); }
-  .score-circle-wrap { text-align: center; margin: 20px 0; }
+  /* Coaching — restrained typography (400/700 only), four-band sidebars */
+  .coaching-report { color: var(--white); font-family: var(--font-body); font-weight: 400; }
+  .coaching-report strong, .coaching-report b { font-weight: 700; }
+  .coaching-report em, .coaching-report i { font-style: italic; font-weight: 400; }
+  .cr-speaker { text-align: center; margin-bottom: 14px; color: var(--gray-mid); }
+  .cr-speaker .cr-name { font-size: 18px; font-weight: 700; color: var(--white); }
+  .cr-speaker .cr-date { font-size: 13px; font-weight: 400; margin-top: 2px; }
+  .synthesis-card { background: var(--navy); border-radius: 8px; padding: 16px 18px; border-left: 4px solid var(--teal); margin: 14px 0 18px; font-family: var(--font-display); font-weight: 400; font-size: 14px; line-height: 1.7; color: var(--offwhite); }
+  .synthesis-card .overline { display: flex; align-items: center; justify-content: space-between; font-family: var(--font-body); font-weight: 700; font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--teal); margin-bottom: 10px; }
+  .score-circle-wrap { text-align: center; margin: 18px 0; }
   .score-circle { width: 120px; height: 120px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; flex-direction: column; border: 4px solid; }
-  .score-circle .score-num { font-size: 36px; font-weight: 800; font-family: var(--font-display); }
-  .score-circle .score-label { font-size: 10px; text-transform: uppercase; letter-spacing: 1px; opacity: 0.7; }
+  .score-circle .score-num { font-size: 36px; font-weight: 700; font-family: var(--font-display); }
+  .score-circle .score-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; opacity: 0.7; }
   .score-green { border-color: var(--green); color: var(--green); }
-  .score-gold { border-color: var(--gold); color: var(--gold); }
-  .score-red { border-color: var(--red); color: var(--red); }
-  .tier-group { margin-bottom: 16px; }
-  .tier-header { font-size: 11px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--teal); margin-bottom: 8px; padding-bottom: 4px; border-bottom: 1px solid var(--navy-light); }
-  .dim-row { display: flex; align-items: center; gap: 10px; margin-bottom: 6px; }
-  .dim-name { width: 180px; font-size: 12px; font-weight: 600; flex-shrink: 0; }
-  .dim-dots { display: flex; gap: 4px; }
-  .dim-dot { width: 14px; height: 14px; border-radius: 50%; border: 2px solid var(--teal); background: transparent; }
-  .dim-dot.filled { background: var(--teal); }
-  .dim-summary { font-size: 11px; color: var(--gray-mid); margin: 0 0 10px 190px; }
-  .coaching-card { background: var(--navy); border-radius: 8px; padding: 14px; margin-bottom: 12px; border-left: 3px solid; }
-  .coaching-card.strength { border-color: var(--green); }
-  .coaching-card.improvement { border-color: var(--gold); }
-  .coaching-card.toolkit { border-color: var(--teal); }
-  .coaching-card h4 { font-size: 14px; font-weight: 700; margin-bottom: 6px; }
-  .coaching-card p { font-size: 12px; line-height: 1.6; color: var(--gray-mid); margin-bottom: 4px; }
-  .coaching-card .evidence-quote { font-style: italic; font-size: 12px; color: var(--teal); padding: 6px 10px; background: rgba(42,127,165,0.08); border-radius: 4px; margin-top: 6px; }
-  .coaching-card .exercise { font-size: 12px; color: var(--gold); margin-top: 6px; padding: 6px 10px; background: rgba(184,134,11,0.08); border-radius: 4px; }
-
-  /* Synthesis paragraph */
-  .synthesis-card { background: var(--navy); border-radius: 8px; padding: 16px 18px; border-left: 3px solid var(--teal); margin: 16px 0; font-size: 13.5px; line-height: 1.7; color: var(--offwhite); font-family: var(--font-display); font-weight: 600; }
-  .synthesis-card .overline { font-family: var(--font-body); font-weight: 700; }
-
-  /* This Week Focus */
-  .this-week-focus { background: linear-gradient(180deg, rgba(184,134,11,0.10), rgba(184,134,11,0.04)); border: 1px solid rgba(184,134,11,0.35); border-radius: 10px; padding: 16px 18px; margin: 20px 0; }
-  .this-week-focus .focus-header { font-size: 11px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--gold); margin-bottom: 10px; display: flex; align-items: center; justify-content: space-between; }
-  .focus-item { background: var(--navy); border-radius: 6px; padding: 12px 14px; margin-bottom: 10px; border-left: 3px solid var(--gold); }
-  .focus-item:last-child { margin-bottom: 0; }
-  .focus-item .focus-num { display: inline-block; width: 20px; height: 20px; line-height: 20px; text-align: center; background: var(--gold); color: var(--navy-deep); font-weight: 800; font-size: 11px; border-radius: 50%; margin-right: 8px; vertical-align: middle; }
-  .focus-item .focus-dim { display: inline-block; font-size: 13px; font-weight: 700; color: var(--white); vertical-align: middle; }
-  .focus-item .transition-badge { display: inline-block; font-size: 10px; font-weight: 700; color: var(--gold); background: rgba(184,134,11,0.15); padding: 2px 7px; border-radius: 10px; margin-left: 8px; letter-spacing: 0.04em; vertical-align: middle; }
-  .focus-item .focus-why { font-size: 12px; color: var(--gray-mid); font-style: italic; margin: 6px 0 0 28px; line-height: 1.5; }
-  .focus-item .focus-try { font-size: 12px; color: var(--offwhite); margin: 6px 0 0 28px; line-height: 1.5; }
-  .focus-item .focus-try strong { color: var(--teal); }
-  .focus-item .focus-practice { font-size: 12px; color: var(--gold); margin: 6px 0 0 28px; padding: 6px 10px; background: rgba(184,134,11,0.10); border-radius: 4px; line-height: 1.5; }
-
-  /* Confidence + evidence on dimensions */
-  .dim-row .conf-badge { display: inline-block; padding: 1px 6px; border-radius: 3px; font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; margin-left: 6px; }
-  .dim-evidence { font-style: italic; font-size: 11px; color: var(--teal); padding: 6px 10px; background: rgba(42,127,165,0.08); border-radius: 4px; margin: 4px 0 12px 190px; line-height: 1.5; }
-
-  /* Signatures */
-  .sig-section { margin: 20px 0; }
-  .sig-tier-block { margin-bottom: 14px; }
-  .sig-tier-label { font-size: 10px; font-weight: 700; letter-spacing: 1.2px; text-transform: uppercase; color: var(--gray-mid); margin-bottom: 6px; }
-  .sig-row { display: flex; align-items: flex-start; gap: 10px; background: var(--navy); border-radius: 6px; padding: 10px 12px; margin-bottom: 6px; }
-  .sig-status { flex-shrink: 0; width: 20px; height: 20px; line-height: 20px; text-align: center; font-weight: 800; font-size: 12px; border-radius: 50%; margin-top: 1px; }
-  .sig-status.observed { background: rgba(27,110,58,0.20); color: var(--green); }
-  .sig-status.not-observed { background: rgba(144,150,163,0.18); color: var(--gray-mid); }
-  .sig-body { flex: 1; min-width: 0; }
-  .sig-name { font-size: 12.5px; font-weight: 700; color: var(--white); margin-bottom: 2px; }
-  .sig-pair { font-size: 10px; font-weight: 600; color: var(--teal); letter-spacing: 0.04em; margin-bottom: 4px; }
-  .sig-quote { font-style: italic; font-size: 12px; color: var(--offwhite); padding: 4px 8px; background: rgba(42,127,165,0.08); border-left: 2px solid var(--teal); border-radius: 0 4px 4px 0; margin-top: 4px; line-height: 1.5; }
-  .sig-note { font-size: 11.5px; color: var(--gray-mid); margin-top: 4px; line-height: 1.5; }
-
-  /* Section synthesis */
-  .section-synthesis { margin: 24px 0; }
-  .tier-section { background: var(--navy); border-radius: 8px; padding: 14px; margin-bottom: 14px; border-top: 3px solid var(--teal); }
-  .tier-section .tier-section-header { font-family: var(--font-display); font-size: 16px; font-weight: 700; color: var(--white); margin-bottom: 4px; }
-  .tier-section .tier-section-meta { font-size: 10px; font-weight: 600; letter-spacing: 0.08em; color: var(--gray-mid); text-transform: uppercase; margin-bottom: 12px; }
-  .tier-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-  .tier-col-label { font-size: 10px; font-weight: 700; letter-spacing: 1.2px; text-transform: uppercase; margin-bottom: 8px; }
-  .tier-col-label.affirm { color: var(--green); }
-  .tier-col-label.area { color: var(--gold); }
-  .affirm-card { background: rgba(27,110,58,0.06); border-left: 2px solid var(--green); border-radius: 0 4px 4px 0; padding: 8px 10px; margin-bottom: 8px; }
-  .affirm-card .a-title { font-size: 12.5px; font-weight: 700; color: var(--white); margin-bottom: 3px; }
-  .affirm-card .a-prose { font-size: 11.5px; color: var(--gray-mid); line-height: 1.5; margin-bottom: 4px; }
-  .affirm-card .a-quote { font-style: italic; font-size: 11px; color: var(--green); padding: 4px 8px; background: rgba(27,110,58,0.10); border-radius: 3px; margin-top: 4px; line-height: 1.45; }
-  .area-card { background: rgba(184,134,11,0.06); border-left: 2px solid var(--gold); border-radius: 0 4px 4px 0; padding: 8px 10px; margin-bottom: 8px; }
-  .area-card .area-top { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; margin-bottom: 4px; }
-  .area-card .area-dim { font-size: 12.5px; font-weight: 700; color: var(--white); }
-  .area-card .area-try { font-size: 11.5px; color: var(--offwhite); line-height: 1.5; margin-bottom: 4px; }
-  .area-card .area-try strong { color: var(--teal); }
-  .area-card .area-practice { font-size: 11px; color: var(--gold); padding: 4px 8px; background: rgba(184,134,11,0.10); border-radius: 3px; margin-top: 4px; line-height: 1.45; }
-  @media (max-width: 600px) { .tier-cols { grid-template-columns: 1fr; } }
-
-  /* Dimension-centric cards (each dimension self-contained) */
-  .dim-card { background: var(--navy); border-radius: 10px; padding: 14px 16px; margin-bottom: 12px; border-left: 3px solid var(--teal); }
-  .dim-card-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; margin-bottom: 8px; }
+  .score-gold  { border-color: var(--gold);  color: var(--gold);  }
+  .score-red   { border-color: var(--red);   color: var(--red);   }
+  .cr-band-label { font-family: var(--font-body); font-weight: 700; font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase; margin: 22px 0 10px; display: flex; align-items: center; justify-content: space-between; padding-bottom: 4px; border-bottom: 1px solid var(--navy-light); }
+  .cr-band-label.dimensions { color: var(--teal); }
+  .cr-band-label.working    { color: var(--green); }
+  .cr-band-label.work-todo  { color: var(--gold); }
+  .cr-band-label.signatures { color: var(--gray-mid); }
+  .cr-band-tier-label { font-family: var(--font-body); font-weight: 700; font-size: 10px; letter-spacing: 1.2px; text-transform: uppercase; color: var(--gray-mid); margin: 14px 0 6px; }
+  /* Dimensions band — blue */
+  .dim-card { background: var(--navy); border-radius: 8px; padding: 12px 14px; margin-bottom: 8px; border-left: 4px solid var(--teal); }
+  .dim-card-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; margin-bottom: 6px; }
   .dim-card-name { font-size: 14px; font-weight: 700; color: var(--white); flex: 1; }
-  .dim-card-name .conf-badge { margin-left: 6px; }
   .dim-card-dots { display: flex; gap: 4px; flex-shrink: 0; }
-  .dim-card-commentary { font-size: 12.5px; color: var(--gray-mid); line-height: 1.6; margin-bottom: 8px; }
-  .dim-card-evidence { font-style: italic; font-size: 12px; color: var(--teal); padding: 6px 10px; background: rgba(42,127,165,0.08); border-left: 2px solid var(--teal); border-radius: 0 4px 4px 0; line-height: 1.5; }
-  .dim-block { margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--navy-light); }
-  .dim-block-label { font-size: 10px; font-weight: 700; letter-spacing: 1.2px; text-transform: uppercase; margin-bottom: 6px; }
-  .dim-block-label.signature { color: var(--teal); }
-  .dim-block-label.affirm { color: var(--green); }
-  .dim-block-label.area { color: var(--gold); }
-  .dim-sig { display: flex; align-items: flex-start; gap: 8px; margin-bottom: 6px; }
-  .dim-sig:last-child { margin-bottom: 0; }
-  .dim-sig-status { flex-shrink: 0; width: 18px; height: 18px; line-height: 18px; text-align: center; font-weight: 800; font-size: 11px; border-radius: 50%; margin-top: 1px; }
-  .dim-sig-status.observed { background: rgba(27,110,58,0.20); color: var(--green); }
-  .dim-sig-status.not-observed { background: rgba(144,150,163,0.18); color: var(--gray-mid); }
-  .dim-sig-body { flex: 1; min-width: 0; }
-  .dim-sig-name { font-size: 12.5px; font-weight: 700; color: var(--white); margin-bottom: 2px; }
-  .dim-sig-quote { font-style: italic; font-size: 11.5px; color: var(--offwhite); padding: 4px 8px; background: rgba(42,127,165,0.08); border-left: 2px solid var(--teal); border-radius: 0 3px 3px 0; margin-top: 4px; line-height: 1.5; }
-  .dim-sig-note { font-size: 11.5px; color: var(--gray-mid); margin-top: 4px; line-height: 1.5; }
-  .dim-no-sig { font-size: 11.5px; color: var(--gray-mid); font-style: italic; background: rgba(144,150,163,0.08); border-left: 2px solid var(--gray-mid); padding: 6px 10px; border-radius: 0 4px 4px 0; line-height: 1.5; }
-  .dim-affirm { background: rgba(27,110,58,0.06); border-left: 2px solid var(--green); border-radius: 0 4px 4px 0; padding: 8px 10px; margin-bottom: 6px; }
-  .dim-affirm:last-child { margin-bottom: 0; }
-  .dim-affirm-title { font-size: 12.5px; font-weight: 700; color: var(--white); margin-bottom: 3px; }
-  .dim-affirm-prose { font-size: 11.5px; color: var(--gray-mid); line-height: 1.5; margin-bottom: 4px; }
-  .dim-affirm-quote { font-style: italic; font-size: 11px; color: var(--green); padding: 4px 8px; background: rgba(27,110,58,0.10); border-radius: 3px; margin-top: 4px; line-height: 1.45; }
-  .dim-area { background: rgba(184,134,11,0.06); border-left: 2px solid var(--gold); border-radius: 0 4px 4px 0; padding: 8px 10px; margin-bottom: 6px; }
-  .dim-area:last-child { margin-bottom: 0; }
-  .dim-area-top { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; margin-bottom: 4px; }
-  .dim-area-try { font-size: 11.5px; color: var(--offwhite); line-height: 1.5; margin-bottom: 4px; }
-  .dim-area-try strong { color: var(--teal); }
-  .dim-area-practice { font-size: 11px; color: var(--gold); padding: 4px 8px; background: rgba(184,134,11,0.10); border-radius: 3px; margin-top: 4px; line-height: 1.45; }
+  .dim-dot { width: 12px; height: 12px; border-radius: 50%; border: 2px solid var(--teal); background: transparent; }
+  .dim-dot.filled { background: var(--teal); }
+  .dim-card-commentary { font-size: 13px; font-weight: 400; color: var(--offwhite); line-height: 1.55; margin-bottom: 8px; }
+  .dim-card-evidence { font-style: italic; font-weight: 400; font-size: 12.5px; color: var(--offwhite); padding: 6px 10px; background: rgba(42,127,165,0.10); border-left: 2px solid var(--teal); border-radius: 0 4px 4px 0; line-height: 1.55; }
+  .conf-badge { display: inline-block; padding: 2px 6px; border-radius: 3px; font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; margin-left: 6px; vertical-align: middle; }
+  .conf-high   { background: rgba(27,110,58,0.20);  color: var(--green); }
+  .conf-medium { background: rgba(184,134,11,0.20); color: var(--gold);  }
+  .conf-low    { background: rgba(176,39,29,0.20);  color: var(--red);   }
+  /* What's Working band — green */
+  .working-card { background: var(--navy); border-radius: 8px; padding: 12px 14px; margin-bottom: 8px; border-left: 4px solid var(--green); }
+  .working-title { font-weight: 700; font-size: 13.5px; color: var(--white); margin-bottom: 6px; }
+  .working-quote { font-style: italic; font-weight: 400; font-size: 12.5px; color: var(--offwhite); padding: 6px 10px; background: rgba(27,110,58,0.10); border-left: 2px solid var(--green); border-radius: 0 4px 4px 0; line-height: 1.55; }
+  /* Things to Work On band — gold/orange */
+  .work-card { background: var(--navy); border-radius: 8px; padding: 12px 14px; margin-bottom: 10px; border-left: 4px solid var(--gold); }
+  .work-num { display: inline-block; width: 20px; height: 20px; line-height: 20px; text-align: center; background: var(--gold); color: var(--navy-deep); font-weight: 700; font-size: 11px; border-radius: 50%; margin-right: 8px; vertical-align: middle; }
+  .work-part { margin-bottom: 8px; }
+  .work-part:last-child { margin-bottom: 0; }
+  .work-part-label { font-weight: 700; font-size: 10px; letter-spacing: 1.2px; text-transform: uppercase; color: var(--gold); margin-bottom: 3px; }
+  .work-part-text { font-weight: 400; font-size: 13px; color: var(--offwhite); line-height: 1.55; }
+  .work-part.practicum .work-part-text { padding: 6px 10px; background: rgba(184,134,11,0.10); border-left: 2px solid var(--gold); border-radius: 0 4px 4px 0; }
+  /* Signatures band — neutral */
+  .sig-card { background: var(--navy); border-radius: 8px; padding: 12px 14px; margin-bottom: 8px; border-left: 4px solid var(--navy-light); }
+  .sig-card.observed { border-left-color: var(--gray-mid); }
+  .sig-card.not-observed { opacity: 0.85; }
+  .sig-observation { font-weight: 400; font-size: 13px; color: var(--offwhite); line-height: 1.6; margin-bottom: 6px; }
+  .sig-observation strong, .sig-observation b { font-weight: 700; }
+  .sig-status-tag { display: inline-block; font-weight: 700; font-size: 10px; letter-spacing: 0.5px; text-transform: uppercase; padding: 2px 7px; border-radius: 10px; margin-left: 6px; vertical-align: middle; }
+  .sig-status-tag.observed     { background: rgba(27,110,58,0.20); color: var(--green); }
+  .sig-status-tag.not-observed { background: rgba(144,150,163,0.18); color: var(--gray-mid); }
+  .sig-evidence { font-style: italic; font-weight: 400; font-size: 12.5px; color: var(--offwhite); padding: 6px 10px; background: rgba(144,150,163,0.08); border-left: 2px solid var(--gray-mid); border-radius: 0 4px 4px 0; line-height: 1.55; }
 
   /* Candidate */
   .candidate-report { color: var(--white); }
