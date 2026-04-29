@@ -2,6 +2,7 @@
 // Proxies Anthropic + Supadata APIs so end users don't need API keys
 
 const ALLOWED_ORIGINS = [
+  'https://sermoncoach.showem.ai',
   'https://davidvw56.github.io',
   'http://localhost',
   'http://127.0.0.1',
@@ -141,6 +142,37 @@ export default {
             'Authorization': `Bearer ${env.TRANSCRIPT_SERVICE_SECRET || ''}`,
           },
           body: JSON.stringify({ url: body.url }),
+        });
+
+        const data = await resp.text();
+        return new Response(data, {
+          status: resp.status,
+          headers: { ...cors, 'Content-Type': 'application/json' },
+        });
+      }
+
+      // POST /api/transcribe-file — stream multipart audio upload to Railway
+      if (path === '/api/transcribe-file' && request.method === 'POST') {
+        if (!checkRate(ip)) {
+          return json({ error: 'Daily limit reached. Please try again tomorrow.' }, 429, cors);
+        }
+
+        const serviceUrl = env.TRANSCRIPT_SERVICE_URL;
+        if (!serviceUrl) return json({ error: 'Transcript service not configured' }, 500, cors);
+
+        const contentType = request.headers.get('Content-Type') || '';
+        if (!contentType.startsWith('multipart/form-data')) {
+          return json({ error: 'Expected multipart/form-data' }, 400, cors);
+        }
+
+        // Stream the upload body straight through — don't buffer in worker memory
+        const resp = await fetch(`${serviceUrl}/transcribe-file`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': contentType,
+            'Authorization': `Bearer ${env.TRANSCRIPT_SERVICE_SECRET || ''}`,
+          },
+          body: request.body,
         });
 
         const data = await resp.text();

@@ -587,6 +587,21 @@
     outline: none; border-color: var(--teal);
   }
 
+  .alt-input input[type="file"] { display: none; }
+  .file-picker {
+    display: block;
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid var(--navy-light);
+    border-radius: 4px; font-size: 13px;
+    font-family: var(--font-body);
+    background: var(--navy); color: var(--gray-mid);
+    cursor: pointer;
+    transition: border-color 0.15s ease, color 0.15s ease;
+  }
+  .file-picker:hover { border-color: var(--teal); }
+  .file-picker.has-file { color: var(--white); }
+
   .alt-input label {
     display: block; font-size: 12px;
     color: var(--gray-mid); margin-bottom: 6px;
@@ -982,6 +997,7 @@
   <div class="input-modes">
     <button class="mode-btn active" id="mode-text" onclick="showInput('text')">Paste Transcript</button>
     <button class="mode-btn" id="mode-youtube" onclick="showInput('youtube')">YouTube Link</button>
+    <button class="mode-btn" id="mode-upload" onclick="showInput('upload')">Upload Audio</button>
   </div>
 
   <!-- Paste Text Input -->
@@ -996,6 +1012,14 @@
     <label>Paste a YouTube link</label>
     <input type="text" id="youtubeUrl" placeholder="https://www.youtube.com/watch?v=...">
     <button class="analyze-btn" id="ytBtn" onclick="analyzeFromYouTube()">Analyze Sermon</button>
+  </div>
+
+  <!-- Audio File Upload -->
+  <div class="alt-input" id="uploadInput">
+    <label>Upload an audio file (.m4a, .mp3, .mp4, .wav)</label>
+    <input type="file" id="audioFile" accept="audio/*,.m4a,.mp3,.mp4,.wav,.aac" onchange="onAudioFileChosen(this)">
+    <label for="audioFile" class="file-picker" id="audioFileLabel">Choose audio file…</label>
+    <button class="analyze-btn" id="uploadBtn" onclick="analyzeFromUpload()">Analyze Sermon</button>
   </div>
 
   <!-- History -->
@@ -2429,21 +2453,16 @@ ${t}`;
 
   // ============ Input Modes ============
   function showInput(mode) {
-    const textEl = document.getElementById('textInput');
-    const ytEl = document.getElementById('youtubeInput');
-    const textBtn = document.getElementById('mode-text');
-    const ytBtn = document.getElementById('mode-youtube');
-    if (mode === 'text') {
-      textEl.classList.add('visible');
-      ytEl.classList.remove('visible');
-      textBtn.classList.add('active');
-      ytBtn.classList.remove('active');
-    } else {
-      ytEl.classList.add('visible');
-      textEl.classList.remove('visible');
-      ytBtn.classList.add('active');
-      textBtn.classList.remove('active');
-    }
+    const panels = {
+      text:    { el: 'textInput',    btn: 'mode-text' },
+      youtube: { el: 'youtubeInput', btn: 'mode-youtube' },
+      upload:  { el: 'uploadInput',  btn: 'mode-upload' },
+    };
+    Object.entries(panels).forEach(([key, { el, btn }]) => {
+      const isActive = key === mode;
+      document.getElementById(el).classList.toggle('visible', isActive);
+      document.getElementById(btn).classList.toggle('active', isActive);
+    });
   }
 
   function analyzeFromText() {
@@ -2479,6 +2498,64 @@ ${t}`;
       showError(err.message || 'Could not fetch YouTube transcript.');
       ytBtn.textContent = 'Analyze Sermon';
       ytBtn.disabled = false;
+    }
+  }
+
+  function onAudioFileChosen(inputEl) {
+    const labelEl = document.getElementById('audioFileLabel');
+    const file = inputEl.files && inputEl.files[0];
+    if (file) {
+      labelEl.textContent = `${file.name} (${(file.size / 1024 / 1024).toFixed(1)} MB)`;
+      labelEl.classList.add('has-file');
+    } else {
+      labelEl.textContent = 'Choose audio file…';
+      labelEl.classList.remove('has-file');
+    }
+  }
+
+  async function analyzeFromUpload() {
+    const fileInput = document.getElementById('audioFile');
+    const file = fileInput.files && fileInput.files[0];
+    if (!file) { showError('Choose an audio file to upload.'); return; }
+
+    const upBtn = document.getElementById('uploadBtn');
+    upBtn.disabled = true;
+    upBtn.textContent = 'Uploading...';
+    hideError();
+
+    try {
+      const fd = new FormData();
+      fd.append('audio', file, file.name);
+
+      // Show progress while uploading. Whisper itself runs server-side after upload completes.
+      upBtn.textContent = `Uploading ${(file.size / 1024 / 1024).toFixed(0)}MB...`;
+      const r = await fetch(`${WORKER_URL}/api/transcribe-file`, {
+        method: 'POST',
+        body: fd,
+      });
+
+      if (!r.ok) {
+        const err = await r.json().catch(() => ({}));
+        throw new Error(err.error || `Upload failed (${r.status})`);
+      }
+
+      upBtn.textContent = 'Transcribing...';
+      const data = await r.json();
+      const transcript = data.transcript;
+      if (!transcript || transcript.length < 50) {
+        throw new Error('Transcript came back empty or too short. The audio may be silent or unintelligible.');
+      }
+
+      state.transcript = transcript;
+      fileInput.value = '';
+      onAudioFileChosen(fileInput);
+      upBtn.textContent = 'Analyze Sermon';
+      upBtn.disabled = false;
+      analyzeSermon();
+    } catch (err) {
+      showError(err.message || 'Could not transcribe audio.');
+      upBtn.textContent = 'Analyze Sermon';
+      upBtn.disabled = false;
     }
   }
 

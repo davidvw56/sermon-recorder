@@ -1,7 +1,9 @@
 const express = require('express');
+const multer = require('multer');
 const { execSync, exec } = require('child_process');
 const fs = require('fs');
 const path = require('path');
+const crypto = require('crypto');
 const OpenAI = require('openai');
 
 const app = express();
@@ -11,6 +13,12 @@ const OPENAI_KEY = process.env.OPENAI_KEY;
 const SERVICE_SECRET = process.env.SERVICE_SECRET; // shared secret with Worker
 const PORT = process.env.PORT || 3001;
 const TMP_DIR = '/tmp';
+
+// Upload handler — stream to disk (don't buffer 100MB sermons in memory)
+const upload = multer({
+  dest: TMP_DIR,
+  limits: { fileSize: 500 * 1024 * 1024 } // 500 MB raw upload cap
+});
 
 // CORS — only our Worker calls this, but allow health checks
 app.use((req, res, next) => {
@@ -151,6 +159,76 @@ app.post('/transcribe', authenticate, async (req, res) => {
   } catch (err) {
     console.error(`[${videoId}] Error:`, err.message);
     cleanup(audioPath, trimmedPath);
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// Direct audio file upload → transcript
+// Multipart field name: "audio". Transcodes to ~32 kbps mono AAC, falls back
+// to truncation if still over Whisper's 25 MB cap (very long sermons).
+app.post('/transcribe-file', authenticate, upload.single('audio'), async (req, res) => {
+  if (!req.file) return res.status(400).json({ error: 'audio file is required (multipart field "audio")' });
+
+  const jobId = crypto.randomBytes(4).toString('hex');
+  const uploadedPath = req.file.path;
+  const transcodedPath = path.join(TMP_DIR, `transcoded_${jobId}.m4a`);
+  const trimmedPath = path.join(TMP_DIR, `trimmed_${jobId}.m4a`);
+
+  try {
+    const uploadedSize = fs.statSync(uploadedPath).size;
+    console.log(`[${jobId}] Received ${(uploadedSize / 1024 / 1024).toFixed(1)}MB (${req.file.originalname})`);
+
+    // Transcode to 32 kbps mono AAC — typical sermon (~60 min) lands ~14 MB
+    console.log(`[${jobId}] Transcoding to 32k mono AAC...`);
+    execSync(
+      `ffmpeg -y -i "${uploadedPath}" -c:a aac -b:a 32k -ac 1 -movflags +faststart "${transcodedPath}"`,
+      { timeout: 300000, stdio: 'pipe' }
+    );
+
+    let whisperInput = transcodedPath;
+    let transcodedSize = fs.statSync(transcodedPath).size;
+    console.log(`[${jobId}] Transcoded: ${(transcodedSize / 1024 / 1024).toFixed(1)}MB`);
+
+    // Fallback: if still over Whisper's 25MB cap (extreme — 2.5+ hr sermons),
+    // keep the last 60 minutes which is where the meat usually lives.
+    if (transcodedSize > 25 * 1024 * 1024) {
+      const durationStr = safeExec(
+        `ffprobe -v error -show_entries format=duration -of csv=p=0 "${transcodedPath}"`
+      ).trim();
+      const duration = parseFloat(durationStr);
+      if (!isNaN(duration)) {
+        const startSec = Math.max(0, duration - 3600);
+        console.log(`[${jobId}] Still too large, keeping last 60min (start ${formatTime(startSec)})`);
+        execSync(
+          `ffmpeg -y -i "${transcodedPath}" -ss ${formatTime(startSec)} -c copy "${trimmedPath}"`,
+          { timeout: 60000, stdio: 'pipe' }
+        );
+        whisperInput = trimmedPath;
+      }
+    }
+
+    const finalSize = fs.statSync(whisperInput).size;
+    console.log(`[${jobId}] Sending ${(finalSize / 1024 / 1024).toFixed(1)}MB to Whisper...`);
+
+    const openai = new OpenAI({ apiKey: OPENAI_KEY });
+    const transcription = await openai.audio.transcriptions.create({
+      file: fs.createReadStream(whisperInput),
+      model: 'whisper-1',
+      response_format: 'text'
+    });
+
+    console.log(`[${jobId}] Transcription complete: ${transcription.length} chars`);
+    cleanup(uploadedPath, transcodedPath, trimmedPath);
+
+    res.json({
+      transcript: transcription,
+      filename: req.file.originalname,
+      source: 'whisper-file'
+    });
+
+  } catch (err) {
+    console.error(`[${jobId}] Error:`, err.message);
+    cleanup(uploadedPath, transcodedPath, trimmedPath);
     res.status(500).json({ error: err.message });
   }
 });
