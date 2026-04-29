@@ -181,38 +181,6 @@
     color: var(--teal);
   }
 
-  /* ── Report Type Selector ── */
-  .report-selector {
-    margin: 16px 0 8px;
-  }
-  .report-selector-label {
-    font-size: 11px; font-weight: 700; letter-spacing: 1.5px;
-    text-transform: uppercase; color: var(--gray-mid); margin-bottom: 8px;
-  }
-  .report-toggle { display: flex; gap: 6px; }
-  .report-btn {
-    flex: 1; padding: 10px 8px;
-    border: 1px solid var(--navy-light); border-radius: 6px;
-    background: var(--navy-deep); cursor: pointer;
-    text-align: center; display: flex; flex-direction: column;
-    align-items: center; gap: 2px; transition: all 0.2s ease;
-  }
-  .report-btn strong {
-    font-size: 12px; font-weight: 700; color: var(--gray-mid);
-    font-family: var(--font-body);
-  }
-  .report-btn small {
-    font-size: 10px; color: var(--gray-mid); opacity: 0.6;
-    font-family: var(--font-body);
-  }
-  .report-btn.active {
-    border-color: var(--teal);
-    background: rgba(42,127,165,0.12);
-  }
-  .report-btn.active strong { color: var(--teal); }
-  .report-btn.active small { color: var(--teal); opacity: 0.8; }
-  .report-btn:hover { border-color: var(--teal); }
-
   /* ──────────────────────────────────────────────────────────
      Coaching Report — restrained typography
      Only weights used: 400 (regular) and 700 (bold).
@@ -463,71 +431,6 @@
     line-height: 1.55;
   }
 
-  /* ── Candidate Report Styles ── */
-  .candidate-report { color: var(--white); }
-  .exec-summary {
-    background: var(--navy); border-radius: 8px; padding: 16px;
-    border-left: 3px solid var(--teal); margin-bottom: 16px;
-    font-size: 13px; line-height: 1.8;
-  }
-  .chart-pair { display: flex; gap: 16px; margin: 16px 0; flex-wrap: wrap; }
-  .chart-box {
-    flex: 1; min-width: 280px; background: var(--navy);
-    border-radius: 8px; padding: 16px; text-align: center;
-  }
-  .chart-box h4 { font-size: 13px; font-weight: 700; margin-bottom: 10px; }
-  .chart-box canvas { max-width: 100%; }
-
-  .bar-section { margin-bottom: 16px; }
-  .bar-section h4 {
-    font-size: 11px; font-weight: 700; letter-spacing: 1.5px;
-    text-transform: uppercase; margin-bottom: 10px;
-    padding-bottom: 4px; border-bottom: 1px solid var(--navy-light);
-  }
-  .bar-row { margin-bottom: 10px; }
-  .bar-row-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 3px; }
-  .bar-label { font-size: 12px; font-weight: 600; }
-  .bar-score { font-size: 12px; font-weight: 700; }
-  .bar-track { height: 8px; background: var(--navy); border-radius: 4px; overflow: hidden; }
-  .bar-fill { height: 100%; border-radius: 4px; transition: width 0.6s ease; }
-  .bar-fill-blue { background: linear-gradient(90deg, var(--teal), #6bb3f0); }
-  .bar-fill-gold { background: linear-gradient(90deg, var(--gold), #e8c96a); }
-  .bar-desc { font-size: 11px; color: var(--gray-mid); margin-top: 3px; }
-  .conf-badge {
-    display: inline-block; padding: 1px 6px; border-radius: 3px;
-    font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;
-    margin-left: 6px;
-  }
-  .conf-high { background: rgba(27,110,58,0.2); color: var(--green); }
-  .conf-medium { background: rgba(184,134,11,0.2); color: var(--gold); }
-  .conf-low { background: rgba(176,39,29,0.2); color: var(--red); }
-
-  .fit-columns { display: flex; gap: 12px; margin: 12px 0; flex-wrap: wrap; }
-  .fit-col {
-    flex: 1; min-width: 250px; background: var(--navy);
-    border-radius: 8px; padding: 14px;
-  }
-  .fit-col h4 { font-size: 13px; font-weight: 700; margin-bottom: 8px; }
-  .fit-col.conservative { border-left: 3px solid var(--red); }
-  .fit-col.progressive { border-left: 3px solid var(--gold); }
-  .fit-item {
-    font-size: 12px; color: var(--gray-mid); padding: 6px 0;
-    border-bottom: 1px solid var(--navy-light);
-  }
-  .fit-item:last-child { border-bottom: none; }
-
-  .signal-item {
-    font-size: 12px; padding: 8px 12px; margin-bottom: 6px;
-    background: rgba(42,127,165,0.08); border-left: 3px solid var(--teal);
-    border-radius: 0 4px 4px 0;
-  }
-  .committee-q {
-    font-size: 12px; padding: 8px 0;
-    border-bottom: 1px solid var(--navy-light); line-height: 1.6;
-  }
-  .committee-q:last-child { border-bottom: none; }
-  .committee-q strong { color: var(--teal); }
-
   /* ── Input Mode Tabs ── */
   .input-modes {
     display: flex; gap: 8px;
@@ -586,6 +489,21 @@
   .alt-input input:focus {
     outline: none; border-color: var(--teal);
   }
+
+  .alt-input input[type="file"] { display: none; }
+  .file-picker {
+    display: block;
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid var(--navy-light);
+    border-radius: 4px; font-size: 13px;
+    font-family: var(--font-body);
+    background: var(--navy); color: var(--gray-mid);
+    cursor: pointer;
+    transition: border-color 0.15s ease, color 0.15s ease;
+  }
+  .file-picker:hover { border-color: var(--teal); }
+  .file-picker.has-file { color: var(--white); }
 
   .alt-input label {
     display: block; font-size: 12px;
@@ -674,28 +592,7 @@
 
   .btn-sm:hover { border-color: var(--teal); color: var(--white); }
 
-  /* ── Result Cards ── */
-  .result-card {
-    background: var(--navy);
-    border: 1px solid var(--navy-light);
-    border-left: 4px solid var(--teal);
-    border-radius: 4px;
-    padding: 14px 16px;
-    margin-bottom: 10px;
-  }
-
-  .result-card.gold-border { border-left-color: var(--gold); }
-  .result-card.green-border { border-left-color: var(--green); }
-  .result-card.navy-accent { border-left-color: var(--teal-border); }
-
-  .result-card h3 {
-    font-family: var(--font-display);
-    font-size: 14px; font-weight: 600;
-    margin-bottom: 8px;
-    display: flex; justify-content: space-between;
-    align-items: center;
-  }
-
+  /* ── Section Overline ── */
   .overline {
     font-size: 10px; font-weight: 700;
     text-transform: uppercase;
@@ -703,18 +600,6 @@
     color: var(--gray-mid);
     margin-bottom: 2px;
   }
-
-  .copy-btn {
-    background: none;
-    border: 1px solid var(--navy-light);
-    border-radius: 4px; padding: 2px 8px;
-    font-size: 10px; font-weight: 600;
-    font-family: var(--font-body);
-    cursor: pointer; color: var(--gray-mid);
-  }
-
-  .copy-btn:hover { border-color: var(--teal); color: var(--teal); }
-  .copy-btn.copied { background: var(--teal); color: var(--white); border-color: var(--teal); }
 
   .listen-btn {
     background: none;
@@ -728,86 +613,6 @@
 
   .listen-btn:hover { border-color: var(--gold); color: var(--gold); }
   .listen-btn.speaking { background: var(--gold); color: var(--white); border-color: var(--gold); }
-
-  .result-card p, .result-card li {
-    font-size: 13px; line-height: 1.6; color: var(--offwhite);
-  }
-
-  .result-card ol { padding-left: 1.2rem; }
-  .result-card li { margin-bottom: 4px; }
-
-  .quote-item {
-    padding: 6px 0;
-    border-bottom: 1px solid var(--navy-light);
-    font-size: 13px; line-height: 1.5;
-    color: var(--offwhite);
-  }
-
-  .quote-item:last-child { border-bottom: none; }
-
-  .quote-number {
-    font-family: var(--font-display);
-    font-weight: 700; color: var(--teal);
-    font-size: 12px; margin-right: 6px;
-  }
-
-  .verse-ref {
-    font-family: var(--font-display);
-    font-weight: 700; color: var(--gold);
-  }
-
-  .elevator-pitch {
-    font-family: var(--font-display);
-    font-size: 16px; font-weight: 600;
-    text-align: center; padding: 12px;
-    background: rgba(42,127,165,0.12);
-    border: 1px solid var(--teal-border);
-    border-radius: 4px;
-    color: var(--teal-border);
-    line-height: 1.5;
-  }
-
-  .prayer-text {
-    font-style: italic; line-height: 1.7;
-    color: var(--offwhite);
-  }
-
-  /* ── Summary Points ── */
-  .summary-point {
-    margin-bottom: 14px;
-    padding-bottom: 14px;
-    border-bottom: 1px solid var(--navy-light);
-  }
-
-  .summary-point:last-child {
-    margin-bottom: 0; padding-bottom: 0; border-bottom: none;
-  }
-
-  .summary-point-title {
-    font-weight: 700; font-size: 13px;
-    color: var(--white); margin-bottom: 4px;
-  }
-
-  .summary-point-text {
-    font-size: 13px; line-height: 1.6;
-    color: var(--offwhite);
-  }
-
-  .sub-point {
-    margin-top: 8px; margin-left: 16px;
-    padding-left: 12px;
-    border-left: 2px solid var(--navy-light);
-  }
-
-  .sub-point-title {
-    font-weight: 700; font-size: 12px;
-    color: var(--teal-border); margin-bottom: 2px;
-  }
-
-  .sub-point-text {
-    font-size: 12px; line-height: 1.5;
-    color: var(--gray-mid);
-  }
 
   /* ── History Panel ── */
   .history-panel {
@@ -869,76 +674,19 @@
 
   .history-delete:hover { color: var(--red); }
 
-  /* ── Group Study ── */
-  .study-intro-quote {
-    font-family: var(--font-display);
-    font-size: 15px; font-weight: 600;
-    font-style: italic;
-    text-align: center;
-    padding: 12px 16px;
-    background: rgba(184,134,11,0.1);
-    border: 1px solid var(--gold-border);
-    border-radius: 4px;
-    color: var(--gold-light);
-    line-height: 1.5;
-    margin-bottom: 10px;
-  }
-
-  .study-intro-text {
-    font-size: 13px; line-height: 1.6;
-    color: var(--offwhite);
-    margin-bottom: 12px;
-  }
-
-  .study-question {
-    padding: 8px 0;
-    border-bottom: 1px solid var(--navy-light);
-  }
-
-  .study-question:last-child { border-bottom: none; }
-
-  .study-q-number {
-    font-family: var(--font-display);
-    font-weight: 700; font-size: 12px;
-    margin-right: 6px;
-  }
-
-  .study-q-number.anchor { color: var(--teal); }
-  .study-q-number.middle { color: var(--gold); }
-
-  .study-q-text {
-    font-size: 13px; line-height: 1.5;
-    color: var(--offwhite);
-    display: inline;
-  }
-
-  .study-q-label {
-    font-size: 9px; font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    color: var(--teal); margin-left: 6px;
-  }
-
-  /* ── Responsive ── */
-
   /* ── Animations ── */
   @keyframes fadeUp {
     from { opacity: 0; transform: translateY(8px); }
     to { opacity: 1; transform: translateY(0); }
   }
 
-  .results.visible .result-card {
+  .results.visible .dim-card,
+  .results.visible .working-card,
+  .results.visible .work-card,
+  .results.visible .sig-card {
     animation: fadeUp 0.4s ease both;
   }
 
-  .results.visible .result-card:nth-child(2) { animation-delay: 0.05s; }
-  .results.visible .result-card:nth-child(3) { animation-delay: 0.10s; }
-  .results.visible .result-card:nth-child(4) { animation-delay: 0.15s; }
-  .results.visible .result-card:nth-child(5) { animation-delay: 0.20s; }
-  .results.visible .result-card:nth-child(6) { animation-delay: 0.25s; }
-  .results.visible .result-card:nth-child(7) { animation-delay: 0.30s; }
-  .results.visible .result-card:nth-child(8) { animation-delay: 0.35s; }
-  .results.visible .result-card:nth-child(9) { animation-delay: 0.40s; }
 </style>
 </head>
 <body>
@@ -959,29 +707,11 @@
   <!-- Error -->
   <div class="error-msg" id="errorMsg"></div>
 
-  <!-- Report Type Selector -->
-  <div class="report-selector" id="reportSelector">
-    <div class="report-selector-label">Report Type</div>
-    <div class="report-toggle">
-      <button class="report-btn active" id="btn-summary" onclick="selectReportType('summary')">
-        <strong>Summary</strong>
-        <small>Study guide &amp; quotes</small>
-      </button>
-      <button class="report-btn" id="btn-coaching" onclick="selectReportType('coaching')">
-        <strong>Coaching</strong>
-        <small>Scored feedback</small>
-      </button>
-      <button class="report-btn" id="btn-candidate" onclick="selectReportType('candidate')">
-        <strong>Candidate</strong>
-        <small>Search committee</small>
-      </button>
-    </div>
-  </div>
-
   <!-- Input Source Tabs -->
   <div class="input-modes">
     <button class="mode-btn active" id="mode-text" onclick="showInput('text')">Paste Transcript</button>
     <button class="mode-btn" id="mode-youtube" onclick="showInput('youtube')">YouTube Link</button>
+    <button class="mode-btn" id="mode-upload" onclick="showInput('upload')">Upload Audio</button>
   </div>
 
   <!-- Paste Text Input -->
@@ -996,6 +726,14 @@
     <label>Paste a YouTube link</label>
     <input type="text" id="youtubeUrl" placeholder="https://www.youtube.com/watch?v=...">
     <button class="analyze-btn" id="ytBtn" onclick="analyzeFromYouTube()">Analyze Sermon</button>
+  </div>
+
+  <!-- Audio File Upload -->
+  <div class="alt-input" id="uploadInput">
+    <label>Upload an audio file (.m4a, .mp3, .mp4, .wav)</label>
+    <input type="file" id="audioFile" accept="audio/*,.m4a,.mp3,.mp4,.wav,.aac" onchange="onAudioFileChosen(this)">
+    <label for="audioFile" class="file-picker" id="audioFileLabel">Choose audio file…</label>
+    <button class="analyze-btn" id="uploadBtn" onclick="analyzeFromUpload()">Analyze Sermon</button>
   </div>
 
   <!-- History -->
@@ -1018,48 +756,6 @@
       <button class="btn-sm" onclick="exportHTML()">Export HTML</button>
     </div>
     <h2 id="resultsTitle" style="font-family:var(--font-display);font-size:20px;font-weight:700;margin-bottom:12px;">Analysis</h2>
-
-    <div class="result-card navy-accent" id="pitchCard">
-      <div class="overline">Introduction</div>
-      <h3><span></span><button class="copy-btn" onclick="copySection(this, 'pitch')">Copy</button><button class="listen-btn" onclick="speakSection(this, 'pitch')">Listen</button></h3>
-      <div class="elevator-pitch" id="pitchContent"></div>
-    </div>
-
-    <div class="result-card" id="summaryCard">
-      <div class="overline">Summary</div>
-      <h3>Main Points <button class="copy-btn" onclick="copySection(this, 'summary')">Copy</button><button class="listen-btn" onclick="speakSection(this, 'summary')">Listen</button></h3>
-      <div id="summaryContent"></div>
-    </div>
-
-    <div class="result-card green-border" id="conclusionsCard">
-      <div class="overline">Takeaways</div>
-      <h3>Conclusions <button class="copy-btn" onclick="copySection(this, 'conclusions')">Copy</button><button class="listen-btn" onclick="speakSection(this, 'conclusions')">Listen</button></h3>
-      <div id="conclusionsContent"></div>
-    </div>
-
-    <div class="result-card gold-border" id="quotesCard">
-      <div class="overline">Sermon Arc</div>
-      <h3>7 Key Quotes <button class="copy-btn" onclick="copySection(this, 'quotes')">Copy</button><button class="listen-btn" onclick="speakSection(this, 'quotes')">Listen</button></h3>
-      <div id="quotesContent"></div>
-    </div>
-
-    <div class="result-card gold-border" id="studyCard">
-      <div class="overline">Small Group</div>
-      <h3>Group Study Guide <button class="copy-btn" onclick="copySection(this, 'study')">Copy</button><button class="listen-btn" onclick="speakSection(this, 'study')">Listen</button></h3>
-      <div id="studyContent"></div>
-    </div>
-
-    <div class="result-card green-border" id="versesCard">
-      <div class="overline">Scripture</div>
-      <h3>References <button class="copy-btn" onclick="copySection(this, 'verses')">Copy</button><button class="listen-btn" onclick="speakSection(this, 'verses')">Listen</button></h3>
-      <div id="versesContent"></div>
-    </div>
-
-    <div class="result-card navy-accent" id="applicationCard">
-      <div class="overline">Response</div>
-      <h3>Application <button class="copy-btn" onclick="copySection(this, 'application')">Copy</button><button class="listen-btn" onclick="speakSection(this, 'application')">Listen</button></h3>
-      <div id="applicationContent"></div>
-    </div>
   </div>
 </div>
 
@@ -1072,11 +768,11 @@
     analysisData: null,
     saveDirHandle: null,
     mode: 'community', // 'community' or 'personal'
-    reportType: 'summary' // 'summary', 'coaching', or 'candidate'
   };
 
   (function init() {
     state.mode = 'community';
+    pruneNonCoachingHistory();
     // Hide Listen buttons on iOS (all iOS browsers use Safari's limited speech engine)
     if (/iPad|iPhone|iPod/.test(navigator.userAgent)) {
       document.querySelectorAll('.listen-btn').forEach(b => b.style.display = 'none');
@@ -1104,12 +800,6 @@
 
   // Settings removed — all config is hardcoded. Ask Claude to change if needed.
 
-  function selectReportType(type) {
-    state.reportType = type;
-    document.querySelectorAll('.report-btn').forEach(b => b.classList.remove('active'));
-    document.getElementById('btn-' + type).classList.add('active');
-  }
-
   async function analyzeSermon() {
     const t = state.transcript?.trim();
     if (!t || t.length < 50) { showError('Transcript is too short — paste more text or check the YouTube link.'); return; }
@@ -1118,11 +808,8 @@
     document.getElementById('results').classList.remove('visible');
     hideError();
 
-    const reportType = state.reportType || 'summary';
-    const prompt = getPromptForType(reportType, t);
-    // Coaching's new schema (10 dims + 8 sigs + 3 focus + 4 tier sections + synthesis)
-    // can exceed 7k tokens of output; give it the worker's cap.
-    const maxTokens = (reportType === 'candidate' || reportType === 'coaching') ? 16000 : 8000;
+    const prompt = getCoachingPrompt(t);
+    const maxTokens = 16000;
 
     try {
       const apiPayload = { model: 'claude-sonnet-4-6', max_tokens: maxTokens, messages: [{ role: 'user', content: prompt }] };
@@ -1203,51 +890,6 @@
     }
   }
 
-  function getPromptForType(type, transcript) {
-    if (type === 'coaching') return getCoachingPrompt(transcript);
-    if (type === 'candidate') return getCandidatePrompt(transcript);
-    return getSummaryPrompt(transcript);
-  }
-
-  function getSummaryPrompt(t) {
-    return `You are a skilled theologian and sermon analyst. Analyze the following sermon transcript and return a JSON object with exactly these keys:
-
-1. "sermon_title": A concise 5-8 word title that captures the core purpose or theme of the sermon. Lead with the main idea, not a Bible reference.
-
-2. "elevator_pitch": A compelling 1-2 sentence summary someone could use to tell a friend about this sermon.
-
-3. "main_points": An array of objects, each with:
-   - "title": A bold descriptive title
-   - "explanation": A detailed 2-4 sentence explanation
-   - "sub_points": (optional) An array of objects with "title" and "explanation"
-   Include 4-6 main points.
-
-4. "conclusions": An array of objects, each with "title" and "explanation" (2-3 sentences). Include 3-5 conclusions.
-
-5. "key_quotes": An array of exactly 7 direct quotes capturing the arc of the entire message — opening to closing.
-
-6. "group_study": An object with:
-   - "intro_quote": The single most meaningful quote from the sermon
-   - "intro_text": A warm 2-3 sentence introduction
-   - "questions": An array of exactly 5 objects with "number" (1-5), "question", and "purpose" ("opener", "subpoint", or "closer"):
-     * Q1 (opener): Welcoming, broad, easy to answer
-     * Q2-4 (subpoint): Tied to specific main points, thought-provoking
-     * Q5 (closer): Deeply reflective AND activating
-
-7. "bible_verses": An array of 2-3 objects with "reference" and "relevance".
-
-8. "application": An array of exactly 4 objects with "question" and "prompt":
-   - Q1: How to live out this message
-   - Q2: Who to tell about it
-   - Q3: Verses to meditate on
-   - Q4: A personal prayer prompt
-
-Return ONLY valid JSON, no markdown, no code blocks.
-
-SERMON TRANSCRIPT:
-${t}`;
-  }
-
   function getCoachingPrompt(t) {
     return `You are reading a sermon transcript as a thoughtful preaching coach in the voice of a seasoned pastor — honest about what is weak, generous about what is trying to be strong, slow to dismiss a move that may be faithful in a tradition not your own, and unwilling to hide behind vague affirmation. Read the sermon within its own tradition first. When a phrase could land two ways, read it in the more charitable direction. When the transcript does not give enough to score a dimension responsibly, lower confidence rather than raise certainty. Numbers do real work — be precise, and pair every score with evidence and plain prose.
 
@@ -1306,143 +948,32 @@ SERMON TRANSCRIPT:
 ${t}`;
   }
 
-  function getCandidatePrompt(t) {
-    return `You are an expert at evaluating pastoral candidates for church search committees. Analyze this sermon transcript using TWO rubrics — Teaching Style and Theological Fit. Return a JSON object with these keys:
-
-1. "sermon_title": A concise 5-8 word title capturing the sermon's theme.
-
-2. "speaker_name": The full name of the speaker/preacher. Infer from the transcript (introductions, references, self-mentions). If uncertain, use "Unknown Speaker".
-
-3. "sermon_date": The date the sermon was delivered, if mentioned or inferable from the transcript (format: "Month Day, Year" e.g. "April 6, 2025"). If not determinable, use "Date Unknown".
-
-4. "executive_summary": A 3-5 sentence narrative paragraph describing who this person is as a preacher — their style, strengths, theological positioning, and what kind of church they'd be the best fit for.
-
-5. "teaching_style": An array of exactly 10 objects, each with:
-   - "name": Use exactly these names: "Biblical Methodology", "Application Specificity", "Gospel Urgency", "Structural Approach", "Intellectual Complexity", "Illustration Density", "Vulnerability Level", "Interaction Style", "Contemporary Relevance", "Institutional Integration"
-   - "tier": One of "Core Preaching", "Communication Craft", "Engagement & Style", "Institutional"
-   - "score": Number 1-5 (these are TENDENCIES not quality: e.g., Structure 2 = organic/conversational, 5 = highly outlined)
-   - "description": 2 sentences describing what was observed
-   - "evidence": A direct quote or specific observation from the transcript
-
-6. "theological_fit": An array of exactly 9 objects, each with:
-   - "name": Use exactly these names: "Gender Roles", "Spiritual Gifts", "View of Scripture", "Salvation Emphasis", "Cultural Engagement", "Social Justice", "Political Signaling", "Leadership Style", "Ecclesiology"
-   - "score": Number 1-5 (these are SPECTRA: Gender Roles 1=complementarian/5=egalitarian, Scripture 1=strict inerrancy/5=progressive hermeneutic, Salvation 1=decisional/5=process-oriented, Cultural Engagement 1=counter-cultural/5=culturally engaged, Social Justice 1=individual gospel/5=justice-embedded gospel, Political Signaling 1=conservative signals/5=progressive signals, Leadership 1=CEO-visionary/5=shepherd-relational, Ecclesiology 1=attractional/5=missional)
-   - "confidence": "High", "Medium", or "Low" — based on how much evidence the transcript provided
-   - "description": 2 sentences explaining the assessment
-   - "evidence": A direct quote or observation supporting the score
-
-7. "strengths": An array of 2-3 objects with:
-   - "title": Strength area
-   - "evidence": A direct quote demonstrating it
-   - "significance": Why this matters for a church considering this candidate
-
-8. "growth_areas": An array of 2-3 objects with:
-   - "title": Area for development
-   - "observation": What was noticed
-   - "context": Why this matters (style difference vs. deficiency — be nuanced)
-
-9. "fit_analysis": An object with:
-   - "conservative_concerns": Array of 2-3 strings — signals that might concern more conservative/traditional churches
-   - "progressive_concerns": Array of 2-3 strings — signals that might concern more progressive/mainline churches
-
-10. "key_signals": An array of 3-5 strings — the most revealing moments/statements from the sermon that tell you who this person is
-
-11. "committee_questions": An array of 5-7 recommended follow-up questions for the search committee to ask in an interview, based on areas where the transcript evidence was insufficient or ambiguous
-
-Return ONLY valid JSON, no markdown, no code blocks. Be analytical and objective — this is an assessment tool for decision-makers, not a coaching report.
-
-SERMON TRANSCRIPT:
-${t}`;
-  }
-
   function renderResults(d, skipSave) {
-    const reportType = state.reportType || 'summary';
     const container = document.getElementById('results');
 
-    // Show/hide summary-specific cards
-    const summaryCards = ['pitchCard','summaryCard','conclusionsCard','quotesCard','studyCard','versesCard','applicationCard'];
-    summaryCards.forEach(id => {
-      const el = document.getElementById(id);
-      if (el) el.style.display = reportType === 'summary' ? '' : 'none';
-    });
-
-    // Remove previous dynamic report
-    const prev = container.querySelector('.coaching-report, .candidate-report');
+    const prev = container.querySelector('.coaching-report');
     if (prev) prev.remove();
 
     document.getElementById('resultsTitle').textContent = d.sermon_title || 'Analysis';
-
-    if (reportType === 'summary') {
-      renderSummaryResults(d);
-    } else if (reportType === 'coaching') {
-      renderCoachingResults(d, container);
-    } else if (reportType === 'candidate') {
-      renderCandidateResults(d, container);
-    }
+    renderCoachingResults(d, container);
 
     container.classList.add('visible');
     container.scrollIntoView({ behavior: 'smooth' });
     if (!skipSave) saveToHistory(d);
 
     // Pre-build share File after charts render (needs canvas to be drawn)
-    // This must be ready BEFORE the user taps Share so navigator.share()
-    // can fire synchronously in the click handler (Android gesture requirement)
+    // so navigator.share() can fire synchronously on Android.
     setTimeout(() => {
       try {
-        const rt = state.reportType || 'summary';
         const slug = (d.sermon_title || 'sermon').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/-+$/,'');
-        const html = buildReportHTML(d, rt);
+        const html = buildReportHTML(d);
         const fname = `${slug}-${new Date().toISOString().slice(0,10)}.html`;
-        const title = d.sermon_title || 'Sermon Analysis';
+        const title = d.sermon_title || 'Coaching Report';
         state.shareFile = new File([html], fname, { type: 'application/octet-stream' });
         state.shareTitle = title;
         state.shareHTML = html;
       } catch(e) { console.warn('Share cache build failed', e); }
     }, 500);
-  }
-
-  function renderSummaryResults(d) {
-    document.getElementById('pitchContent').textContent = d.elevator_pitch || '';
-    const points = d.main_points || [];
-    let summaryHtml = '';
-    if (points.length && typeof points[0] === 'object') {
-      summaryHtml = points.map(p => {
-        let html = `<div class="summary-point"><div class="summary-point-title">${esc(p.title)}</div><div class="summary-point-text">${esc(p.explanation)}</div>`;
-        if (p.sub_points && p.sub_points.length) {
-          html += p.sub_points.map(sp => `<div class="sub-point"><div class="sub-point-title">${esc(sp.title)}</div><div class="sub-point-text">${esc(sp.explanation)}</div></div>`).join('');
-        }
-        return html + '</div>';
-      }).join('');
-    } else {
-      summaryHtml = '<ol>' + points.map(p => `<li>${esc(typeof p === 'string' ? p : p.title || '')}</li>`).join('') + '</ol>';
-    }
-    document.getElementById('summaryContent').innerHTML = summaryHtml;
-    const conclusions = d.conclusions || [];
-    let conclusionsHtml = '';
-    if (conclusions.length && typeof conclusions[0] === 'object') {
-      conclusionsHtml = conclusions.map(c => `<div class="summary-point"><div class="summary-point-title">${esc(c.title)}</div><div class="summary-point-text">${esc(c.explanation)}</div></div>`).join('');
-    } else {
-      conclusionsHtml = conclusions.map(c => `<p style="margin-bottom:8px">${esc(typeof c === 'string' ? c : '')}</p>`).join('');
-    }
-    document.getElementById('conclusionsContent').innerHTML = conclusionsHtml;
-    document.getElementById('quotesContent').innerHTML = (d.key_quotes || []).map((q, i) => `<div class="quote-item"><span class="quote-number">${i+1}.</span> "${esc(q)}"</div>`).join('');
-    const study = d.group_study;
-    if (study) {
-      let studyHtml = '';
-      if (study.intro_quote) studyHtml += `<div class="study-intro-quote">"${esc(study.intro_quote)}"</div>`;
-      if (study.intro_text) studyHtml += `<div class="study-intro-text">${esc(study.intro_text)}</div>`;
-      if (study.questions) {
-        studyHtml += study.questions.map(q => {
-          const isAnchor = q.purpose === 'opener' || q.purpose === 'closer';
-          const numClass = isAnchor ? 'anchor' : 'middle';
-          const label = q.purpose === 'opener' ? '<span class="study-q-label">opener</span>' : q.purpose === 'closer' ? '<span class="study-q-label">closer</span>' : '';
-          return `<div class="study-question"><span class="study-q-number ${numClass}">Q${q.number}.</span><span class="study-q-text">${esc(q.question)}</span>${label}</div>`;
-        }).join('');
-      }
-      document.getElementById('studyContent').innerHTML = studyHtml;
-    }
-    document.getElementById('versesContent').innerHTML = (d.bible_verses || []).map(v => `<p style="margin-bottom:8px"><span class="verse-ref">${esc(v.reference)}</span> — ${esc(v.relevance)}</p>`).join('');
-    document.getElementById('applicationContent').innerHTML = (d.application || []).map((a, i) => `<div style="margin-bottom:14px;padding-bottom:14px;border-bottom:1px solid var(--navy-light)"><div style="font-weight:700;font-size:13px;color:var(--white);margin-bottom:4px"><span style="color:var(--teal)">${i+1}.</span> ${esc(a.question)}</div><div style="font-size:12px;line-height:1.5;color:var(--gray-mid);margin-left:16px;padding-left:12px;border-left:2px solid var(--navy-light)">${esc(a.prompt)}</div></div>`).join('');
   }
 
   // ── Coaching Report Renderer (four-band layout) ──
@@ -1584,7 +1115,7 @@ ${t}`;
     }
 
     html += '</div>';
-    container.querySelector('#applicationCard').insertAdjacentHTML('afterend', html);
+    container.insertAdjacentHTML('beforeend', html);
   }
 
   function buildRadarSVG(dims) {
@@ -1641,210 +1172,7 @@ ${t}`;
     return svg;
   }
 
-  // ── Candidate Report Renderer ──
-  async function renderCandidateResults(d, container) {
-    const teaching = d.teaching_style || [];
-    const theology = d.theological_fit || [];
-
-    let html = '<div class="candidate-report">';
-
-    // Speaker & Date header
-    const speaker = d.speaker_name && d.speaker_name !== 'Unknown Speaker' ? d.speaker_name : '';
-    const sDate = d.sermon_date && d.sermon_date !== 'Date Unknown' ? d.sermon_date : '';
-    if (speaker || sDate) {
-      html += `<div style="text-align:center;margin-bottom:16px;color:var(--gray-mid)">`;
-      if (speaker) html += `<div style="font-size:18px;font-weight:700;color:var(--text)">${esc(speaker)}</div>`;
-      if (sDate) html += `<div style="font-size:13px;margin-top:2px">${esc(sDate)}</div>`;
-      html += `</div>`;
-    }
-
-    // Executive Summary
-    if (d.executive_summary) {
-      html += `<div class="exec-summary"><button class="listen-btn" style="float:right" onclick="speakSection(this, 'candidate-summary')">Listen</button>${esc(d.executive_summary)}</div>`;
-    }
-
-    // Radar chart placeholders
-    html += `<div class="chart-pair">
-      <div class="chart-box"><h4 style="color:var(--teal)">Teaching Style</h4><canvas id="candidateRadar1" width="300" height="300"></canvas></div>
-      <div class="chart-box"><h4 style="color:var(--gold)">Theological Fit</h4><canvas id="candidateRadar2" width="300" height="300"></canvas></div>
-    </div>`;
-
-    // Teaching Style Detail
-    html += '<div class="bar-section"><h4 style="color:var(--teal)">Teaching Style Profile <button class="listen-btn" onclick="speakSection(this, \'candidate-teaching\')">Listen</button></h4>';
-    const teachingTiers = { 'Core Preaching': [], 'Communication Craft': [], 'Engagement & Style': [], 'Institutional': [] };
-    teaching.forEach(t => { if (teachingTiers[t.tier]) teachingTiers[t.tier].push(t); else teachingTiers['Core Preaching'].push(t); });
-    Object.entries(teachingTiers).forEach(([tier, items]) => {
-      if (!items.length) return;
-      html += `<div style="font-size:10px;font-weight:700;color:var(--gray-mid);text-transform:uppercase;letter-spacing:1px;margin:12px 0 6px">${esc(tier)}</div>`;
-      items.forEach(t => {
-        const pct = (t.score / 5) * 100;
-        html += `<div class="bar-row">
-          <div class="bar-row-top"><span class="bar-label">${esc(t.name)}</span><span class="bar-score">${t.score}/5</span></div>
-          <div class="bar-track"><div class="bar-fill bar-fill-blue" style="width:${pct}%"></div></div>
-          <div class="bar-desc">${esc(t.description || '')}</div>
-        </div>`;
-      });
-    });
-    html += '</div>';
-
-    // Theological Fit Detail
-    html += '<div class="bar-section"><h4 style="color:var(--gold)">Theological Fit Profile <button class="listen-btn" onclick="speakSection(this, \'candidate-theology\')">Listen</button></h4>';
-    theology.forEach(t => {
-      const pct = (t.score / 5) * 100;
-      const confClass = t.confidence === 'High' ? 'conf-high' : t.confidence === 'Medium' ? 'conf-medium' : 'conf-low';
-      html += `<div class="bar-row">
-        <div class="bar-row-top">
-          <span class="bar-label">${esc(t.name)} <span class="conf-badge ${confClass}">${esc(t.confidence || 'Low')}</span></span>
-          <span class="bar-score">${t.score}/5</span>
-        </div>
-        <div class="bar-track"><div class="bar-fill bar-fill-gold" style="width:${pct}%"></div></div>
-        <div class="bar-desc">${esc(t.description || '')}</div>
-      </div>`;
-    });
-    html += '</div>';
-
-    // Strengths
-    if (d.strengths && d.strengths.length) {
-      html += '<div class="bar-section"><h4 style="color:var(--green)">Strengths <button class="listen-btn" onclick="speakSection(this, \'candidate-strengths\')">Listen</button></h4>';
-      d.strengths.forEach(s => {
-        html += `<div class="coaching-card strength"><h4>${esc(s.title)}</h4>`;
-        if (s.evidence) html += `<div class="evidence-quote">"${esc(s.evidence)}"</div>`;
-        if (s.significance) html += `<p style="margin-top:6px">${esc(s.significance)}</p>`;
-        html += '</div>';
-      });
-      html += '</div>';
-    }
-
-    // Growth Areas
-    if (d.growth_areas && d.growth_areas.length) {
-      html += '<div class="bar-section"><h4 style="color:var(--gold)">Growth Areas <button class="listen-btn" onclick="speakSection(this, \'candidate-growth\')">Listen</button></h4>';
-      d.growth_areas.forEach(g => {
-        html += `<div class="coaching-card improvement"><h4>${esc(g.title)}</h4>`;
-        if (g.observation) html += `<p>${esc(g.observation)}</p>`;
-        if (g.context) html += `<p style="font-style:italic">${esc(g.context)}</p>`;
-        html += '</div>';
-      });
-      html += '</div>';
-    }
-
-    // Fit Analysis
-    if (d.fit_analysis) {
-      html += '<div class="bar-section"><h4>Fit Analysis <button class="listen-btn" onclick="speakSection(this, \'candidate-fit\')">Listen</button></h4><div class="fit-columns">';
-      html += '<div class="fit-col conservative"><h4 style="color:var(--red)">⚠ Potential Concerns for Conservative Churches</h4>';
-      (d.fit_analysis.conservative_concerns || []).forEach(c => html += `<div class="fit-item">${esc(c)}</div>`);
-      html += '</div>';
-      html += '<div class="fit-col progressive"><h4 style="color:var(--gold)">⚠ Potential Concerns for Progressive Churches</h4>';
-      (d.fit_analysis.progressive_concerns || []).forEach(c => html += `<div class="fit-item">${esc(c)}</div>`);
-      html += '</div></div></div>';
-    }
-
-    // Key Signals
-    if (d.key_signals && d.key_signals.length) {
-      html += '<div class="bar-section"><h4 style="color:var(--teal)">Key Signals <button class="listen-btn" onclick="speakSection(this, \'candidate-signals\')">Listen</button></h4>';
-      d.key_signals.forEach(s => html += `<div class="signal-item">${esc(s)}</div>`);
-      html += '</div>';
-    }
-
-    // Committee Questions
-    if (d.committee_questions && d.committee_questions.length) {
-      html += '<div class="bar-section"><h4>Recommended Follow-Up Questions <button class="listen-btn" onclick="speakSection(this, \'candidate-questions\')">Listen</button></h4>';
-      d.committee_questions.forEach((q, i) => html += `<div class="committee-q"><strong>${i+1}.</strong> ${esc(q)}</div>`);
-      html += '</div>';
-    }
-
-    html += '</div>';
-    container.querySelector('#applicationCard').insertAdjacentHTML('afterend', html);
-
-    // Load Chart.js and render radars
-    await loadChartJs();
-    renderCandidateRadars(teaching, theology);
-  }
-
-  function loadChartJs() {
-    return new Promise((resolve, reject) => {
-      if (window.Chart) return resolve();
-      const s = document.createElement('script');
-      s.src = 'https://cdn.jsdelivr.net/npm/chart.js';
-      s.onload = resolve;
-      s.onerror = () => resolve(); // degrade gracefully
-      document.head.appendChild(s);
-    });
-  }
-
-  function renderCandidateRadars(teaching, theology) {
-    if (!window.Chart) return;
-    const chartOpts = (color, bgColor) => ({
-      type: 'radar',
-      options: {
-        responsive: true,
-        scales: { r: { min: 0, max: 5, ticks: { stepSize: 1, color: 'rgba(255,255,255,0.4)', backdropColor: 'transparent' }, grid: { color: 'rgba(255,255,255,0.1)' }, pointLabels: { color: 'rgba(255,255,255,0.7)', font: { size: 9 } } } },
-        plugins: { legend: { display: false } }
-      }
-    });
-
-    // Teaching Style radar
-    const ctx1 = document.getElementById('candidateRadar1');
-    if (ctx1) {
-      new Chart(ctx1, {
-        ...chartOpts(),
-        type: 'radar',
-        data: {
-          labels: teaching.map(t => t.name.length > 16 ? t.name.substring(0,14) + '…' : t.name),
-          datasets: [{ data: teaching.map(t => t.score), backgroundColor: 'rgba(42,127,165,0.15)', borderColor: 'rgba(42,127,165,0.8)', borderWidth: 2, pointBackgroundColor: '#2A7FA5', pointRadius: 3 }]
-        },
-        options: { responsive: true, scales: { r: { min: 0, max: 5, ticks: { stepSize: 1, color: 'rgba(255,255,255,0.4)', backdropColor: 'transparent' }, grid: { color: 'rgba(255,255,255,0.1)' }, pointLabels: { color: 'rgba(255,255,255,0.7)', font: { size: 9 } } } }, plugins: { legend: { display: false } } }
-      });
-    }
-
-    // Theological Fit radar
-    const ctx2 = document.getElementById('candidateRadar2');
-    if (ctx2) {
-      new Chart(ctx2, {
-        type: 'radar',
-        data: {
-          labels: theology.map(t => t.name.length > 16 ? t.name.substring(0,14) + '…' : t.name),
-          datasets: [{ data: theology.map(t => t.score), backgroundColor: 'rgba(184,134,11,0.15)', borderColor: 'rgba(184,134,11,0.8)', borderWidth: 2, pointBackgroundColor: '#B8860B', pointRadius: 3 }]
-        },
-        options: { responsive: true, scales: { r: { min: 0, max: 5, ticks: { stepSize: 1, color: 'rgba(255,255,255,0.4)', backdropColor: 'transparent' }, grid: { color: 'rgba(255,255,255,0.1)' }, pointLabels: { color: 'rgba(255,255,255,0.7)', font: { size: 9 } } } }, plugins: { legend: { display: false } } }
-      });
-    }
-  }
-
   function esc(s) { const d = document.createElement('div'); d.textContent = s; return d.innerHTML; }
-
-  function copySection(btn, section) {
-    if (!state.analysisData) return;
-    const d = state.analysisData;
-    let text = '';
-    switch (section) {
-      case 'pitch': text = d.elevator_pitch; break;
-      case 'summary': text = 'MAIN POINTS\n' + (d.main_points||[]).map((p,i) => {
-        if (typeof p === 'object') {
-          let t = `${i+1}. ${p.title}: ${p.explanation}`;
-          if (p.sub_points) t += '\n' + p.sub_points.map(sp => `   - ${sp.title}: ${sp.explanation}`).join('\n');
-          return t;
-        }
-        return `${i+1}. ${p}`;
-      }).join('\n\n'); break;
-      case 'conclusions': text = 'CONCLUSIONS\n' + (d.conclusions||[]).map((c,i) => typeof c === 'object' ? `${i+1}. ${c.title}: ${c.explanation}` : `${i+1}. ${c}`).join('\n\n'); break;
-      case 'quotes': text = '7 KEY QUOTES\n' + (d.key_quotes||[]).map((q,i) => `${i+1}. "${q}"`).join('\n'); break;
-      case 'study': {
-        const s = d.group_study;
-        if (s) {
-          text = 'GROUP STUDY GUIDE\n\n';
-          if (s.intro_quote) text += `"${s.intro_quote}"\n\n`;
-          if (s.intro_text) text += s.intro_text + '\n\n';
-          if (s.questions) text += s.questions.map(q => `Q${q.number}. ${q.question}`).join('\n\n');
-        }
-      } break;
-      case 'verses': text = 'SCRIPTURE\n' + (d.bible_verses||[]).map(v => `${v.reference} — ${v.relevance}`).join('\n\n'); break;
-      case 'application': text = 'APPLICATION\n' + (d.application||[]).map((a,i) => `${i+1}. ${a.question}\n   ${a.prompt}`).join('\n\n'); break;
-    }
-    navigator.clipboard.writeText(text).then(() => {
-      btn.textContent = 'Copied'; btn.classList.add('copied');
-      setTimeout(() => { btn.textContent = 'Copy'; btn.classList.remove('copied'); }, 2000);
-    });
-  }
 
   let currentSpeechBtn = null;
 
@@ -1866,46 +1194,11 @@ ${t}`;
     const d = state.analysisData;
     let text = '';
     switch (section) {
-      case 'pitch': text = d.elevator_pitch; break;
-      case 'summary': text = (d.main_points||[]).map((p,i) => {
-        if (typeof p === 'object') {
-          let t = `Point ${i+1}. ${p.title}. ${p.explanation}`;
-          if (p.sub_points) t += ' ' + p.sub_points.map(sp => `${sp.title}. ${sp.explanation}`).join(' ');
-          return t;
-        }
-        return p;
-      }).join('. '); break;
-      case 'conclusions': text = (d.conclusions||[]).map((c,i) => typeof c === 'object' ? `${c.title}. ${c.explanation}` : c).join('. '); break;
-      case 'quotes': text = (d.key_quotes||[]).map((q,i) => `Quote ${i+1}. ${q}`).join('. '); break;
-      case 'study': {
-        const s = d.group_study;
-        if (s) {
-          text = '';
-          if (s.intro_quote) text += s.intro_quote + '. ';
-          if (s.intro_text) text += s.intro_text + ' ';
-          if (s.questions) text += s.questions.map(q => `Question ${q.number}. ${q.question}`).join('. ');
-        }
-      } break;
-      case 'verses': text = (d.bible_verses||[]).map(v => `${v.reference}. ${v.relevance}`).join('. '); break;
-      case 'application': text = (d.application||[]).map((a,i) => `${i+1}. ${a.question}. ${a.prompt}`).join('. '); break;
-      // Coaching sections
       case 'coaching-synthesis': text = d.synthesis_paragraph || ''; break;
       case 'coaching-dimensions': text = (d.dimensions||[]).map(dim => `${dim.name}. Score ${dim.score} of 5${dim.confidence ? ', ' + dim.confidence + ' confidence' : ''}. ${dim.commentary || dim.summary || ''}${dim.evidence ? ' Quote: ' + dim.evidence : ''}`).join('. '); break;
       case 'coaching-working': text = (d.whats_working||[]).map((w,i) => `${i+1}. ${w.title || ''}.${w.observation ? ' ' + w.observation : ''}${w.quote ? ' Quote: ' + w.quote : ''}`).join(' '); break;
       case 'coaching-work-todo': text = (d.things_to_work_on||[]).map((item,i) => `Priority ${i+1}. ${item.title || ''}. Observation: ${item.observation || ''}. Recommendation: ${item.recommendation || ''}. Practicum: ${item.practicum || ''}`).join(' '); break;
       case 'coaching-signatures': text = (d.signatures||[]).map(sig => `${sig.observation || sig.name || ''}${sig.observed && sig.evidence ? ' Quote: ' + sig.evidence : ''}`).join(' '); break;
-      // Candidate sections
-      case 'candidate-summary': text = d.executive_summary || ''; break;
-      case 'candidate-teaching': text = (d.teaching_style||[]).map(t => `${t.name}. Score ${t.score} out of 5. ${t.description}`).join('. '); break;
-      case 'candidate-theology': text = (d.theological_fit||[]).map(t => `${t.name}. Score ${t.score} out of 5. Confidence: ${t.confidence}. ${t.description}`).join('. '); break;
-      case 'candidate-strengths': text = (d.strengths||[]).map(s => `${s.title}. ${s.evidence || ''}. ${s.significance || ''}`).join('. '); break;
-      case 'candidate-growth': text = (d.growth_areas||[]).map(g => `${g.title}. ${g.observation || ''}. ${g.context || ''}`).join('. '); break;
-      case 'candidate-fit': {
-        const fa = d.fit_analysis || {};
-        text = 'Conservative concerns: ' + (fa.conservative_concerns||[]).join('. ') + '. Progressive concerns: ' + (fa.progressive_concerns||[]).join('. ');
-      } break;
-      case 'candidate-signals': text = (d.key_signals||[]).map((s,i) => `Signal ${i+1}. ${s}`).join('. '); break;
-      case 'candidate-questions': text = (d.committee_questions||[]).map((q,i) => `Question ${i+1}. ${q}`).join('. '); break;
     }
     if (!text) return;
 
@@ -1944,37 +1237,7 @@ ${t}`;
   }
 
   function buildResultsText(d) {
-    const type = state.reportType || 'summary';
-    if (type === 'coaching') return buildCoachingText(d);
-    if (type === 'candidate') return buildCandidateText(d);
-    return buildSummaryText(d);
-  }
-
-  function buildSummaryText(d) {
-    const pts = (d.main_points||[]).map((p,i) => {
-      if (typeof p === 'object') {
-        let t = `${i+1}. ${p.title}: ${p.explanation}`;
-        if (p.sub_points) t += '\n' + p.sub_points.map(sp => `   - ${sp.title}: ${sp.explanation}`).join('\n');
-        return t;
-      }
-      return `${i+1}. ${p}`;
-    });
-    const concl = (d.conclusions||[]).map((c,i) => typeof c === 'object' ? `${i+1}. ${c.title}: ${c.explanation}` : `${i+1}. ${c}`);
-    const study = [];
-    if (d.group_study) {
-      study.push('GROUP STUDY GUIDE', '');
-      if (d.group_study.intro_quote) study.push(`"${d.group_study.intro_quote}"`, '');
-      if (d.group_study.intro_text) study.push(d.group_study.intro_text, '');
-      if (d.group_study.questions) study.push(...d.group_study.questions.map(q => `Q${q.number}. ${q.question}`));
-    }
-    const title = d.sermon_title ? [d.sermon_title, ''] : [];
-    return [...title, 'SERMON ANALYSIS','='.repeat(40),'','INTRODUCTION',d.elevator_pitch,'',
-      'MAIN POINTS',...pts,'',
-      'CONCLUSIONS',...concl,'',
-      '7 KEY QUOTES',...(d.key_quotes||[]).map((q,i)=>`${i+1}. "${q}"`),'',
-      ...study,'',
-      'SCRIPTURE',...(d.bible_verses||[]).map(v=>`${v.reference}\n${v.relevance}`),'',
-      'APPLICATION',...(d.application||[]).map((a,i)=>`${i+1}. ${a.question}\n   ${a.prompt}`)].join('\n');
+    return buildCoachingText(d);
   }
 
   function buildCoachingText(d) {
@@ -2042,34 +1305,6 @@ ${t}`;
     return lines.join('\n');
   }
 
-  function buildCandidateText(d) {
-    const lines = [d.sermon_title || 'Sermon'];
-    if (d.speaker_name) lines.push(`Speaker: ${d.speaker_name}`);
-    if (d.sermon_date) lines.push(`Date: ${d.sermon_date}`);
-    lines.push('', 'PASTORAL SEARCH REPORT', '='.repeat(40), '',
-      'EXECUTIVE SUMMARY', d.executive_summary || '', '');
-    lines.push('TEACHING STYLE');
-    (d.teaching_style || []).forEach(t => lines.push(`  ${t.name}: ${t.score}/5 — ${t.description}`));
-    lines.push('', 'THEOLOGICAL FIT');
-    (d.theological_fit || []).forEach(t => lines.push(`  ${t.name}: ${t.score}/5 [${t.confidence}] — ${t.description}`));
-    lines.push('', 'STRENGTHS');
-    (d.strengths || []).forEach(s => lines.push(`• ${s.title}`, s.evidence ? `  "${s.evidence}"` : '', ''));
-    lines.push('GROWTH AREAS');
-    (d.growth_areas || []).forEach(g => lines.push(`• ${g.title}: ${g.observation}`, ''));
-    if (d.fit_analysis) {
-      lines.push('FIT ANALYSIS', 'Conservative concerns:');
-      (d.fit_analysis.conservative_concerns || []).forEach(c => lines.push(`  • ${c}`));
-      lines.push('Progressive concerns:');
-      (d.fit_analysis.progressive_concerns || []).forEach(c => lines.push(`  • ${c}`));
-      lines.push('');
-    }
-    lines.push('KEY SIGNALS');
-    (d.key_signals || []).forEach(s => lines.push(`• ${s}`));
-    lines.push('', 'FOLLOW-UP QUESTIONS');
-    (d.committee_questions || []).forEach((q, i) => lines.push(`${i+1}. ${q}`));
-    return lines.join('\n');
-  }
-
   async function saveResults() {
     if (!state.analysisData) return;
 
@@ -2083,26 +1318,16 @@ ${t}`;
     }
 
     const d = state.analysisData;
-    const reportType = state.reportType || 'summary';
     const titleSlug = (d.sermon_title || 'sermon').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/-+$/,'');
-
-    let content, filename;
-    if (reportType === 'summary') {
-      content = buildResultsText(d);
-      filename = `${titleSlug}-${new Date().toISOString().slice(0,10)}.txt`;
-    } else {
-      content = buildReportHTML(d, reportType);
-      filename = `${titleSlug}-${new Date().toISOString().slice(0,10)}.html`;
-    }
+    const content = buildReportHTML(d);
+    const filename = `${titleSlug}-${new Date().toISOString().slice(0,10)}.html`;
 
     if (state.saveDirHandle) {
       await saveToFolder(state.saveDirHandle, filename, content);
       showSaveConfirmation(filename);
     } else {
-      // Fallback for browsers without folder picker
-      const mimeType = reportType === 'summary' ? 'text/plain' : 'text/html';
       const a = document.createElement('a');
-      a.href = URL.createObjectURL(new Blob([content], { type: mimeType }));
+      a.href = URL.createObjectURL(new Blob([content], { type: 'text/html' }));
       a.download = filename;
       a.click();
     }
@@ -2125,42 +1350,17 @@ ${t}`;
     setTimeout(() => toast.remove(), 2500);
   }
 
-  function buildReportHTML(d, reportType) {
-    const title = d.sermon_title || 'Sermon Analysis';
+  function buildReportHTML(d) {
+    const title = d.sermon_title || 'Coaching Report';
+    const reportLabel = 'Coaching Report';
     const speaker = d.speaker_name || '';
     const sDate = d.sermon_date || '';
-    const reportLabels = { summary: 'Sermon Summary', coaching: 'Coaching Report', candidate: 'Pastoral Search Report' };
-    const reportLabel = reportLabels[reportType] || 'Sermon Analysis';
 
     // Grab the rendered report HTML from the DOM
     let reportContent = '';
-    if (reportType === 'summary') {
-      // Capture summary cards
-      const cardIds = ['pitchCard','summaryCard','conclusionsCard','quotesCard','studyCard','versesCard','applicationCard'];
-      const cards = cardIds.map(id => document.getElementById(id)).filter(el => el && el.style.display !== 'none');
-      reportContent = '<div class="summary-report">' + cards.map(c => {
-        const clone = c.cloneNode(true);
-        // Remove Copy/Listen buttons from export
-        clone.querySelectorAll('.copy-btn, .listen-btn').forEach(b => b.remove());
-        return clone.outerHTML;
-      }).join('') + '</div>';
-    } else {
-      const reportEl = document.querySelector('.coaching-report, .candidate-report');
-      if (reportEl) {
-        const clone = reportEl.cloneNode(true);
-        // Convert canvas elements to inline images
-        const origCanvases = reportEl.querySelectorAll('canvas');
-        const cloneCanvases = clone.querySelectorAll('canvas');
-        origCanvases.forEach((canvas, i) => {
-          try {
-            const img = document.createElement('img');
-            img.src = canvas.toDataURL('image/png');
-            img.style.maxWidth = '100%';
-            cloneCanvases[i].parentNode.replaceChild(img, cloneCanvases[i]);
-          } catch(e) { /* canvas tainted or empty */ }
-        });
-        reportContent = clone.outerHTML;
-      }
+    const reportEl = document.querySelector('.coaching-report');
+    if (reportEl) {
+      reportContent = reportEl.cloneNode(true).outerHTML;
     }
 
     return `<!DOCTYPE html>
@@ -2256,64 +1456,10 @@ ${t}`;
   .sig-status-tag.not-observed { background: rgba(144,150,163,0.18); color: var(--gray-mid); }
   .sig-evidence { font-style: italic; font-weight: 400; font-size: 12.5px; color: var(--offwhite); padding: 6px 10px; background: rgba(144,150,163,0.08); border-left: 2px solid var(--gray-mid); border-radius: 0 4px 4px 0; line-height: 1.55; }
 
-  /* Candidate */
-  .candidate-report { color: var(--white); }
-  .exec-summary { background: var(--navy); border-radius: 8px; padding: 16px; border-left: 3px solid var(--teal); margin-bottom: 16px; font-size: 13px; line-height: 1.8; }
-  .chart-pair { display: flex; gap: 16px; margin: 16px 0; flex-wrap: wrap; }
-  .chart-box { flex: 1; min-width: 280px; background: var(--navy); border-radius: 8px; padding: 16px; text-align: center; }
-  .chart-box h4 { font-size: 13px; font-weight: 700; margin-bottom: 10px; }
-  .chart-box canvas { max-width: 100%; }
-  .bar-section { margin-bottom: 16px; }
-  .bar-section h4 { font-size: 11px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 10px; padding-bottom: 4px; border-bottom: 1px solid var(--navy-light); }
-  .bar-row { margin-bottom: 10px; }
-  .bar-row-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 3px; }
-  .bar-label { font-size: 12px; font-weight: 600; }
-  .bar-score { font-size: 12px; font-weight: 700; }
-  .bar-track { height: 8px; background: var(--navy); border-radius: 4px; overflow: hidden; }
-  .bar-fill { height: 100%; border-radius: 4px; }
-  .bar-fill-blue { background: linear-gradient(90deg, var(--teal), #6bb3f0); }
-  .bar-fill-gold { background: linear-gradient(90deg, var(--gold), #e8c96a); }
-  .bar-desc { font-size: 11px; color: var(--gray-mid); margin-top: 3px; }
-  .conf-badge { display: inline-block; padding: 1px 6px; border-radius: 3px; font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; margin-left: 6px; }
-  .conf-high { background: rgba(27,110,58,0.2); color: var(--green); }
-  .conf-medium { background: rgba(184,134,11,0.2); color: var(--gold); }
-  .conf-low { background: rgba(176,39,29,0.2); color: var(--red); }
-  .fit-columns { display: flex; gap: 12px; margin: 12px 0; flex-wrap: wrap; }
-  .fit-col { flex: 1; min-width: 250px; background: var(--navy); border-radius: 8px; padding: 14px; }
-  .fit-col h4 { font-size: 13px; font-weight: 700; margin-bottom: 8px; }
-  .fit-col.conservative { border-left: 3px solid var(--red); }
-  .fit-col.progressive { border-left: 3px solid var(--gold); }
-  .fit-item { font-size: 12px; color: var(--gray-mid); padding: 6px 0; border-bottom: 1px solid var(--navy-light); }
-  .fit-item:last-child { border-bottom: none; }
-  .signal-item { font-size: 12px; padding: 8px 12px; margin-bottom: 6px; background: rgba(42,127,165,0.08); border-left: 3px solid var(--teal); border-radius: 0 4px 4px 0; }
-  .committee-q { font-size: 12px; padding: 8px 0; border-bottom: 1px solid var(--navy-light); line-height: 1.6; }
-  .committee-q:last-child { border-bottom: none; }
-  .committee-q strong { color: var(--teal); }
-
-  @media (max-width: 500px) {
-    .dim-row { flex-direction: column; align-items: flex-start; gap: 4px; margin-bottom: 4px; }
-    .dim-name { width: auto; }
-    .dim-summary { margin-left: 0 !important; margin-bottom: 16px; }
-  }
-  /* Summary */
-  .result-card { background: var(--navy); border: 1px solid var(--navy-light); border-radius: 8px; padding: 16px; margin-bottom: 12px; border-left: 3px solid var(--navy-light); }
-  .result-card.navy-accent { border-left-color: var(--teal-border); }
-  .result-card.gold-border { border-left-color: var(--gold); }
-  .result-card.green-border { border-left-color: var(--green); }
-  .result-card h3 { font-family: var(--font-display); font-size: 14px; font-weight: 600; margin-bottom: 8px; }
-  .result-card p, .result-card li { font-size: 13px; line-height: 1.6; color: var(--offwhite); }
-  .result-card ol { padding-left: 1.2rem; }
-  .result-card li { margin-bottom: 4px; }
-  .overline { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; color: var(--teal); margin-bottom: 4px; }
-  .elevator-pitch { font-family: var(--font-display); font-size: 16px; font-weight: 600; line-height: 1.6; color: var(--offwhite); }
-  .quote-item { padding: 8px 12px; margin-bottom: 6px; background: rgba(42,127,165,0.08); border-left: 3px solid var(--teal); border-radius: 0 4px 4px 0; font-size: 13px; font-style: italic; }
-
   @media print {
     body { background: white; color: #222; }
-    .coaching-report, .candidate-report, .summary-report { color: #222; }
-    .exec-summary, .coaching-card, .fit-col, .chart-box, .result-card { background: #f5f5f5; }
-    .dim-summary, .bar-desc, .coaching-card p, .fit-item { color: #555; }
-    .result-card p, .result-card li { color: #333; }
+    .coaching-report { color: #222; }
+    .dim-card, .working-card, .work-card, .sig-card, .synthesis-card { background: #f5f5f5; }
   }
 </style>
 </head>
@@ -2363,9 +1509,7 @@ ${t}`;
     if (!state.analysisData) return;
     var html = state.shareHTML;
     if (!html) {
-      var d = state.analysisData;
-      var rt = state.reportType || 'summary';
-      html = buildReportHTML(d, rt);
+      html = buildReportHTML(state.analysisData);
     }
     var d = state.analysisData;
     var slug = (d.sermon_title || 'sermon').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/-+$/,'');
@@ -2429,21 +1573,16 @@ ${t}`;
 
   // ============ Input Modes ============
   function showInput(mode) {
-    const textEl = document.getElementById('textInput');
-    const ytEl = document.getElementById('youtubeInput');
-    const textBtn = document.getElementById('mode-text');
-    const ytBtn = document.getElementById('mode-youtube');
-    if (mode === 'text') {
-      textEl.classList.add('visible');
-      ytEl.classList.remove('visible');
-      textBtn.classList.add('active');
-      ytBtn.classList.remove('active');
-    } else {
-      ytEl.classList.add('visible');
-      textEl.classList.remove('visible');
-      ytBtn.classList.add('active');
-      textBtn.classList.remove('active');
-    }
+    const panels = {
+      text:    { el: 'textInput',    btn: 'mode-text' },
+      youtube: { el: 'youtubeInput', btn: 'mode-youtube' },
+      upload:  { el: 'uploadInput',  btn: 'mode-upload' },
+    };
+    Object.entries(panels).forEach(([key, { el, btn }]) => {
+      const isActive = key === mode;
+      document.getElementById(el).classList.toggle('visible', isActive);
+      document.getElementById(btn).classList.toggle('active', isActive);
+    });
   }
 
   function analyzeFromText() {
@@ -2479,6 +1618,64 @@ ${t}`;
       showError(err.message || 'Could not fetch YouTube transcript.');
       ytBtn.textContent = 'Analyze Sermon';
       ytBtn.disabled = false;
+    }
+  }
+
+  function onAudioFileChosen(inputEl) {
+    const labelEl = document.getElementById('audioFileLabel');
+    const file = inputEl.files && inputEl.files[0];
+    if (file) {
+      labelEl.textContent = `${file.name} (${(file.size / 1024 / 1024).toFixed(1)} MB)`;
+      labelEl.classList.add('has-file');
+    } else {
+      labelEl.textContent = 'Choose audio file…';
+      labelEl.classList.remove('has-file');
+    }
+  }
+
+  async function analyzeFromUpload() {
+    const fileInput = document.getElementById('audioFile');
+    const file = fileInput.files && fileInput.files[0];
+    if (!file) { showError('Choose an audio file to upload.'); return; }
+
+    const upBtn = document.getElementById('uploadBtn');
+    upBtn.disabled = true;
+    upBtn.textContent = 'Uploading...';
+    hideError();
+
+    try {
+      const fd = new FormData();
+      fd.append('audio', file, file.name);
+
+      // Show progress while uploading. Whisper itself runs server-side after upload completes.
+      upBtn.textContent = `Uploading ${(file.size / 1024 / 1024).toFixed(0)}MB...`;
+      const r = await fetch(`${WORKER_URL}/api/transcribe-file`, {
+        method: 'POST',
+        body: fd,
+      });
+
+      if (!r.ok) {
+        const err = await r.json().catch(() => ({}));
+        throw new Error(err.error || `Upload failed (${r.status})`);
+      }
+
+      upBtn.textContent = 'Transcribing...';
+      const data = await r.json();
+      const transcript = data.transcript;
+      if (!transcript || transcript.length < 50) {
+        throw new Error('Transcript came back empty or too short. The audio may be silent or unintelligible.');
+      }
+
+      state.transcript = transcript;
+      fileInput.value = '';
+      onAudioFileChosen(fileInput);
+      upBtn.textContent = 'Analyze Sermon';
+      upBtn.disabled = false;
+      analyzeSermon();
+    } catch (err) {
+      showError(err.message || 'Could not transcribe audio.');
+      upBtn.textContent = 'Analyze Sermon';
+      upBtn.disabled = false;
     }
   }
 
@@ -2556,16 +1753,24 @@ ${t}`;
 
   function saveToHistory(analysis) {
     const history = JSON.parse(localStorage.getItem('sermonHistory') || '[]');
-    const entry = {
+    history.unshift({
       id: Date.now(),
       date: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
       transcript: state.transcript?.substring(0, 500) || '',
       analysis: analysis,
-      reportType: state.reportType || 'summary'
-    };
-    history.unshift(entry);
+    });
     if (history.length > 50) history.length = 50;
     localStorage.setItem('sermonHistory', JSON.stringify(history));
+  }
+
+  // One-time migration: drop legacy Summary/Candidate entries from when this app
+  // also produced those reports. A coaching entry has a `dimensions` array.
+  function pruneNonCoachingHistory() {
+    if (localStorage.getItem('sermonHistory_coachingOnlyMigrated')) return;
+    const history = JSON.parse(localStorage.getItem('sermonHistory') || '[]');
+    const coachingOnly = history.filter(h => Array.isArray(h?.analysis?.dimensions));
+    localStorage.setItem('sermonHistory', JSON.stringify(coachingOnly));
+    localStorage.setItem('sermonHistory_coachingOnlyMigrated', '1');
   }
 
   function renderHistory() {
@@ -2578,7 +1783,7 @@ ${t}`;
     el.innerHTML = history.map(h => `<div class="history-item" onclick="loadFromHistory(${h.id})">
       <div class="history-item-content">
         <div class="history-item-date">${esc(h.date)}</div>
-        <div class="history-item-pitch">${esc(h.analysis.sermon_title || h.analysis.elevator_pitch || 'Untitled sermon')}${h.reportType && h.reportType !== 'summary' ? ` <span style="font-size:9px;color:var(--teal);text-transform:uppercase;letter-spacing:0.5px">${esc(h.reportType)}</span>` : ''}</div>
+        <div class="history-item-pitch">${esc(h.analysis.sermon_title || 'Untitled sermon')}</div>
       </div>
       <button class="history-delete" onclick="event.stopPropagation(); deleteFromHistory(${h.id})">×</button>
     </div>`).join('');
@@ -2590,7 +1795,6 @@ ${t}`;
     if (!entry) return;
     state.analysisData = entry.analysis;
     state.transcript = entry.transcript;
-    if (entry.reportType) selectReportType(entry.reportType);
     renderResults(entry.analysis, true);
     document.getElementById('historyPanel').classList.remove('open');
   }
